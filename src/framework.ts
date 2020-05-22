@@ -19,12 +19,12 @@ export const elementCreators = <Action>(): ElementCreators<Action> => {
       type: "div",
       ...props,
     }),
-    text: (props) => ({
-      type: "text",
-      ...props,
-    }),
     button: (props) => ({
       type: "button",
+      ...props,
+    }),
+    input: (props) => ({
+      type: "input",
       ...props,
     }),
   };
@@ -35,27 +35,27 @@ export type Component<Props, State, Action> = (_: {
   readonly state: State;
   readonly element: ElementCreators<Action>;
   readonly dispatch: (action: Action) => Action;
-}) => HtmlElement<Action>;
+}) => VirtualNode<Action>;
 
 export const map = <FromAction, ToAction>(
-  element: HtmlElement<FromAction>,
+  element: VirtualNode<FromAction>,
   transform: (action: FromAction) => ToAction,
-): HtmlElement<ToAction> => {
+): VirtualNode<ToAction> => {
   return element as any;
 };
 
 type ElementCreators<Action> = {
   div: ElementCreator<Action, "div">;
-  text: ElementCreator<Action, "text">;
   button: ElementCreator<Action, "button">;
+  input: ElementCreator<Action, "input">;
 };
 
-type ElementCreator<Action, T extends HtmlElement<Action>["type"]> = (
+type ElementCreator<Action, T extends VirtualElement<Action>["type"]> = (
   props: Prop<Action, T>,
-) => HtmlElement<Action>;
+) => VirtualElement<Action>;
 
-type Prop<Action, T extends HtmlElement<Action>["type"]> = Omit<
-  Extract<HtmlElement<Action>, { type: T }>,
+type Prop<Action, T extends VirtualElement<Action>["type"]> = Omit<
+  Extract<VirtualElement<Action>, { type: T }>,
   "type"
 >;
 
@@ -64,7 +64,7 @@ export const component = <
   T extends {
     Props?: object;
     State?: object;
-    Action: object;
+    Action?: object;
   },
   Props = T["Props"],
   State = T["State"],
@@ -104,37 +104,34 @@ type ComponentReturnType<Props, State, Action> = {
     handle: (fromAction: Action) => ToAction;
     props: Props;
     state: State;
-  }) => HtmlElement<ToAction>;
+  }) => VirtualNode<ToAction>;
 };
 
 export type Action<T> = T extends
-  Component<infer Props, infer State, infer Action> ? Action
+  Component<infer _, infer _, infer Action> ? Action
   : never;
 
-export type HtmlElement<Action> = {
-  type: "div";
-  children?: HtmlElement<Action>[];
-  on?: {
-    click?: Action;
-  };
-} | {
-  type: "text";
-  content: string;
-  on?: {
-    change?: Action;
-  };
-} | {
-  type: "button";
-  style?: {};
-  attr?: {
-    value?: string;
-  };
-  on?: {
-    click?: Action;
-  };
-};
+export type VirtualNode<Action> = string | VirtualElement<Action>
+export type VirtualElement<Action> =
+  (
+  & {
+    events?: Partial<Record<keyof HTMLElementEventMap, Action>>;
+  }
+  & ({
+    type: "div";
+    children?: VirtualNode<Action>[];
+  } | {
+    type: "button";
+    style?: {};
+    attr?: {
+      value?: string;
+    };
+  } | {
+    type: "input";
+    value: string;
+  }));
 
-export const mount = <Props extends {}, State, Action>({
+export const start = <Props extends {}, State, Action>({
   component,
   at,
 }: {
@@ -144,10 +141,193 @@ export const mount = <Props extends {}, State, Action>({
   if (!at) {
     throw new Error(`Root element is undefined`);
   }
-  const x = component.render({
+  let virtualDom = component.render({
     state: component.initialState,
     handle: (x) => x,
     props: {} as any,
   });
-  console.log(JSON.stringify(x, null, 2));
+
+  let state = component.initialState;
+  const handler = (action: Action | undefined, event: Event) => {
+    if (action) {
+      const newState = component.update(state, action as any, event);
+      const newVirtualDom = component.render(
+          { state: newState, handle: (x) => x, props: {} as any },
+        )
+      console.log("re-render");
+      const patches = diff({
+        original: virtualDom,
+        updated: newVirtualDom,
+        patches: [],
+        path: [0],
+      })
+      console.log(patches)
+      applyPatches({
+        element: at,
+        patches,
+        handler
+      })
+      state = newState
+      virtualDom = newVirtualDom
+      // at.innerHTML = "";
+      // at.appendChild(
+      //   mount({
+      //   virtualDom: newVirtualDom,
+      //   handler,
+      // }));
+    }
+  };
+  at.appendChild(mount({
+    virtualDom: virtualDom,
+    handler,
+  }));
+};
+
+type Path = number[]
+
+type Patch<Action> = {
+  path: Path,
+  operation: {
+    type: 'replace_node'
+    node: VirtualNode<Action>
+  } | {
+    type: 'add_node'
+    node: VirtualNode<Action>
+  } | {
+    type: 'remove_node'
+  }
+}
+const diff = <Action>({
+  original,
+  updated,
+  patches,
+  path
+}: {
+  original: VirtualNode<Action>, 
+  updated: VirtualNode<Action>, 
+  patches: Patch<Action>[],
+  path: Path
+}): Patch<Action>[] => {
+  if(typeof original === 'string') {
+    if(original !== updated) {
+      return [...patches,{
+        path,
+        operation: {
+          type: 'replace_node',
+          node: updated
+        }
+      }]
+    }
+    else {
+      return patches
+    }
+  }
+  else {
+    if(typeof updated === 'string') {
+      return [...patches,{
+        path,
+        operation: {
+          type: 'replace_node',
+          node: updated
+        }
+      }]
+    }
+    else {
+      if(original.type !== updated.type) {
+        return [...patches,{
+          path,
+          operation: {
+            type: 'replace_node',
+            node: updated
+          }
+        }]
+      }
+      else {
+        if(original.type === 'div' && updated.type === 'div') {
+          return [...patches,{
+            path,
+            operation: {
+              type: 'replace_node',
+              node: updated
+            }
+          }]
+        }
+        else {
+          return [...patches,{
+            path,
+            operation: {
+              type: 'replace_node',
+              node: updated
+            }
+          }]
+        }
+      }
+    }
+  }
+}
+
+const applyPatches = <Action>({
+  element,
+  patches,
+  handler
+}: {
+  element: HTMLElement
+  patches: Patch<Action>[]
+  handler: (action: Action | undefined, event: Event) => void;
+}) => {
+  patches.forEach(patch => {
+    const target = 
+      patch.path
+        .slice(0, -1)
+        .reduce<Element | undefined>((element, path) => element?.children?.[path], element)
+
+    if(target === undefined) {
+      throw new Error(`target is undefined at ${patch.path}`)
+    }
+    switch(patch.operation.type) {
+      case 'replace_node': {
+        const oldNode = target.childNodes[patch.path.slice(-1)[0]]
+        if(!oldNode) {
+          throw new Error(`oldNode is undefined as ${patch.path}`)
+        }
+        target.replaceChild(mount({virtualDom: patch.operation.node, handler}), oldNode)
+        break
+      }
+    }
+  })
+}
+
+const mount = <Action>({ virtualDom: element, handler }: {
+  virtualDom: VirtualNode<Action>;
+  handler: (action: Action | undefined, event: Event) => void;
+}): Node => {
+  if(typeof element === 'string') {
+    return document.createTextNode(element)
+  }
+  const el = document.createElement(element.type);
+  (Object.keys(element.events ?? {}) as (keyof HTMLElementEventMap)[])
+  .map((key) => {
+    el.addEventListener(key, (el as any)['$' + key] = (event: any) => {
+      handler(element.events?.[key], event)
+    })  
+  })
+  switch (element.type) {
+    case "div": {
+      element.children?.forEach((child) =>
+        el.appendChild(mount({ virtualDom: child, handler }))
+      );
+      return el;
+    }
+
+    case "button": {
+      el.append(document.createTextNode(
+        element.attr?.value ?? "",
+      ));
+      return el;
+    }
+    case "input": {
+      (el as HTMLInputElement).value = element.value;
+      return el;
+    }
+  }
 };

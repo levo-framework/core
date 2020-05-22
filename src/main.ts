@@ -1,7 +1,7 @@
-import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+/// <reference lib="dom" />
 import {
   Component,
-  mount,
+  start,
   component,
   Action,
   map,
@@ -38,18 +38,15 @@ const SearchBar = component<{
         };
     }
   },
-  view: ({ props, state, element: {div, text}, dispatch }) => {
-    return div({
-      on: {
-        click: dispatch({ type: "on_done" }),
-      },
+  view: ({ props, state, element: html, dispatch }) => {
+    return html.div({
       children: [
-        text({ content: props.placeholder }),
-        text({
-          content: state.searchWord,
-          on: {
-            change: dispatch({ type: "update_search_word" }),
-          },
+        props.placeholder,
+        html.input({
+          value: state.searchWord,
+          events: {
+            input: dispatch({type: 'update_search_word'})
+          }
         }),
       ],
     });
@@ -70,6 +67,13 @@ const TodoList = component<{
     | {
       type: "search_bar_action";
       action: Action<typeof SearchBar.view>;
+    }
+    | {
+      type: "add_item";
+    }
+    | {
+      type: "update_item";
+      itemIndex: number;
     };
 }>({
   initialState: {
@@ -79,6 +83,16 @@ const TodoList = component<{
   },
   update: (state, action, event) => {
     switch (action.type) {
+      case "add_item":
+        const item = window.prompt("Item name?");
+        if (item) {
+          return {
+            ...state,
+            items: [...state.items, { content: item, done: false }],
+          };
+        } else {
+          return state;
+        }
       case "mark_as_done":
         return {
           ...state,
@@ -88,6 +102,17 @@ const TodoList = component<{
               : item
           ),
         };
+
+      case "update_item": {
+        return {
+          ...state,
+          items: state.items.map((item, index) =>
+            index === action.itemIndex
+              ? { ...item, content: event?.target?.value }
+              : item
+          ),
+        };
+      }
 
       case "search_bar_action":
         const { action: searchBarAction } = action;
@@ -109,7 +134,7 @@ const TodoList = component<{
         }
     }
   },
-  view: ({ state, element: {div, text, button}, dispatch }) => {
+  view: ({ state, element: { div, button, input }, dispatch }) => {
     return div({
       children: [
         SearchBar.render({
@@ -120,27 +145,43 @@ const TodoList = component<{
           state: state.searchBar,
         }),
         div({
-          children: state.items.map((item, itemIndex) =>
-            div({
-              children: [
-                text({ content: item.content }),
-                button(
-                  {
-                    on: {
-                      click: dispatch({ type: "mark_as_done", itemIndex }),
+          children: [
+            ...state.items.map((item, itemIndex) =>
+              div({
+                children: [
+                  input({
+                    value: item.content,
+                    events: {
+                      blur: dispatch({type: 'update_item', itemIndex})
+                    }
+                  }),
+                  button({
+                    attr: {
+                      value: item.done ? "undone" : "done",
                     },
-                  },
-                ),
-              ],
-            })
-          ),
+                    events: {
+                      click: dispatch({type: 'mark_as_done', itemIndex})
+                    }
+                  }),
+                ],
+              })
+            ),
+            button({
+              attr: { value: state.searchBar.searchWord },
+              events: {
+                click: dispatch({type: 'add_item'})
+              }
+            }),
+          ],
         }),
       ],
     });
   },
 });
 
-mount({
+console.log("hello");
+
+start({
   component: TodoList,
   at: document.getElementById("root"),
 });
