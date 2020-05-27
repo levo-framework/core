@@ -18,4 +18,12 @@ Deno.test('compute attributes updates', () => {
     { type: "remove_attribute", attributeName: "z" },
     { type: "update_attribute", attributeName: "y", value: 3 }
   ])
+
+  assertEquals(computeAttributesUpdates({
+    originalAttrs: {
+    },
+    updatedAttrs: {
+      x: undefined
+    }
+  }), [])
 })

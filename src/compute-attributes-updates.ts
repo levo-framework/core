@@ -1,4 +1,5 @@
 import { arrayDiff } from "./array-diff.ts"
+import { deepEqual } from "./deep-equal.ts"
 
 export const computeAttributesUpdates = <RecordReturnType>({ 
   originalAttrs, 
@@ -37,7 +38,7 @@ export const computeAttributesUpdates = <RecordReturnType>({
             attributeName: key,
           }]
         }
-        else if(originalValue !== updatedValue) {
+        else if(!deepEqual(originalValue, updatedValue)) {
           return [{
             type: "update_attribute",
             attributeName: key,
@@ -48,11 +49,17 @@ export const computeAttributesUpdates = <RecordReturnType>({
           return []
         }
       }),
-      ...addedAttributes.map(key => {
-        return {
-          type: "update_attribute" as const,
-          attributeName: key,
-          value: updatedAttrs[key]
+      ...addedAttributes.flatMap(key => {
+        const value = updatedAttrs[key]
+        if(value) {
+          return [{
+            type: "update_attribute" as const,
+            attributeName: key,
+            value
+          }]
+        }
+        else {
+          return []
         }
       })
     ]

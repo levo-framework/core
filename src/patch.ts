@@ -14,6 +14,10 @@ export type Patch<Action> =
   virtualNode: VirtualNode<Action>;
 } 
 | {
+  type: "remove_node";
+  nodeToBeRemoved: Node
+}
+| {
   type: "update_attribute"
   attributeName: string
   value: string
@@ -32,6 +36,11 @@ export type Patch<Action> =
   attributeName: string
 }
 | {
-  type: "remove_node";
-  nodeToBeRemoved: Node
-});
+  type: "update_event_attribute"
+  attributeName: string
+  action: Action | undefined
+}
+| {
+  type: "remove_event_attribute"
+  attributeName: string
+})

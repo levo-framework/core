@@ -2,6 +2,7 @@
 import { Patch } from './patch.ts';
 import { computeAttributesUpdates } from './compute-attributes-updates.ts';
 import { VirtualNode, MountedVirtualNode } from './virtual-node.ts';
+
 import { replaceVirtualNode } from './replace-virtual-node.ts';
 
 type Update<T> = (value: T) => T;
@@ -157,11 +158,12 @@ export const start = <Model, Action>({
         updated: newVirtualNode,
         parentVirtualNode: undefined
       })
-      currentVirtualNode = applyPatches({ 
-        patches, 
-        mountedVirtualNode: currentVirtualNode 
+      currentVirtualNode = applyPatches({
+        patches,
+        mountedVirtualNode: currentVirtualNode
       })
       console.log("patches", patches)
+      console.log("currentVirtualNode", currentVirtualNode)
       currentModel = newModel;
 
       // Remount (temporary, to be removed)
@@ -187,10 +189,10 @@ const diff = <Action>({
   updated: VirtualNode<Action>;
   parentVirtualNode: MountedVirtualNode<Action> | undefined
 }): Patch<Action>[] => {
-  if(
+  if (
     original.$ !== updated.$
     ||
-    (original.$ === '_text' && updated.$ === '_text' 
+    (original.$ === '_text' && updated.$ === '_text'
       && updated.value !== (original as any).value)
   ) {
     return [{
@@ -208,38 +210,58 @@ const diff = <Action>({
       originalAttrs,
       updatedAttrs,
     })
-    .map(update => ({
-      originalNode: original,
-      ...update,
-    }))
+      .map(update => ({
+        originalNode: original,
+        ...update,
+      }))
 
+    // Compare styles
     const styleAttributesUpdates = computeAttributesUpdates<string | undefined>({
       originalAttrs: original.style ?? {},
       updatedAttrs: updated.style ?? {}
     })
-    .map<Patch<Action>>(update => {
-      switch(update.type) {
-        case 'remove_attribute':
-          return {
-            ...update,
-            originalNode: original,
-            type: 'remove_style_attribute'
-          }
+      .map<Patch<Action>>(update => {
+        switch (update.type) {
+          case 'remove_attribute':
+            return {
+              ...update,
+              originalNode: original,
+              type: 'remove_style_attribute'
+            }
 
-        case 'update_attribute':
-          return {
-            ...update,
-            originalNode: original,
-            type: 'update_style_attribute'
-          }
-      }
+          case 'update_attribute':
+            return {
+              ...update,
+              originalNode: original,
+              type: 'update_style_attribute'
+            }
+        }
+      })
+
+
+    // Compare event handlers
+    const eventAttributesUpdates = computeAttributesUpdates<Action | undefined>({
+      originalAttrs: original.events ?? {},
+      updatedAttrs: updated.events ?? {}
     })
+      .map<Patch<Action>>(update => {
+        switch (update.type) {
+          case 'remove_attribute':
+            return {
+              originalNode: original,
+              type: 'remove_event_attribute',
+              attributeName: update.attributeName
+            }
 
-    // TODO: Compare styles
-    console.warn("styles not being compared")
-
-    // TODO: Compare event handlers
-    console.warn("events not being compared")
+          case 'update_attribute':
+            return {
+              originalNode: original,
+              type: 'update_event_attribute',
+              attributeName: update.attributeName,
+              action: update.value
+            }
+        }
+      })
 
     // Compare child
     // TODO: use optimized diff algorithm 
@@ -251,14 +273,14 @@ const diff = <Action>({
 
     const originalChildrenLength = original.children?.length ?? 0
     const updatedChildrenLength = updated.children?.length ?? 0
-    const minLength = originalChildrenLength < updatedChildrenLength 
+    const minLength = originalChildrenLength < updatedChildrenLength
       ? originalChildrenLength
       : updatedChildrenLength
 
     const childrenUpdates = original.children?.slice(0, minLength)
       .flatMap((child, index) => {
         const updatedChild = updated.children?.[index]
-        if(updatedChild) {
+        if (updatedChild) {
           return diff({
             original: child,
             updated: updatedChild,
@@ -270,10 +292,11 @@ const diff = <Action>({
         }
       }) ?? []
 
-    
+
     return [
       ...attributesUpdates,
       ...styleAttributesUpdates,
+      ...eventAttributesUpdates,
       ...childrenUpdates,
       ...addedChildren.map(child => ({
         type: "add_node" as const,
@@ -291,8 +314,8 @@ const diff = <Action>({
 const extractAttributes = <Action>(
   virtualNode: VirtualNode<Action> | MountedVirtualNode<Action>
 ): Omit<VirtualNode<Action>, 'ref' | 'style' | 'events' | '$' | 'children'> => {
-  const {style, events, $, children, ...attributes} = virtualNode
-  if('ref' in attributes) {
+  const { style, events, $, children, ...attributes } = virtualNode
+  if ('ref' in attributes) {
     //@ts-ignore
     delete attributes['ref']
   }
@@ -310,15 +333,14 @@ const applyPatches = <Action>({
   mountedVirtualNode: MountedVirtualNode<Action>
 }): MountedVirtualNode<Action> => {
   return patches.reduce((updatedMountedVirtualNode, patch) => {
-    switch(patch.type) {
+    switch (patch.type) {
       case 'add_node': {
-        const {virtualNode, node} = mount({virtualNode: patch.virtualNode})
+        const { virtualNode, node } = mount({ virtualNode: patch.virtualNode })
         patch.originalNode.ref.appendChild(node)
         patch.originalNode.children?.push(virtualNode)
         return updatedMountedVirtualNode
       }
       case 'remove_node': {
-        alert('Not implemented yet')
         patch.originalNode.ref.removeChild(patch.nodeToBeRemoved)
         const index = patch.originalNode.children
           ?.findIndex(child => child.ref === patch.nodeToBeRemoved) ?? 0
@@ -328,12 +350,12 @@ const applyPatches = <Action>({
         return updatedMountedVirtualNode
       }
       case 'replace_node': {
-        const {virtualNode, node} = mount({virtualNode: patch.updatedVirtualNode})
+        const { virtualNode, node } = mount({ virtualNode: patch.updatedVirtualNode })
         patch.originalNode.ref.parentElement?.replaceChild(node, patch.originalNode.ref)
-        if(!patch.parentVirtualNode) {
+        if (!patch.parentVirtualNode) {
           return virtualNode
         }
-        else if(patch.parentVirtualNode.children) {
+        else if (patch.parentVirtualNode.children) {
           const index = patch.parentVirtualNode.children
             ?.findIndex(child => child.ref === patch.originalNode.ref)
           patch.parentVirtualNode.children[index] = virtualNode
@@ -354,17 +376,30 @@ const applyPatches = <Action>({
         return updatedMountedVirtualNode
       }
       case 'update_style_attribute': {
-        ((patch.originalNode.ref as HTMLElement).style as any)[patch.attributeName] = 
-          patch.value
-        patch.originalNode.style = {
-          ...(patch.originalNode.style ?? {}),
-          [patch.attributeName]: patch.value
-        }
+        ((patch.originalNode.ref as HTMLElement).style as any)[patch.attributeName] =
+          patch.value;
+        (patch.originalNode.style as any)[patch.attributeName]  = patch.value
         return updatedMountedVirtualNode
       }
       case 'remove_style_attribute': {
         ((patch.originalNode.ref as HTMLElement).style as any)[patch.attributeName] = undefined
         delete (patch.originalNode.style as any)[patch.attributeName]
+        return updatedMountedVirtualNode
+      }
+      case 'update_event_attribute': {
+        if(patch.action) {
+          setEventHandler(
+            ((patch.originalNode.ref as HTMLElement)),
+            patch.attributeName,
+            patch.action
+          );
+          (patch.originalNode.events as any)[patch.attributeName] = patch.action 
+        };
+        return updatedMountedVirtualNode
+      }
+      case 'remove_event_attribute': {
+        (patch.originalNode.ref as HTMLElement).removeAttribute("on" + patch.attributeName)
+        delete (patch.originalNode.events as any)[patch.attributeName]
         return updatedMountedVirtualNode
       }
       default:
@@ -384,6 +419,19 @@ const applyPatches = <Action>({
 //   }
 //   & { ref: Node };
 
+const setEventHandler = <Action>(
+  element: HTMLElement,
+  eventName: string,
+  action: Action
+) => {
+  if(action !== undefined) {
+    element.setAttribute(
+      "on" + eventName,
+      `$$h(${JSON.stringify(action).replace(/"([^"]+)":/g, '$1:')})`
+    );
+  }
+}
+
 const mount = <Action>({ virtualNode }: {
   virtualNode: VirtualNode<Action>;
 }): {
@@ -392,16 +440,16 @@ const mount = <Action>({ virtualNode }: {
 } => {
   if (virtualNode.$ === '_text') {
     const node = document.createTextNode(virtualNode.value)
-    return { node, virtualNode: {...virtualNode, ref: node} };
+    return { node, virtualNode: {...virtualNode, ref: node}};
   }
   const node = document.createElement(virtualNode.$);
   (Object.keys(virtualNode.events ?? {}) as (keyof HTMLElementEventMap)[])
-    .map((key) => {
-      const action = virtualNode.events?.[key];
-      node.setAttribute("on" + key, `$$h(${JSON.stringify(action)})`);
+    .map((eventName) => {
+      const action = virtualNode.events?.[eventName];
+      setEventHandler(node, eventName, action)
     });
 
-  // const { ref, events, style, $, children, ...attributes } = virtualNode;
+
   const attributes = extractAttributes(virtualNode)
   Object.entries(attributes).map(([key, value]) => {
     if (value) {
@@ -409,7 +457,7 @@ const mount = <Action>({ virtualNode }: {
     }
   });
   Object.entries(virtualNode.style ?? {}).forEach(([key, value]) => {
-    if(value) {
+    if (value) {
       node.style[key as any] = value
     }
   })
@@ -422,6 +470,7 @@ const mount = <Action>({ virtualNode }: {
       node.appendChild(childNode); // side-effect
       return virtualNode;
     }),
-  };
-  return { node, virtualNode: { ...updatedVirtualNode, ref: node } };
+    ref: node
+  }
+  return { node, virtualNode: updatedVirtualNode };
 };

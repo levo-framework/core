@@ -33,7 +33,7 @@ const TodoAppView = <Action>(
             $.input({
               value: item.content,
               events: {
-                input: action.onItemContentChange(itemIndex)
+                input: !item.done ? action.onItemContentChange(itemIndex) : undefined
               }
             }),
             $.button({
@@ -77,7 +77,7 @@ start<TodoAppModel, TodoAppAction>({
     onItemContentChange: (itemIndex) => ({type: 'update_item', itemIndex})
   }),
   initialModel: {
-    items: []
+    items: new Array(1000).fill({content: '', done: true})
   },
   update: (model, action, event) => {
     switch(action.type) {
