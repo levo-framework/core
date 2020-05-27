@@ -14,3 +14,21 @@
 - user need not to perform low-level optimization (e.g. React.useMemo)
 - DOM API should be very close to vanilla JS DOM API
 - code that passes typechecking shouldn't have bomb bug
+
+
+## Layout for pages
+```
+- login
+  - index.ts
+  - index.html
+  - index.css
+- home
+  - index.ts
+  - index.html
+  - index.css
+```
+
+## How to bundle?
+```
+deno bundle --config tsconfig.json src/main.ts > src/out.bundle.js
+```

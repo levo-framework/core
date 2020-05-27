@@ -7,6 +7,7 @@ import {
   map,
   elementCreators,
 } from "./framework.ts";
+import { VirtualNode } from "./virtual-node.ts";
 
 const SearchBar = component<{
   Props: {
@@ -18,13 +19,13 @@ const SearchBar = component<{
   };
 
   Action:
-    | {
-      type: "update_search_word";
-    }
-    | {
-      type: "on_done";
-      $handleByParent?: true;
-    };
+  | {
+    type: "update_search_word";
+  }
+  | {
+    type: "on_done";
+    $handleByParent?: true;
+  };
 }>({
   initialState: {
     searchWord: "",
@@ -39,17 +40,16 @@ const SearchBar = component<{
     }
   },
   view: ({ props, state, element: html, dispatch }) => {
-    return html.div({
-      children: [
-        props.placeholder,
-        html.input({
-          value: state.searchWord,
-          events: {
-            input: dispatch({type: 'update_search_word'})
-          }
-        }),
-      ],
-    });
+    return html.div({}, [
+      html.text(props.placeholder),
+      html.input({
+        value: state.searchWord,
+        events: {
+          input: dispatch({ type: "update_search_word" }),
+        },
+      }),
+    ],
+    );
   },
 });
 
@@ -60,21 +60,21 @@ const TodoList = component<{
     title: string;
   };
   Action:
-    | {
-      type: "mark_as_done";
-      itemIndex: number;
-    }
-    | {
-      type: "search_bar_action";
-      action: Action<typeof SearchBar.view>;
-    }
-    | {
-      type: "add_item";
-    }
-    | {
-      type: "update_item";
-      itemIndex: number;
-    };
+  | {
+    type: "mark_as_done";
+    itemIndex: number;
+  }
+  | {
+    type: "search_bar_action";
+    action: Action<typeof SearchBar.view>;
+  }
+  | {
+    type: "add_item";
+  }
+  | {
+    type: "update_item";
+    itemIndex: number;
+  };
 }>({
   initialState: {
     items: [{ content: "test", done: true }],
@@ -134,52 +134,77 @@ const TodoList = component<{
         }
     }
   },
-  view: ({ state, element: { div, button, input }, dispatch }) => {
-    return div({
-      children: [
-        SearchBar.render({
-          handle: (action) => dispatch({ type: "search_bar_action", action }),
-          props: {
-            placeholder: "hi",
-          },
-          state: state.searchBar,
-        }),
-        div({
-          children: [
-            ...state.items.map((item, itemIndex) =>
-              div({
-                children: [
-                  input({
-                    value: item.content,
-                    events: {
-                      blur: dispatch({type: 'update_item', itemIndex})
-                    }
-                  }),
-                  button({
-                    attr: {
-                      value: item.done ? "undone" : "done",
-                    },
-                    events: {
-                      click: dispatch({type: 'mark_as_done', itemIndex})
-                    }
-                  }),
-                ],
-              })
-            ),
-            button({
-              attr: { value: state.searchBar.searchWord },
+  view: ({ state, element: { div, button, input, text }, dispatch }) => {
+    return div({}, [
+      // SearchBar.render({
+      //   handle: (action) => dispatch({ type: "search_bar_action", action }),
+      //   props: {
+      //     placeholder: "hi",
+      //   },
+      //   state: state.searchBar,
+      // }),
+      div({}, [
+        ...state.items.map((item, itemIndex) =>
+          div({}, [
+            input({
+              value: item.content,
               events: {
-                click: dispatch({type: 'add_item'})
-              }
+                blur: dispatch({ type: "update_item", itemIndex }),
+              },
             }),
-          ],
+            button({
+              events: {
+                click: dispatch({ type: "mark_as_done", itemIndex }),
+              },
+            }, [
+              text(item.done ? "undone" : "done"),
+            ]),
+          ])
+        ),
+        button({
+          value: state.searchBar.searchWord,
+          events: {
+            click: dispatch({ type: "add_item" }),
+          },
         }),
-      ],
-    });
+      ]),
+    ]);
   },
 });
 
-console.log("hello");
+const TodoApp = <Action>({
+  model,
+  action,
+}: {
+  model: {
+    items: {
+      content: string;
+      done: boolean;
+    }[];
+  };
+  action: {
+    clickItemDoneButton: (itemIndex: number) => Action;
+  };
+}): VirtualNode<Action> => {
+  const el = elementCreators<Action>();
+  return el.div({}, [
+    el.text("TODO App"),
+    el.div({},
+      model.items.map((item, itemIndex) => el.div({},
+        [
+          el.text(item.content),
+          el.button({
+            events: {
+              click: action.clickItemDoneButton(itemIndex),
+            },
+          }, [
+            el.text(item.done ? "undone" : "done"),
+          ]),
+        ],
+      )),
+    ),],
+  );
+};
 
 start({
   component: TodoList,
