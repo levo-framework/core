@@ -23,6 +23,15 @@ export type Patch<Action> =
   attributeName: string
 }
 | {
+  type: "update_style_attribute"
+  attributeName: string
+  value: string | undefined
+}
+| {
+  type: "remove_style_attribute"
+  attributeName: string
+}
+| {
   type: "remove_node";
   nodeToBeRemoved: Node
 });

@@ -13,10 +13,9 @@ Deno.test('compute attributes updates', () => {
       x: 2,
       y: 3,
     },
-    originalNode: undefined as any
   }), [
-    { originalNode: undefined, type: "update_attribute", attributeName: "x", value: 2 },
-    { originalNode: undefined, type: "remove_attribute", attributeName: "z" },
-    { originalNode: undefined, type: "update_attribute", attributeName: "y", value: 3 }
+    { type: "update_attribute", attributeName: "x", value: 2 },
+    { type: "remove_attribute", attributeName: "z" },
+    { type: "update_attribute", attributeName: "y", value: 3 }
   ])
 })

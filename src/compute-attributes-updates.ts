@@ -1,24 +1,20 @@
 import { arrayDiff } from "./array-diff.ts"
 
-export const computeAttributesUpdates = <Action, OriginalNodeType>({ 
+export const computeAttributesUpdates = <RecordReturnType>({ 
   originalAttrs, 
   updatedAttrs,
-  originalNode
 }: { 
-  originalAttrs: Record<string, string | number>; 
-  updatedAttrs: Record<string, string | number> 
-  originalNode: OriginalNodeType
+  originalAttrs: Record<string, RecordReturnType>
+  updatedAttrs: Record<string, RecordReturnType> 
 }): 
   Array<{
     type: "update_attribute"
     attributeName: string
-    value: string
-    originalNode: OriginalNodeType
+    value: RecordReturnType
   }
   | {
     type: "remove_attribute"
     attributeName: string
-    originalNode: OriginalNodeType
   }> => {
 
     const originalAttrsKeys = Object.keys(originalAttrs)
@@ -28,25 +24,21 @@ export const computeAttributesUpdates = <Action, OriginalNodeType>({
       ...originalAttrsKeys.flatMap<{
         type: "update_attribute"
         attributeName: string
-        value: string | number
-        originalNode: OriginalNodeType
+        value: RecordReturnType
       } | {
         type: "remove_attribute"
         attributeName: string
-        originalNode: OriginalNodeType
       }>(key => {
-        const originalValue = (originalAttrs as any)[key]
-        const updatedValue = (updatedAttrs as any)[key]
+        const originalValue = originalAttrs[key]
+        const updatedValue = updatedAttrs[key]
         if(updatedValue === undefined) {
           return [{
-            originalNode,
             type: "remove_attribute",
             attributeName: key,
           }]
         }
         else if(originalValue !== updatedValue) {
           return [{
-            originalNode,
             type: "update_attribute",
             attributeName: key,
             value: updatedValue
@@ -58,10 +50,9 @@ export const computeAttributesUpdates = <Action, OriginalNodeType>({
       }),
       ...addedAttributes.map(key => {
         return {
-          originalNode,
           type: "update_attribute" as const,
           attributeName: key,
-          value: (updatedAttrs as any)[key]
+          value: updatedAttrs[key]
         }
       })
     ]
