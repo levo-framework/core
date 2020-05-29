@@ -1,8 +1,5 @@
-/// <reference lib="dom" />
-import {
-  start,
-  elementCreators,
-} from "./framework.ts";
+import { start, } from "./framework.ts";
+import { elementCreators } from "./element-creators.ts";
 type TodoAppModel = {
   items: {
     content: string;
@@ -77,7 +74,7 @@ start<TodoAppModel, TodoAppAction>({
     onItemContentChange: (itemIndex) => ({type: 'update_item', itemIndex})
   }),
   initialModel: {
-    items: new Array(1000).fill({content: '', done: true})
+    items: new Array(0).fill({content: '', done: true})
   },
   update: (model, action, event) => {
     switch(action.type) {

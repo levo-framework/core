@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-
 type NoMethodsKey<T> = ({[P in keyof T]: T[P] extends Function ? never : P })[keyof T];  
 type NoMethods<T> = Pick<T, NoMethodsKey<T>>; 
 
@@ -15,8 +13,11 @@ type Writable<T> = Pick<T, WritableKeys<T>>
 
 export type VirtualNode<Action> = (
   & {
-    events?: Partial<Record<keyof HTMLElementEventMap, Action>>;
-    style?: Partial<Writable<NoMethods<CSSStyleDeclaration>>>;
+    // TODO: use refined type
+    events?: Partial<Record<string, Action>>;
+
+    // TODO: use refined type
+    style?: Partial<Record<string, string>>;
     children?: VirtualNode<Action>[];
     ref?: undefined
   }
@@ -36,7 +37,3 @@ export type VirtualNode<Action> = (
   })
 );
 
-export type MountedVirtualNode<Action> = Omit<VirtualNode<Action>, 'ref' | 'children'> & {
-  ref: Node
-  children?: MountedVirtualNode<Action>[]
-}

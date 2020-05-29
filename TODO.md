@@ -3,3 +3,9 @@
 - event subscriptions
 - server-routing
 - deno or node?
+- css import
+- how to bundle updater that uses DOM API?
+- refined style CSS types
+- refined attributes types
+- compress content (gzip, uglify)
+- cache bundled view and updater (allow setting cache limit number)

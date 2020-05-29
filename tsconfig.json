@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    // "outFile": "out.bundle.js",
     "plugins": [
       {
         "name": "typescript-deno-plugin",

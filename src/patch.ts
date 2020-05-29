@@ -1,5 +1,9 @@
-import { VirtualNode, MountedVirtualNode } from './virtual-node.ts';
+import { VirtualNode } from './virtual-node.ts';
 
+export type MountedVirtualNode<Action> = Omit<VirtualNode<Action>, 'ref' | 'children'> & {
+  ref: Node
+  children?: MountedVirtualNode<Action>[]
+}
 export type Patch<Action> = 
 & {
   originalNode: MountedVirtualNode<Action>

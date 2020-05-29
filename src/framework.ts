@@ -1,9 +1,8 @@
 /// <reference lib="dom" />
 import { Patch } from './patch.ts';
 import { computeAttributesUpdates } from './compute-attributes-updates.ts';
-import { VirtualNode, MountedVirtualNode } from './virtual-node.ts';
-
-import { replaceVirtualNode } from './replace-virtual-node.ts';
+import { VirtualNode } from './virtual-node.ts';
+import { ElementCreators, elementCreators } from './element-creators.ts';
 
 type Update<T> = (value: T) => T;
 
@@ -18,28 +17,6 @@ export type Updatable<T> =
   }
   & { $update: (_: Update<T>) => Updatable<T> };
 
-export const elementCreators = <Action>(): ElementCreators<Action> => {
-  return {
-    text: (value) => ({
-      $: '_text',
-      value
-    }),
-    div: (props, children) => ({
-      $: "div",
-      ...props,
-      children,
-    }),
-    button: (props, children) => ({
-      $: "button",
-      ...props,
-      children,
-    }),
-    input: (props, children) => ({
-      $: "input",
-      ...props,
-    }),
-  };
-};
 
 export type Component<Props, State, Action> = (_: {
   readonly props: Props;
@@ -54,26 +31,6 @@ export const map = <FromAction, ToAction>(
 ): VirtualNode<ToAction> => {
   return element as any;
 };
-
-type ElementCreators<Action> = {
-  text: (value: string) => {
-    $: "_text" // not a tag, but a text node
-    value: string
-  }
-  div: ElementCreator<Action, "div">;
-  button: ElementCreator<Action, "button">;
-  input: ElementCreator<Action, "input">;
-};
-
-type ElementCreator<Action, T extends VirtualNode<Action>["$"]> = (
-  props: Omit<Prop<Action, T>, 'children'>,
-  children?: VirtualNode<Action>[],
-) => VirtualNode<Action>;
-
-type Prop<Action, T extends VirtualNode<Action>["$"]> = Omit<
-  Extract<VirtualNode<Action>, { $: T }>,
-  "$"
->;
 
 type Updater<State, Action> = (state: State, action: Action) => State;
 export const component = <
@@ -430,6 +387,11 @@ const setEventHandler = <Action>(
       `$$h(${JSON.stringify(action).replace(/"([^"]+)":/g, '$1:')})`
     );
   }
+}
+
+export type MountedVirtualNode<Action> = Omit<VirtualNode<Action>, 'ref' | 'children'> & {
+  ref: Node
+  children?: MountedVirtualNode<Action>[]
 }
 
 const mount = <Action>({ virtualNode }: {

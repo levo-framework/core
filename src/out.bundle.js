@@ -1,0 +1,816 @@
+// Copyright 2018-2020 the Deno authors. All rights reserved. MIT license.
+
+// This is a specialised implementation of a System module loader.
+
+// @ts-nocheck
+/* eslint-disable */
+let System, __instantiateAsync, __instantiate;
+
+(() => {
+  const r = new Map();
+
+  System = {
+    register(id, d, f) {
+      r.set(id, { d, f, exp: {} });
+    },
+  };
+
+  async function dI(mid, src) {
+    let id = mid.replace(/\.\w+$/i, "");
+    if (id.includes("./")) {
+      const [o, ...ia] = id.split("/").reverse(),
+        [, ...sa] = src.split("/").reverse(),
+        oa = [o];
+      let s = 0,
+        i;
+      while ((i = ia.shift())) {
+        if (i === "..") s++;
+        else if (i === ".") break;
+        else oa.push(i);
+      }
+      if (s < sa.length) oa.push(...sa.slice(s));
+      id = oa.reverse().join("/");
+    }
+    return r.has(id) ? gExpA(id) : import(mid);
+  }
+
+  function gC(id, main) {
+    return {
+      id,
+      import: (m) => dI(m, id),
+      meta: { url: id, main },
+    };
+  }
+
+  function gE(exp) {
+    return (id, v) => {
+      v = typeof id === "string" ? { [id]: v } : id;
+      for (const [id, value] of Object.entries(v)) {
+        Object.defineProperty(exp, id, {
+          value,
+          writable: true,
+          enumerable: true,
+        });
+      }
+    };
+  }
+
+  function rF(main) {
+    for (const [id, m] of r.entries()) {
+      const { f, exp } = m;
+      const { execute: e, setters: s } = f(gE(exp), gC(id, id === main));
+      delete m.f;
+      m.e = e;
+      m.s = s;
+    }
+  }
+
+  async function gExpA(id) {
+    if (!r.has(id)) return;
+    const m = r.get(id);
+    if (m.s) {
+      const { d, e, s } = m;
+      delete m.s;
+      delete m.e;
+      for (let i = 0; i < s.length; i++) s[i](await gExpA(d[i]));
+      const r = e();
+      if (r) await r;
+    }
+    return m.exp;
+  }
+
+  function gExp(id) {
+    if (!r.has(id)) return;
+    const m = r.get(id);
+    if (m.s) {
+      const { d, e, s } = m;
+      delete m.s;
+      delete m.e;
+      for (let i = 0; i < s.length; i++) s[i](gExp(d[i]));
+      e();
+    }
+    return m.exp;
+  }
+
+  __instantiateAsync = async (m) => {
+    System = __instantiateAsync = __instantiate = undefined;
+    rF(m);
+    return gExpA(m);
+  };
+
+  __instantiate = (m) => {
+    System = __instantiateAsync = __instantiate = undefined;
+    rF(m);
+    return gExp(m);
+  };
+})();
+
+/// <reference lib="dom" />
+System.register("virtual-node", [], function (exports_1, context_1) {
+  "use strict";
+  var __moduleName = context_1 && context_1.id;
+  return {
+    setters: [],
+    execute: function () {
+    },
+  };
+});
+System.register("patch", [], function (exports_2, context_2) {
+  "use strict";
+  var __moduleName = context_2 && context_2.id;
+  return {
+    setters: [],
+    execute: function () {
+    },
+  };
+});
+System.register("array-diff", [], function (exports_3, context_3) {
+  "use strict";
+  var arrayDiff;
+  var __moduleName = context_3 && context_3.id;
+  return {
+    setters: [],
+    execute: function () {
+      /**
+             * Return elements that are present in `left` but not in `right`
+             */
+      exports_3(
+        "arrayDiff",
+        arrayDiff = (left, right) => {
+          let cache = {};
+          const rightLength = right.length;
+          for (let i = 0; i < rightLength; i++) {
+            cache[right[i]] = true;
+          }
+          let diff = [];
+          const leftLength = left.length;
+          for (let i = 0; i < leftLength; i++) {
+            const y = left[i];
+            if (!cache[y]) {
+              diff.push(y);
+            }
+          }
+          return diff;
+        },
+      );
+    },
+  };
+});
+// Modified from: https://raw.githubusercontent.com/epoberezkin/fast-deep-equal/master/src/index.jst
+System.register("deep-equal", [], function (exports_4, context_4) {
+  "use strict";
+  var __moduleName = context_4 && context_4.id;
+  //@ts-nocheck
+  function deepEqual(a, b) {
+    if (a === b) {
+      return true;
+    }
+    if (a && b && typeof a === "object" && typeof b === "object") {
+      if (a.constructor !== b.constructor) {
+        return false;
+      }
+      var length, i, keys;
+      if (Array.isArray(a)) {
+        length = a.length;
+        if (length != b.length) {
+          return false;
+        }
+        for (i = length; i-- !== 0;) {
+          if (!deepEqual(a[i], b[i])) {
+            return false;
+          }
+        }
+        return true;
+      }
+      if ((a instanceof Map) && (b instanceof Map)) {
+        if (a.size !== b.size) {
+          return false;
+        }
+        for (i of a.entries()) {
+          if (!b.has(i[0])) {
+            return false;
+          }
+        }
+        for (i of a.entries()) {
+          if (!deepEqual(i[1], b.get(i[0]))) {
+            return false;
+          }
+        }
+        return true;
+      }
+      if ((a instanceof Set) && (b instanceof Set)) {
+        if (a.size !== b.size) {
+          return false;
+        }
+        for (i of a.entries()) {
+          if (!b.has(i[0])) {
+            return false;
+          }
+        }
+        return true;
+      }
+      if (ArrayBuffer.isView(a) && ArrayBuffer.isView(b)) {
+        length = a.length;
+        if (length != b.length) {
+          return false;
+        }
+        for (i = length; i-- !== 0;) {
+          if (a[i] !== b[i]) {
+            return false;
+          }
+        }
+        return true;
+      }
+      if (a.constructor === RegExp) {
+        return a.source === b.source && a.flags === b.flags;
+      }
+      if (a.valueOf !== Object.prototype.valueOf) {
+        return a.valueOf() === b.valueOf();
+      }
+      if (a.toString !== Object.prototype.toString) {
+        return a.toString() === b.toString();
+      }
+      keys = Object.keys(a);
+      length = keys.length;
+      if (length !== Object.keys(b).length) {
+        return false;
+      }
+      for (i = length; i-- !== 0;) {
+        if (!Object.prototype.hasOwnProperty.call(b, keys[i])) {
+          return false;
+        }
+      }
+      for (i = length; i-- !== 0;) {
+        var key = keys[i];
+        if (!deepEqual(a[key], b[key])) {
+          return false;
+        }
+      }
+      return true;
+    }
+    // true if both NaN, false otherwise
+    return a !== a && b !== b;
+  }
+  exports_4("deepEqual", deepEqual);
+  return {
+    setters: [],
+    execute: function () {
+    },
+  };
+});
+System.register(
+  "compute-attributes-updates",
+  ["array-diff", "deep-equal"],
+  function (exports_5, context_5) {
+    "use strict";
+    var array_diff_ts_1, deep_equal_ts_1, computeAttributesUpdates;
+    var __moduleName = context_5 && context_5.id;
+    return {
+      setters: [
+        function (array_diff_ts_1_1) {
+          array_diff_ts_1 = array_diff_ts_1_1;
+        },
+        function (deep_equal_ts_1_1) {
+          deep_equal_ts_1 = deep_equal_ts_1_1;
+        },
+      ],
+      execute: function () {
+        exports_5(
+          "computeAttributesUpdates",
+          computeAttributesUpdates = ({ originalAttrs, updatedAttrs }) => {
+            const originalAttrsKeys = Object.keys(originalAttrs);
+            const updatedAttrsKeys = Object.keys(updatedAttrs);
+            const addedAttributes = array_diff_ts_1.arrayDiff(
+              updatedAttrsKeys,
+              originalAttrsKeys,
+            );
+            return [
+              ...originalAttrsKeys.flatMap((key) => {
+                const originalValue = originalAttrs[key];
+                const updatedValue = updatedAttrs[key];
+                if (updatedValue === undefined) {
+                  return [{
+                    type: "remove_attribute",
+                    attributeName: key,
+                  }];
+                } else if (
+                  !deep_equal_ts_1.deepEqual(originalValue, updatedValue)
+                ) {
+                  return [{
+                    type: "update_attribute",
+                    attributeName: key,
+                    value: updatedValue,
+                  }];
+                } else {
+                  return [];
+                }
+              }),
+              ...addedAttributes.flatMap((key) => {
+                const value = updatedAttrs[key];
+                if (value) {
+                  return [{
+                    type: "update_attribute",
+                    attributeName: key,
+                    value,
+                  }];
+                } else {
+                  return [];
+                }
+              }),
+            ];
+          },
+        );
+      },
+    };
+  },
+);
+System.register(
+  "framework",
+  ["compute-attributes-updates"],
+  function (exports_6, context_6) {
+    "use strict";
+    var compute_attributes_updates_ts_1,
+      elementCreators,
+      map,
+      component,
+      start,
+      diff,
+      extractAttributes,
+      applyPatches,
+      setEventHandler,
+      mount;
+    var __moduleName = context_6 && context_6.id;
+    return {
+      setters: [
+        function (compute_attributes_updates_ts_1_1) {
+          compute_attributes_updates_ts_1 = compute_attributes_updates_ts_1_1;
+        },
+      ],
+      execute: function () {
+        exports_6(
+          "elementCreators",
+          elementCreators = () => {
+            return {
+              text: (value) => ({
+                $: "_text",
+                value,
+              }),
+              div: (props, children) => ({
+                $: "div",
+                ...props,
+                children,
+              }),
+              button: (props, children) => ({
+                $: "button",
+                ...props,
+                children,
+              }),
+              input: (props, children) => ({
+                $: "input",
+                ...props,
+              }),
+            };
+          },
+        );
+        exports_6(
+          "map",
+          map = (element, transform) => {
+            return element;
+          },
+        );
+        exports_6(
+          "component",
+          component = (_) => ({
+            ..._,
+            render: ({ handle, props, state }) => {
+              return map(
+                _.view({
+                  props,
+                  state,
+                  element: elementCreators(),
+                  dispatch: handle,
+                }),
+                handle,
+              );
+            },
+          }),
+        );
+        exports_6(
+          "start",
+          start = ({ at, view, update, initialModel }) => {
+            if (!at) {
+              throw new Error(`Root element is undefined`);
+            }
+            let { node, virtualNode: currentVirtualNode } = mount({
+              virtualNode: view(initialModel),
+            });
+            let currentModel = initialModel;
+            at.appendChild(node);
+            const handler = (action) => {
+              const event = window.event;
+              if (action) {
+                const newModel = update(currentModel, action, event);
+                const newVirtualNode = view(newModel);
+                console.log("re-render");
+                console.log("action", action);
+                const patches = diff({
+                  original: currentVirtualNode,
+                  updated: newVirtualNode,
+                  parentVirtualNode: undefined,
+                });
+                currentVirtualNode = applyPatches({
+                  patches,
+                  mountedVirtualNode: currentVirtualNode,
+                });
+                console.log("patches", patches);
+                console.log("currentVirtualNode", currentVirtualNode);
+                currentModel = newModel;
+                // Remount (temporary, to be removed)
+                // at.innerHTML = "";
+                // const { node, virtualNode } = mount({
+                //   virtualNode: newVirtualNode,
+                // });
+                // at.appendChild(node);
+                // currentVirtualNode = virtualNode;
+              }
+            };
+            //@ts-ignore
+            window.$$h = handler;
+          },
+        );
+        diff = ({ original, updated, parentVirtualNode }) => {
+          if (
+            original.$ !== updated.$ ||
+            (original.$ === "_text" && updated.$ === "_text" &&
+              updated.value !== original.value)
+          ) {
+            return [{
+              type: "replace_node",
+              updatedVirtualNode: updated,
+              originalNode: original,
+              parentVirtualNode,
+            }];
+          } else {
+            // Compare attributes
+            const originalAttrs = extractAttributes(original);
+            const updatedAttrs = extractAttributes(updated);
+            const attributesUpdates = compute_attributes_updates_ts_1
+              .computeAttributesUpdates({
+                originalAttrs,
+                updatedAttrs,
+              })
+              .map((update) => ({
+                originalNode: original,
+                ...update,
+              }));
+            // Compare styles
+            const styleAttributesUpdates = compute_attributes_updates_ts_1
+              .computeAttributesUpdates({
+                originalAttrs: original.style ?? {},
+                updatedAttrs: updated.style ?? {},
+              })
+              .map((update) => {
+                switch (update.type) {
+                  case "remove_attribute":
+                    return {
+                      ...update,
+                      originalNode: original,
+                      type: "remove_style_attribute",
+                    };
+                  case "update_attribute":
+                    return {
+                      ...update,
+                      originalNode: original,
+                      type: "update_style_attribute",
+                    };
+                }
+              });
+            // Compare event handlers
+            const eventAttributesUpdates = compute_attributes_updates_ts_1
+              .computeAttributesUpdates({
+                originalAttrs: original.events ?? {},
+                updatedAttrs: updated.events ?? {},
+              })
+              .map((update) => {
+                switch (update.type) {
+                  case "remove_attribute":
+                    return {
+                      originalNode: original,
+                      type: "remove_event_attribute",
+                      attributeName: update.attributeName,
+                    };
+                  case "update_attribute":
+                    return {
+                      originalNode: original,
+                      type: "update_event_attribute",
+                      attributeName: update.attributeName,
+                      action: update.value,
+                    };
+                }
+              });
+            // Compare child
+            // TODO: use optimized diff algorithm
+            // Now is using naive method
+            const addedChildren =
+              updated.children?.slice(original.children?.length ?? 0) ?? [];
+            const removedChildren =
+              original.children?.slice(updated.children?.length ?? 0)
+                .map((child) => child.ref) ?? [];
+            const originalChildrenLength = original.children?.length ?? 0;
+            const updatedChildrenLength = updated.children?.length ?? 0;
+            const minLength = originalChildrenLength < updatedChildrenLength
+              ? originalChildrenLength : updatedChildrenLength;
+            const childrenUpdates = original.children?.slice(0, minLength)
+              .flatMap((child, index) => {
+                const updatedChild = updated.children?.[index];
+                if (updatedChild) {
+                  return diff({
+                    original: child,
+                    updated: updatedChild,
+                    parentVirtualNode: original,
+                  });
+                } else {
+                  return [];
+                }
+              }) ?? [];
+            return [
+              ...attributesUpdates,
+              ...styleAttributesUpdates,
+              ...eventAttributesUpdates,
+              ...childrenUpdates,
+              ...addedChildren.map((child) => ({
+                type: "add_node",
+                virtualNode: child,
+                originalNode: original,
+              })),
+              ...removedChildren.map((nodeToBeRemoved) => ({
+                type: "remove_node",
+                nodeToBeRemoved,
+                originalNode: original,
+              })),
+            ];
+          }
+        };
+        extractAttributes = (virtualNode) => {
+          const { style, events, $, children, ...attributes } = virtualNode;
+          if ("ref" in attributes) {
+            //@ts-ignore
+            delete attributes["ref"];
+          }
+          return attributes;
+        };
+        /**
+             * This function will mutate DOM and `mountedVirtualNode`
+             */
+        applyPatches = ({ patches, mountedVirtualNode }) => {
+          return patches.reduce((updatedMountedVirtualNode, patch) => {
+            switch (patch.type) {
+              case "add_node": {
+                const { virtualNode, node } = mount(
+                  { virtualNode: patch.virtualNode },
+                );
+                patch.originalNode.ref.appendChild(node);
+                patch.originalNode.children?.push(virtualNode);
+                return updatedMountedVirtualNode;
+              }
+              case "remove_node": {
+                patch.originalNode.ref.removeChild(patch.nodeToBeRemoved);
+                const index = patch.originalNode.children
+                  ?.findIndex((child) => child.ref === patch.nodeToBeRemoved) ??
+                  0;
+                if (index > -1) {
+                  patch.originalNode.children?.splice(index, 1);
+                }
+                return updatedMountedVirtualNode;
+              }
+              case "replace_node": {
+                const { virtualNode, node } = mount(
+                  { virtualNode: patch.updatedVirtualNode },
+                );
+                patch.originalNode.ref.parentElement?.replaceChild(
+                  node,
+                  patch.originalNode.ref,
+                );
+                if (!patch.parentVirtualNode) {
+                  return virtualNode;
+                } else if (patch.parentVirtualNode.children) {
+                  const index = patch.parentVirtualNode.children
+                    ?.findIndex((child) =>
+                      child.ref === patch.originalNode.ref
+                    );
+                  patch.parentVirtualNode.children[index] = virtualNode;
+                  return updatedMountedVirtualNode;
+                } else {
+                  return updatedMountedVirtualNode;
+                }
+              }
+              case "update_attribute": {
+                patch.originalNode.ref.setAttribute?.(
+                  patch.attributeName,
+                  patch.value,
+                );
+                patch.originalNode[patch.attributeName] = patch.value;
+                return updatedMountedVirtualNode;
+              }
+              case "remove_attribute": {
+                patch.originalNode.ref.removeAttribute?.(patch.attributeName);
+                delete patch.originalNode[patch.attributeName];
+                return updatedMountedVirtualNode;
+              }
+              case "update_style_attribute": {
+                patch.originalNode.ref.style[patch.attributeName] = patch.value;
+                patch.originalNode.style[patch.attributeName] = patch.value;
+                return updatedMountedVirtualNode;
+              }
+              case "remove_style_attribute": {
+                patch.originalNode.ref.style[patch.attributeName] = undefined;
+                delete patch.originalNode.style[patch.attributeName];
+                return updatedMountedVirtualNode;
+              }
+              case "update_event_attribute": {
+                if (patch.action) {
+                  setEventHandler(
+                    patch.originalNode.ref,
+                    patch.attributeName,
+                    patch.action,
+                  );
+                  patch.originalNode.events[patch.attributeName] = patch.action;
+                }
+
+                return updatedMountedVirtualNode;
+              }
+              case "remove_event_attribute": {
+                patch.originalNode.ref.removeAttribute(
+                  "on" + patch.attributeName,
+                );
+                delete patch.originalNode.events[patch.attributeName];
+                return updatedMountedVirtualNode;
+              }
+              default:
+                return updatedMountedVirtualNode;
+            }
+          }, mountedVirtualNode);
+        };
+        // type Mounted<T> =
+        //   & {
+        //     [Key in keyof T]:
+        //       T[Key] extends Array<infer E> | undefined
+        //         ? E extends T
+        //           ? Array<Mounted<E>> | undefined
+        //           : T[Key]
+        //         : T[Key];
+        //   }
+        //   & { ref: Node };
+        setEventHandler = (element, eventName, action) => {
+          if (action !== undefined) {
+            element.setAttribute(
+              "on" + eventName,
+              `$$h(${JSON.stringify(action).replace(/"([^"]+)":/g, "$1:")})`,
+            );
+          }
+        };
+        mount = ({ virtualNode }) => {
+          if (virtualNode.$ === "_text") {
+            const node = document.createTextNode(virtualNode.value);
+            return { node, virtualNode: { ...virtualNode, ref: node } };
+          }
+          const node = document.createElement(virtualNode.$);
+          Object.keys(virtualNode.events ?? {})
+            .map((eventName) => {
+              const action = virtualNode.events?.[eventName];
+              setEventHandler(node, eventName, action);
+            });
+          const attributes = extractAttributes(virtualNode);
+          Object.entries(attributes).map(([key, value]) => {
+            if (value) {
+              node.setAttribute(key, value);
+            }
+          });
+          Object.entries(virtualNode.style ?? {}).forEach(([key, value]) => {
+            if (value) {
+              node.style[key] = value;
+            }
+          });
+          const updatedVirtualNode = {
+            ...virtualNode,
+            children: virtualNode.children?.map((childVirtualNode) => {
+              const { node: childNode, virtualNode } = mount(
+                { virtualNode: childVirtualNode },
+              );
+              node.appendChild(childNode); // side-effect
+              return virtualNode;
+            }),
+            ref: node,
+          };
+          return { node, virtualNode: updatedVirtualNode };
+        };
+      },
+    };
+  },
+);
+System.register("main", ["framework"], function (exports_7, context_7) {
+  "use strict";
+  var framework_ts_1, TodoAppView;
+  var __moduleName = context_7 && context_7.id;
+  return {
+    setters: [
+      function (framework_ts_1_1) {
+        framework_ts_1 = framework_ts_1_1;
+      },
+    ],
+    execute: function () {
+      TodoAppView = (action) =>
+        (model) => {
+          const $ = framework_ts_1.elementCreators();
+          return $.div({}, [
+            $.text("TODO App"),
+            $.div({}, [
+              $.div(
+                {},
+                model.items.map((item, itemIndex) =>
+                  $.div({
+                    style: {
+                      backgroundColor: item.done ? "grey" : "green",
+                    },
+                  }, [
+                    $.input({
+                      value: item.content,
+                      events: {
+                        input: !item.done
+                          ? action.onItemContentChange(itemIndex)
+                          : undefined,
+                      },
+                    }),
+                    $.button({
+                      events: {
+                        click: action.clickItemDoneButton(itemIndex),
+                      },
+                    }, [
+                      $.text(item.done ? "undone" : "done"),
+                    ]),
+                  ])
+                ),
+              ),
+              $.button({
+                events: {
+                  click: action.addItem,
+                },
+              }, [
+                $.text("Add item"),
+              ]),
+            ]),
+          ]);
+        };
+      framework_ts_1.start({
+        view: TodoAppView({
+          clickItemDoneButton: (itemIndex) => ({
+            type: "toggle_done",
+            itemIndex,
+          }),
+          addItem: { type: "add_item" },
+          onItemContentChange: (itemIndex) => ({
+            type: "update_item",
+            itemIndex,
+          }),
+        }),
+        initialModel: {
+          items: new Array(0).fill({ content: "", done: true }),
+        },
+        update: (model, action, event) => {
+          switch (action.type) {
+            case "toggle_done": {
+              return {
+                ...model,
+                items: model.items.map((item, index) =>
+                  index === action.itemIndex
+                    ? { ...item, done: !item.done }
+                    : item
+                ),
+              };
+            }
+            case "add_item": {
+              return {
+                ...model,
+                items: [...model.items, { content: "", done: false }],
+              };
+            }
+            case "update_item": {
+              return {
+                ...model,
+                items: model.items.map((item, index) =>
+                  index === action.itemIndex
+                    ? { ...item, content: event?.target.value }
+                    : item
+                ),
+              };
+            }
+          }
+        },
+        at: document.getElementById("root"),
+      });
+    },
+  };
+});
+
+__instantiate("main");
+
