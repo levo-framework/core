@@ -1,5 +1,5 @@
-import { Action } from './action.levo.ts';
-import { Model } from './model.levo.ts';
+import { Action } from './action.ts';
+import { Model } from './model.ts';
 import { LevoUpdater, Levo } from "../../src/levo.ts";
 
 export const updater: LevoUpdater<Model, Action> = (model, action, event) => {

@@ -22,6 +22,11 @@ const start = <Model, Action>({
     virtualNode: view(initialModel)
   });
   let currentModel = initialModel;
+
+  // Make root node child-less
+  if(at.firstElementChild) {
+    at.removeChild(at.firstElementChild)
+  }
   at.appendChild(node);
   const handler = (action: Action | undefined) => {
     const event = window.event
@@ -59,10 +64,6 @@ if(!window.$levoUpdater) {
   throw new Error(`You might have forgot to call Levo.registerUpdater at updater.levo.ts`)
 }
 
-// Make document node child-less
-if(document.firstElementChild) {
-  document.removeChild(document.firstElementChild)
-}
 start({
   at: document,
 

@@ -1,11 +1,12 @@
 # TODO
-- required properties won't trigger compile error
-- event subscriptions
+- event subscriptions (on mount)
 - server-routing
-- deno or node?
 - css import
+- how to handle assets? (favicon etc.)
 - how to bundle updater that uses DOM API?
 - refined style CSS types
 - refined attributes types
 - compress content (gzip, uglify)
 - cache bundled view and updater (allow setting cache limit number)
+- CLI scafolding tools
+- make path resolution relative to path of entry file
