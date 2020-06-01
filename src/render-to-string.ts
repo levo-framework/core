@@ -1,3 +1,4 @@
+import { camelToKebab } from './camel-to-kebab.ts';
 import { VirtualNode } from './virtual-node.ts';
 
 export const renderToString = <Action>(virtualNode: VirtualNode<Action>): string => {
@@ -18,7 +19,7 @@ export const renderToString = <Action>(virtualNode: VirtualNode<Action>): string
 
       const styleString = (() => {
         const s = Object.entries(style ?? {}).map(([key, value]) => {
-          return `${key}:${value}`
+          return `${camelToKebab(key)}:${value}`
         }).join(';')
         return s ? ` style='${s}'` : ''
       })()

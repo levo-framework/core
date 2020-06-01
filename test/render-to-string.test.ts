@@ -7,7 +7,7 @@ Deno.test('render-to-string', () => {
   const virtualNode = el.div({
     style: {
       'display': 'grid',
-      'align-items': 'center'
+      'alignItems': 'center'
     }
   }, [
     el.input({value: 'hello'}),
