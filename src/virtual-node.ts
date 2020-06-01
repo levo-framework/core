@@ -1,10 +1,11 @@
+import { Properties } from './css-types.ts';
 import { AllElements } from './html-attributes-type.ts';
 
 // TODO: use refined type
 export type VirtualNodeEvents<Action> = Record<string, Action>
 
 // TODO: use refined type
-export type VirtualNodeStyle = Partial<Record<string, string>>
+export type VirtualNodeStyle = Properties
 
 export type VirtualNode<Action> = (
   & {

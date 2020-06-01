@@ -1,11 +1,12 @@
 # TODO
-- [] event subscriptions (on mount)
-- [] server-routing
-- [] css import
-- [] how to handle assets? (favicon etc.)
-- [] how to bundle updater that uses DOM API?
-- [] refined style CSS types
-- [] refined attributes types
+- [x] event subscriptions (on mount)
+- [x] server-routing
+- [x] css import
+- [x] how to handle assets? (favicon etc.)
+- [x] how to bundle updater that uses DOM API?
+- [x] refined style CSS types
+- [x] refined attributes types
+- [] refined events types
 - [] compress content (gzip, uglify)
 - [] cache bundled view and updater (allow setting cache limit number)
 - [] CLI scafolding tools
