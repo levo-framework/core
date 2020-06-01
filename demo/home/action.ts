@@ -12,3 +12,10 @@ export type Action =
   | {
     type: 'stop_interval'
   }
+  | {
+    type: 'fetch'
+  }
+  | {
+    type: 'text_fetched',
+    text: string
+  }

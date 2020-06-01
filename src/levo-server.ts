@@ -1,3 +1,4 @@
+import { levoTsconfigRaw } from './levo-tsconfig-raw.ts';
 import { mimeLookup } from './mime-lookup.ts';
 import { fileExists } from './file-exists.ts';
 import { server } from './deps.ts'
@@ -9,43 +10,7 @@ export const levo = {
     const s = server.serve(options);
     const decoder = new TextDecoder('utf-8')
 
-    await Deno.writeFile('levo.tsconfig.json', new TextEncoder().encode(`
-      {
-        "compilerOptions": {
-          "allowJs": false,
-          "allowUmdGlobalAccess": false,
-          "allowUnreachableCode": false,
-          "allowUnusedLabels": false,
-          "alwaysStrict": true,
-          "assumeChangesOnlyAffectDirectDependencies": false,
-          "checkJs": false,
-          "disableSizeLimit": false,
-          "generateCpuProfile": "profile.cpuprofile",
-          "jsx": "react",
-          "jsxFactory": "React.createElement",
-          "lib": ["dom", "DOM", "ES2016", "ES2017", "ES2018", "ES2019"],
-          "noFallthroughCasesInSwitch": false,
-          "noImplicitAny": true,
-          "noImplicitReturns": true,
-          "noImplicitThis": true,
-          "noImplicitUseStrict": false,
-          "noStrictGenericChecks": false,
-          "noUnusedLocals": false,
-          "noUnusedParameters": false,
-          "preserveConstEnums": false,
-          "removeComments": false,
-          "resolveJsonModule": true,
-          "strict": true,
-          "strictBindCallApply": true,
-          "strictFunctionTypes": true,
-          "strictNullChecks": true,
-          "strictPropertyInitialization": true,
-          "suppressExcessPropertyErrors": false,
-          "suppressImplicitAnyIndexErrors": false,
-          "useDefineForClassFields": false
-        }
-      }
-    `))
+    await Deno.writeFile('levo.tsconfig.json', new TextEncoder().encode(levoTsconfigRaw))
     const bundle = async (filename: string) => {
       return decoder.decode(
         await Deno.run({
@@ -101,9 +66,11 @@ export const levo = {
             req.respond({status: 500})
             return
           }
-          const viewCode = await bundle(dirname + 'levo.view.ts')
-          const updateCode = await bundle(dirname + 'levo.update.ts')
-          const initCode = await bundle(dirname + 'levo.init.ts')
+          const [viewCode, updateCode, initCode] = await Promise.all([
+            bundle(dirname + 'levo.view.ts'),
+            bundle(dirname + 'levo.update.ts'),
+            bundle(dirname + 'levo.init.ts')
+          ])
           const headers = new Headers()
           headers.set('content-type', 'text/html')
           req.respond({

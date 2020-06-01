@@ -586,7 +586,7 @@ System.register(
       ],
       execute: function () {
         /**
-             * This function will mutate DOM and `mountedVirtualNode`
+             * This function will mutate DOM and mountedVirtualNode
              */
         exports_10(
           "applyPatches",
@@ -689,15 +689,10 @@ System.register(
 );
 System.register(
   "levo-runtime",
-  [
-    "virtual-node-diff",
-    "mount",
-    "apply-patches",
-    "https://dev.jspm.io/queue@6.0.1",
-  ],
+  ["virtual-node-diff", "mount", "apply-patches"],
   function (exports_11, context_11) {
     "use strict";
-    var virtual_node_diff_ts_1, mount_ts_2, apply_patches_ts_1, Queue, start;
+    var virtual_node_diff_ts_1, mount_ts_2, apply_patches_ts_1, start;
     var __moduleName = context_11 && context_11.id;
     return {
       setters: [
@@ -709,9 +704,6 @@ System.register(
         },
         function (apply_patches_ts_1_1) {
           apply_patches_ts_1 = apply_patches_ts_1_1;
-        },
-        function (Queue_1) {
-          Queue = Queue_1;
         },
       ],
       execute: function () {
@@ -731,9 +723,12 @@ System.register(
           const handler = (action) => {
             const event = window.event;
             if (action) {
-              const newModel = update(currentModel, action, event);
+              const { newModel, then: promise } = update(
+                currentModel,
+                action,
+                event,
+              );
               const newVirtualNode = view(newModel);
-              console.log("re-render");
               console.log("action", action);
               const patches = virtual_node_diff_ts_1.diff({
                 original: currentVirtualNode,
@@ -744,31 +739,26 @@ System.register(
                 patches,
                 mountedVirtualNode: currentVirtualNode,
               });
-              console.log("patches", patches);
-              console.log("currentVirtualNode", currentVirtualNode);
+              // console.log("patches", patches)
+              // console.log("currentVirtualNode", currentVirtualNode)
               currentModel = newModel;
+              promise?.().then(handler);
             }
           };
-          const queue = Queue({ concurrency: 1, autostart: true });
-          onMount(currentModel, (action) => {
-            queue.push((callback) => {
-              handler(action);
-              callback();
-            });
-          });
+          onMount(currentModel, handler);
           //@ts-ignore
           window.$$h = handler;
         };
         //@ts-ignore
         if (!window.$levoView) {
           throw new Error(
-            `You might have forgot to call Levo.registerView at levo.view.ts`,
+            "You might have forgot to call Levo.registerView at levo.view.ts",
           );
         }
         //@ts-ignore
         if (!window.$levoUpdater) {
           throw new Error(
-            `You might have forgot to call Levo.registerUpdater at levo.updater.ts`,
+            "You might have forgot to call Levo.registerUpdater at levo.updater.ts",
           );
         }
         start({

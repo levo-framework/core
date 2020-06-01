@@ -13,12 +13,15 @@ const start = <Model, Action>({
 }: {
   initialModel: Model
   view: (model: Model) => VirtualNode<Action>
-  update: (model: Model, action: Action, event: Event | undefined) => Model
+  update: (model: Model, action: Action, event: Event | undefined) => {
+    newModel: Model,
+    then?: () => Promise<Action>
+  }
   onMount: (model: Model, dispatch: (action: Action) => void) => void
   at: HTMLElement | Document | null;
 }) => {
   if (!at) {
-    throw new Error(`Root element is undefined`);
+    throw new Error('Root element is undefined');
   }
   let { node, virtualNode: currentVirtualNode } = mount({
     virtualNode: view(initialModel)
@@ -33,7 +36,7 @@ const start = <Model, Action>({
   const handler = (action: Action | undefined) => {
     const event = window.event
     if (action) {
-      const newModel = update(currentModel, action, event);
+      const { newModel, then: promise } = update(currentModel, action, event);
       const newVirtualNode = view(newModel)
       console.log("action", action)
       const patches = diff({
@@ -45,9 +48,10 @@ const start = <Model, Action>({
         patches,
         mountedVirtualNode: currentVirtualNode
       })
-      console.log("patches", patches)
-      console.log("currentVirtualNode", currentVirtualNode)
+      // console.log("patches", patches)
+      // console.log("currentVirtualNode", currentVirtualNode)
       currentModel = newModel;
+      promise?.().then(handler)
     }
   };
 
@@ -59,12 +63,12 @@ const start = <Model, Action>({
 
 //@ts-ignore
 if(!window.$levoView) {
-  throw new Error(`You might have forgot to call Levo.registerView at levo.view.ts`)
+  throw new Error('You might have forgot to call Levo.registerView at levo.view.ts')
 }
 
 //@ts-ignore
 if(!window.$levoUpdater) {
-  throw new Error(`You might have forgot to call Levo.registerUpdater at levo.updater.ts`)
+  throw new Error('You might have forgot to call Levo.registerUpdater at levo.updater.ts')
 }
 
 start({

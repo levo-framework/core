@@ -3,7 +3,7 @@ import { mount } from "./mount.ts"
 import { setEventHandler } from "./set-event-handler.ts"
 
 /**
- * This function will mutate DOM and `mountedVirtualNode`
+ * This function will mutate DOM and mountedVirtualNode
  */
 export const applyPatches = <Action>({
   patches,

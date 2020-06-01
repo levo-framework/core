@@ -583,6 +583,9 @@ System.register(
         },
       ],
       execute: function () {
+        /**
+             * This function will mutate DOM and mountedVirtualNode
+             */
         exports_10(
           "applyPatches",
           applyPatches = ({ patches, mountedVirtualNode }) => {
@@ -718,9 +721,12 @@ System.register(
           const handler = (action) => {
             const event = window.event;
             if (action) {
-              const newModel = update(currentModel, action, event);
+              const { newModel, then: promise } = update(
+                currentModel,
+                action,
+                event,
+              );
               const newVirtualNode = view(newModel);
-              console.log("re-render");
               console.log("action", action);
               const patches = virtual_node_diff_ts_1.diff({
                 original: currentVirtualNode,
@@ -731,9 +737,10 @@ System.register(
                 patches,
                 mountedVirtualNode: currentVirtualNode,
               });
-              console.log("patches", patches);
-              console.log("currentVirtualNode", currentVirtualNode);
+              // console.log("patches", patches)
+              // console.log("currentVirtualNode", currentVirtualNode)
               currentModel = newModel;
+              promise?.().then(handler);
             }
           };
           onMount(currentModel, handler);
@@ -743,13 +750,13 @@ System.register(
         //@ts-ignore
         if (!window.$levoView) {
           throw new Error(
-            'You might have forgot to call Levo.registerView at levo.view.ts',
+            "You might have forgot to call Levo.registerView at levo.view.ts",
           );
         }
         //@ts-ignore
         if (!window.$levoUpdater) {
           throw new Error(
-            'You might have forgot to call Levo.registerUpdater at levo.updater.ts',
+            "You might have forgot to call Levo.registerUpdater at levo.updater.ts",
           );
         }
         start({

@@ -4,7 +4,10 @@ export type LevoView<Model, Action> =
   (model: Model) => VirtualNode<Action>
 
 export type LevoUpdate<Model, Action> = 
-  (model: Model, action: Action, event: any) => Model
+  (model: Model, action: Action, event: any) => {
+    newModel: Model,
+    then?: () => Promise<Action>
+  }
 
 export type LevoInit<Model, Action> = 
   (model: Model, dispatch: (action: Action) => void) => void

@@ -6,20 +6,51 @@ export const update: LevoUpdate<Model, Action> = (model, action, event) => {
   switch (action.type) {
     case 'add': {
       return {
-        ...model,
-        currentValue: model.currentValue + 1
+        newModel: {
+          ...model,
+          currentValue: model.currentValue + 1
+        }
       }
     }
     case 'minus': {
       return {
-        ...model,
-        currentValue: model.currentValue - 1
+        newModel: {
+          ...model,
+          currentValue: model.currentValue - 1
+        }
+      }
+    }
+    case 'fetch': {
+      return {
+        newModel: {
+          ...model,
+          text: 'Loading'
+        },
+        then: () => 
+          fetch('https://raw.githubusercontent.com/denoland/deno/master/Cargo.toml')
+            .then(res => res.text())
+            .then(text => ({
+              type: 'text_fetched',
+              text
+            }))
+        
+      }
+      
+    }
+    case 'text_fetched': {
+      return {
+        newModel: {
+          ...model,
+          text: action.text
+        }
       }
     }
     case 'set_interval_id': {
       return {
-        ...model,
-        intervalId: action.intervalId
+        newModel: {
+          ...model,
+          intervalId: action.intervalId
+        }
       }
     }
     case 'stop_interval': {
@@ -27,8 +58,10 @@ export const update: LevoUpdate<Model, Action> = (model, action, event) => {
         clearInterval(model.intervalId)
       }
       return {
-        ...model,
-        intervalId: undefined
+        newModel: {
+          ...model,
+          intervalId: undefined
+        }
       }
     }
   }

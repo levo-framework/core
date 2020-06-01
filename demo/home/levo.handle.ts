@@ -8,7 +8,8 @@ handle<Model, Action>({
   getModel: async (req) => {
     return { 
       currentValue: req.url.length, 
-      intervalId: undefined 
+      intervalId: undefined,
+      text: ''
     }
   }
 })

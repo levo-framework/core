@@ -18,7 +18,11 @@ export const view: LevoView<Model, Action> = (model) => {
       _.button({ events: { click: { type: 'stop_interval' } } }, [
         _.text('stop timer')
       ]),
-      _.text(`Interval ID: ${model.intervalId}`)
+      _.button({events: {click: {type: 'fetch'}}}, [
+        _.text('fetch')
+      ]),
+      _.text(`Interval ID: ${model.intervalId}`),
+      _.text(`Text: ${model.text}`)
     ])
   )
 }
