@@ -9,16 +9,16 @@ Deno.test('render-to-string', () => {
       'display': 'grid',
       'alignItems': 'center'
     }
-  }, [
+  }, 
     el.input({value: 'hello'}),
     el.button({
       events: {
         click:  {type: 'click', index: 2}
       }
-    }, [
-      el.text('click me')
-    ])
-  ])
+    }, 
+      'click me'
+    )
+  )
 
   assertEquals(renderToString(virtualNode), `
   <div style='display:grid;align-items:center'><input value='hello'></input><button onclick='$$h({type:\"click\",index:2})'>click me</button></div>

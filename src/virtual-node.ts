@@ -1,43 +1,27 @@
-type NoMethodsKey<T> = ({[P in keyof T]: T[P] extends Function ? never : P })[keyof T];  
-type NoMethods<T> = Pick<T, NoMethodsKey<T>>; 
+import { AllElements } from './html-attributes-type.ts';
 
-type IfEquals<X, Y, A=X, B=never> =
-  (<T>() => T extends X ? 1 : 2) extends
-  (<T>() => T extends Y ? 1 : 2) ? A : B;
+// TODO: use refined type
+export type VirtualNodeEvents<Action> = Record<string, Action>
 
-type WritableKeys<T> = {
-  [P in keyof T]-?: IfEquals<{ [Q in P]: T[P] }, { -readonly [Q in P]: T[P] }, P>
-}[keyof T];
-
-type Writable<T> = Pick<T, WritableKeys<T>>
+// TODO: use refined type
+export type VirtualNodeStyle = Partial<Record<string, string>>
 
 export type VirtualNode<Action> = (
   & {
-    // TODO: use refined type
-    events?: Partial<Record<string, Action>>;
-
-    // TODO: use refined type
-    style?: Partial<Record<string, string>>;
+    events?: VirtualNodeEvents<Action>
+    style?: VirtualNodeStyle
     children?: VirtualNode<Action>[];
     ref?: undefined
   }
-  & ({
+  & (
+    {
     $: "_text" // not a tag, but a text node
     value: string
     children?: undefined
-  } | {
-    $: "div";
-  } | {
-    $: "button";
-    value?: string;
-  } | {
-    $: "input";
-    value: string;
-    children?: undefined
-  } | {
-    $: "link"
-    rel: string
-    href: string
-  })
+    } 
+    | 
+    AllElements
+  )
+
 );
 

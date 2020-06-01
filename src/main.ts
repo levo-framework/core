@@ -1,5 +1,5 @@
 import { start, } from "./framework.ts";
-import { elementCreators } from "./element-creators.ts";
+import { elementCreatorsx } from "./element-creators.ts";
 type TodoAppModel = {
   items: {
     content: string;
@@ -16,7 +16,7 @@ const TodoAppView = <Action>(
 ) => (
   model: TodoAppModel
 ) => {
-  const $ = elementCreators<Action>();
+  const $ = elementCreatorsx<Action>();
   return $.div({}, [
     $.text("TODO App"),
     $.div({}, [

@@ -2,7 +2,7 @@
 import { Patch } from './patch.ts';
 import { computeAttributesUpdates } from './compute-attributes-updates.ts';
 import { VirtualNode } from './virtual-node.ts';
-import { ElementCreators, elementCreators } from './element-creators.ts';
+import { ElementCreators, elementCreatorsx } from './element-creators.ts';
 
 type Update<T> = (value: T) => T;
 
@@ -57,7 +57,7 @@ export const component = <
         _.view({
           props,
           state,
-          element: elementCreators(),
+          element: elementCreatorsx(),
           dispatch: handle as any, // has to surpress compile error
         }),
         handle,
