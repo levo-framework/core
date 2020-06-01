@@ -6,6 +6,9 @@ import { Model } from './model.ts';
 handle<Model, Action>({
   view,
   getModel: async (req) => {
-    return { currentValue: req.url.length }
+    return { 
+      currentValue: req.url.length, 
+      intervalId: undefined 
+    }
   }
 })

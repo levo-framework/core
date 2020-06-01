@@ -8,11 +8,13 @@ const start = <Model, Action>({
   at,
   view,
   update,
-  initialModel
+  initialModel,
+  onMount
 }: {
   initialModel: Model
   view: (model: Model) => VirtualNode<Action>
   update: (model: Model, action: Action, event: Event | undefined) => Model
+  onMount: (model: Model, dispatch: (action: Action) => void) => void
   at: HTMLElement | Document | null;
 }) => {
   if (!at) {
@@ -33,7 +35,6 @@ const start = <Model, Action>({
     if (action) {
       const newModel = update(currentModel, action, event);
       const newVirtualNode = view(newModel)
-      console.log("re-render");
       console.log("action", action)
       const patches = diff({
         original: currentVirtualNode,
@@ -50,18 +51,20 @@ const start = <Model, Action>({
     }
   };
 
+  onMount(currentModel, handler)
+
   //@ts-ignore
   window.$$h = handler;
 };
 
 //@ts-ignore
 if(!window.$levoView) {
-  throw new Error(`You might have forgot to call Levo.registerView at view.levo.ts`)
+  throw new Error(`You might have forgot to call Levo.registerView at levo.view.ts`)
 }
 
 //@ts-ignore
 if(!window.$levoUpdater) {
-  throw new Error(`You might have forgot to call Levo.registerUpdater at updater.levo.ts`)
+  throw new Error(`You might have forgot to call Levo.registerUpdater at levo.updater.ts`)
 }
 
 start({
@@ -74,5 +77,9 @@ start({
   view: window.$levoView,
 
   //@ts-ignore
-  update: window.$levoUpdater
+  update: window.$levoUpdater,
+
+  //@ts-ignore
+  onMount: window.$levoInit
+
 })

@@ -28,7 +28,7 @@
   - index.css
 ```
 
-## How to bundle?
+## How to re-bundle Levo runtime?
 ```
-deno bundle --config tsconfig.json src/main.ts > src/out.bundle.js
+deno bundle --config tsconfig.json src/levo-runtime.ts > levo-runtime.bundle.js
 ```

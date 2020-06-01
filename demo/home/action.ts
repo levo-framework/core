@@ -5,3 +5,10 @@ export type Action =
   | {
     type: 'minus'
   }
+  | {
+    type: 'set_interval_id',
+    intervalId: number
+  }
+  | {
+    type: 'stop_interval'
+  }

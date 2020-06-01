@@ -702,7 +702,7 @@ System.register(
         },
       ],
       execute: function () {
-        start = ({ at, view, update, initialModel }) => {
+        start = ({ at, view, update, initialModel, onMount }) => {
           if (!at) {
             throw new Error('Root element is undefined');
           }
@@ -710,6 +710,10 @@ System.register(
             virtualNode: view(initialModel),
           });
           let currentModel = initialModel;
+          // Make root node child-less
+          if (at.firstElementChild) {
+            at.removeChild(at.firstElementChild);
+          }
           at.appendChild(node);
           const handler = (action) => {
             const event = window.event;
@@ -732,24 +736,21 @@ System.register(
               currentModel = newModel;
             }
           };
+          onMount(currentModel, handler);
           //@ts-ignore
           window.$$h = handler;
         };
         //@ts-ignore
         if (!window.$levoView) {
           throw new Error(
-            'You might have forgot to call Levo.registerView at view.levo.ts',
+            'You might have forgot to call Levo.registerView at levo.view.ts',
           );
         }
         //@ts-ignore
         if (!window.$levoUpdater) {
           throw new Error(
-            'You might have forgot to call Levo.registerUpdater at updater.levo.ts',
+            'You might have forgot to call Levo.registerUpdater at levo.updater.ts',
           );
-        }
-        // Make document node child-less
-        if (document.firstElementChild) {
-          document.removeChild(document.firstElementChild);
         }
         start({
           at: document,
@@ -759,6 +760,8 @@ System.register(
           view: window.$levoView,
           //@ts-ignore
           update: window.$levoUpdater,
+          //@ts-ignore
+          onMount: window.$levoInit,
         });
       },
     };

@@ -12,3 +12,4 @@
 - [] make path resolution relative to path of entry file
 - [] test async request per seconds limit
 - [] delete framework.ts
+- [] documentation

@@ -1,3 +1,6 @@
+/**
+ * Copied from https://raw.githubusercontent.com/jshttp/mime-db/master/db.json
+ */
 export const mimeDB = {
   "application/1d-interleaved-parityfec": {
     "source": "iana"

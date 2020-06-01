@@ -689,10 +689,15 @@ System.register(
 );
 System.register(
   "levo-runtime",
-  ["virtual-node-diff", "mount", "apply-patches"],
+  [
+    "virtual-node-diff",
+    "mount",
+    "apply-patches",
+    "https://dev.jspm.io/queue@6.0.1",
+  ],
   function (exports_11, context_11) {
     "use strict";
-    var virtual_node_diff_ts_1, mount_ts_2, apply_patches_ts_1, start;
+    var virtual_node_diff_ts_1, mount_ts_2, apply_patches_ts_1, Queue, start;
     var __moduleName = context_11 && context_11.id;
     return {
       setters: [
@@ -705,9 +710,12 @@ System.register(
         function (apply_patches_ts_1_1) {
           apply_patches_ts_1 = apply_patches_ts_1_1;
         },
+        function (Queue_1) {
+          Queue = Queue_1;
+        },
       ],
       execute: function () {
-        start = ({ at, view, update, initialModel }) => {
+        start = ({ at, view, update, initialModel, onMount }) => {
           if (!at) {
             throw new Error(`Root element is undefined`);
           }
@@ -715,6 +723,10 @@ System.register(
             virtualNode: view(initialModel),
           });
           let currentModel = initialModel;
+          // Make root node child-less
+          if (at.firstElementChild) {
+            at.removeChild(at.firstElementChild);
+          }
           at.appendChild(node);
           const handler = (action) => {
             const event = window.event;
@@ -737,24 +749,27 @@ System.register(
               currentModel = newModel;
             }
           };
+          const queue = Queue({ concurrency: 1, autostart: true });
+          onMount(currentModel, (action) => {
+            queue.push((callback) => {
+              handler(action);
+              callback();
+            });
+          });
           //@ts-ignore
           window.$$h = handler;
         };
         //@ts-ignore
         if (!window.$levoView) {
           throw new Error(
-            `You might have forgot to call Levo.registerView at view.levo.ts`,
+            `You might have forgot to call Levo.registerView at levo.view.ts`,
           );
         }
         //@ts-ignore
         if (!window.$levoUpdater) {
           throw new Error(
-            `You might have forgot to call Levo.registerUpdater at updater.levo.ts`,
+            `You might have forgot to call Levo.registerUpdater at levo.updater.ts`,
           );
-        }
-        // Make document node child-less
-        if (document.firstElementChild) {
-          document.removeChild(document.firstElementChild);
         }
         start({
           at: document,
@@ -764,6 +779,8 @@ System.register(
           view: window.$levoView,
           //@ts-ignore
           update: window.$levoUpdater,
+          //@ts-ignore
+          onMount: window.$levoInit,
         });
       },
     };

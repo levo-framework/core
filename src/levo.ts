@@ -1,8 +1,13 @@
 import { VirtualNode } from './virtual-node.ts';
 
-export type LevoView<Model, Action> = (model: Model) => VirtualNode<Action>
+export type LevoView<Model, Action> = 
+  (model: Model) => VirtualNode<Action>
 
-export type LevoUpdater<Model, Action> = (model: Model, action: Action, event: any) => Model
+export type LevoUpdate<Model, Action> = 
+  (model: Model, action: Action, event: any) => Model
+
+export type LevoInit<Model, Action> = 
+  (model: Model, dispatch: (action: Action) => void) => void
 
 export const Levo = <Model, Action>() => {
   return {
@@ -18,12 +23,22 @@ export const Levo = <Model, Action>() => {
         catch {}
       }
     },
-    registerUpdater: (updater: LevoUpdater<Model, Action>) => {
+    registerUpdate: (updater: LevoUpdate<Model, Action>) => {
       //@ts-ignore
       if(typeof window !== undefined) {
         try {
           //@ts-ignore
           window.$levoUpdater = updater
+        }
+        catch {}
+      }
+    },
+    registerInit: (init: LevoInit<Model, Action>) => {
+      //@ts-ignore
+      if(typeof window !== undefined) {
+        try {
+          //@ts-ignore
+          window.$levoInit = init
         }
         catch {}
       }

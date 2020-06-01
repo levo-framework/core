@@ -1,20 +1,61 @@
 import { mimeLookup } from './mime-lookup.ts';
 import { fileExists } from './file-exists.ts';
-import { levoRuntimeCode } from './../levo-runtime-raw.ts';
-import { server, mimeDB } from './deps.ts'
+import { server } from './deps.ts'
 import { path } from './deps.ts'
+import { levoRuntimeCode } from '../levo-runtime-raw.ts';
 
 export const levo = {
   start: async (options: server.HTTPOptions) => {
     const s = server.serve(options);
-    const bundle = async (filename: string) =>
-      new TextDecoder('utf-8').decode(
+    const decoder = new TextDecoder('utf-8')
+
+    await Deno.writeFile('levo.tsconfig.json', new TextEncoder().encode(`
+      {
+        "compilerOptions": {
+          "allowJs": false,
+          "allowUmdGlobalAccess": false,
+          "allowUnreachableCode": false,
+          "allowUnusedLabels": false,
+          "alwaysStrict": true,
+          "assumeChangesOnlyAffectDirectDependencies": false,
+          "checkJs": false,
+          "disableSizeLimit": false,
+          "generateCpuProfile": "profile.cpuprofile",
+          "jsx": "react",
+          "jsxFactory": "React.createElement",
+          "lib": ["dom", "DOM", "ES2016", "ES2017", "ES2018", "ES2019"],
+          "noFallthroughCasesInSwitch": false,
+          "noImplicitAny": true,
+          "noImplicitReturns": true,
+          "noImplicitThis": true,
+          "noImplicitUseStrict": false,
+          "noStrictGenericChecks": false,
+          "noUnusedLocals": false,
+          "noUnusedParameters": false,
+          "preserveConstEnums": false,
+          "removeComments": false,
+          "resolveJsonModule": true,
+          "strict": true,
+          "strictBindCallApply": true,
+          "strictFunctionTypes": true,
+          "strictNullChecks": true,
+          "strictPropertyInitialization": true,
+          "suppressExcessPropertyErrors": false,
+          "suppressImplicitAnyIndexErrors": false,
+          "useDefineForClassFields": false
+        }
+      }
+    `))
+    const bundle = async (filename: string) => {
+      return decoder.decode(
         await Deno.run({
-          cmd: ['deno', 'bundle', filename],
+          cmd: ['deno', 'bundle', '--config', 'levo.tsconfig.json', filename],
           stdout: 'piped'
         })
           .output()
       )
+    }
+
 
     console.log(`Server listening on ${options.hostname ?? '0.0.0.0'}:${options.port}`)
     for await (const req of s) {
@@ -61,7 +102,8 @@ export const levo = {
             return
           }
           const viewCode = await bundle(dirname + 'levo.view.ts')
-          const updaterCode = await bundle(dirname + 'levo.updater.ts')
+          const updateCode = await bundle(dirname + 'levo.update.ts')
+          const initCode = await bundle(dirname + 'levo.init.ts')
           const headers = new Headers()
           headers.set('content-type', 'text/html')
           req.respond({
@@ -70,7 +112,8 @@ export const levo = {
               ${html}
               <script>
                 (()=>{${viewCode.replace(/export const/gi, 'const')}})();
-                (()=>{${updaterCode.replace(/export const/gi, 'const')}})();
+                (()=>{${updateCode.replace(/export const/gi, 'const')}})();
+                (()=>{${initCode.replace(/export const/gi, 'const')}})();
                 (()=>{window.$levoModel=${JSON.stringify(model)}})();
                 (()=>{${levoRuntimeCode}})();
               </script>
