@@ -1,5 +1,5 @@
 
-import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+import { assertEquals } from "../src/deps.ts";
 import { arrayDiff } from "../src/array-diff.ts";
 
 Deno.test("array-diff", () => {

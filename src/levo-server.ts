@@ -1,6 +1,7 @@
+import { mimeLookup } from './mime-lookup.ts';
 import { fileExists } from './file-exists.ts';
 import { levoRuntimeCode } from './../levo-runtime-raw.ts';
-import { server } from './deps.ts'
+import { server, mimeDB } from './deps.ts'
 import { path } from './deps.ts'
 
 export const levo = {
@@ -18,11 +19,27 @@ export const levo = {
     console.log(`Server listening on ${options.hostname ?? '0.0.0.0'}:${options.port}`)
     for await (const req of s) {
       try {
-        console.log(new Date(), `Incoming request: ${req.url}`)
+        const headers: Record<string, string> = {}
+        req.headers.forEach((value, key) => { headers[key] = value })
+        console.log(new Date(), `${req.method}\nURL: ${req.url}`)
+        if(req.url.includes('levo.assets')) {
+          const file = await Deno.readFile('.' + req.url)
+          const headers = new Headers()
+          const contentType = mimeLookup(req.url)
+          if(contentType) {
+            headers.set('content-type', contentType)
+          }
+          req.respond({
+            body: file,
+            headers
+          })
+          continue
+        }
+
         const dirname = `.${req.url}${path.SEP}`
         const handlerPath = dirname + `levo.handle.ts`
         if(!(await fileExists(handlerPath))) {
-          console.error(`No handle.levo.ts found under ${dirname}`)
+          console.error(`No levo.handle.ts found under ${dirname}`)
           req.respond({status: 500})
           continue
         }
@@ -43,9 +60,9 @@ export const levo = {
             req.respond({status: 500})
             return
           }
-          const headers = new Headers()
           const viewCode = await bundle(dirname + 'levo.view.ts')
           const updaterCode = await bundle(dirname + 'levo.updater.ts')
+          const headers = new Headers()
           headers.set('content-type', 'text/html')
           req.respond({
             headers,

@@ -8,6 +8,7 @@ export type ElementCreators<Action> = {
   div: ElementCreator<Action, "div">;
   button: ElementCreator<Action, "button">;
   input: ElementCreator<Action, "input">;
+  link: ElementCreator<Action, "link">;
 };
 
 type ElementCreator<Action, T extends VirtualNode<Action>["$"]> = (
@@ -40,5 +41,9 @@ export const elementCreators = <Action>(): ElementCreators<Action> => {
       $: "input",
       ...props,
     }),
+    link: (props) => ({
+      $: 'link',
+      ...props
+    })
   };
 };

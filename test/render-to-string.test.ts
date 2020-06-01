@@ -1,5 +1,5 @@
 import { renderToString } from './../src/render-to-string.ts';
-import { assertEquals } from 'https://deno.land/std/testing/asserts.ts';
+import { assertEquals } from "../src/deps.ts";
 import { elementCreators } from './../src/element-creators.ts';
 
 Deno.test('render-to-string', () => {

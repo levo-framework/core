@@ -7,6 +7,7 @@ export const view: LevoView<Model, Action> = (model) => {
   const _ = elementCreators<Action>()
   return (
     _.div({}, [
+      _.link({rel: 'stylesheet', href: 'home/levo.assets/index.css'}),
       _.button({ events: { click: {type: 'minus'} } }, [
         _.text('minus')
       ]),

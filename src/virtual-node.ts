@@ -34,6 +34,10 @@ export type VirtualNode<Action> = (
     $: "input";
     value: string;
     children?: undefined
+  } | {
+    $: "link"
+    rel: string
+    href: string
   })
 );
 
