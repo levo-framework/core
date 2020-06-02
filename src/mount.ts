@@ -9,29 +9,27 @@ export const mount = <Action>({ virtualNode }: {
   node: Node;
   virtualNode: MountedVirtualNode<Action>;
 } => {
-  if (virtualNode.$ === '_text') {
-    const node = document.createTextNode(virtualNode.value)
-    return { node, virtualNode: {...virtualNode, ref: node}};
+  if (virtualNode.$ === "_text") {
+    const node = document.createTextNode(virtualNode.value);
+    return { node, virtualNode: { ...virtualNode, ref: node } };
   }
   const node = document.createElement(virtualNode.$);
-  (Object.keys(virtualNode.events ?? {}) as (keyof HTMLElementEventMap)[])
-    .map((eventName) => {
-      const action = virtualNode.events?.[eventName];
-      setEventHandler(node, eventName, action)
-    });
 
-
-  const attributes = extractAttributes(virtualNode)
+  const attributes = extractAttributes(virtualNode);
   Object.entries(attributes).map(([key, value]) => {
     if (value) {
-      node.setAttribute(key, value as string);
+      if (typeof value === "string") {
+        node.setAttribute(key, value as string);
+      } else {
+        setEventHandler({ element: node, eventName: key, action: value });
+      }
     }
   });
   Object.entries(virtualNode.style ?? {}).forEach(([key, value]) => {
     if (value) {
-      node.style[key as any] = value
+      node.style[key as any] = value;
     }
-  })
+  });
   const updatedVirtualNode = {
     ...virtualNode,
     children: virtualNode.children?.map((childVirtualNode) => {
@@ -41,7 +39,7 @@ export const mount = <Action>({ virtualNode }: {
       node.appendChild(childNode); // side-effect
       return virtualNode;
     }),
-    ref: node
-  }
+    ref: node,
+  };
   return { node, virtualNode: updatedVirtualNode };
 };

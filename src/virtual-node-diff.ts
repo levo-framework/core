@@ -7,131 +7,107 @@ import { extractAttributes } from "./extract-attributes.ts";
 export const diff = <Action>({
   original,
   updated,
-  parentVirtualNode
+  parentVirtualNode,
 }: {
   original: MountedVirtualNode<Action>;
   updated: VirtualNode<Action>;
-  parentVirtualNode: MountedVirtualNode<Action> | undefined
+  parentVirtualNode: MountedVirtualNode<Action> | undefined;
 }): Patch<Action>[] => {
   if (
-    original.$ !== updated.$
-    ||
-    (original.$ === '_text' && updated.$ === '_text'
-      && updated.value !== (original as any).value)
+    original.$ !== updated.$ ||
+    (original.$ === "_text" && updated.$ === "_text" &&
+      updated.value !== (original as any).value)
   ) {
     return [{
-      type: 'replace_node',
+      type: "replace_node",
       updatedVirtualNode: updated,
       originalNode: original,
-      parentVirtualNode
-    }]
-  }
-  else {
+      parentVirtualNode,
+    }];
+  } else {
     // Compare attributes
-    const originalAttrs = extractAttributes(original)
-    const updatedAttrs = extractAttributes(updated)
-    const attributesUpdates = computeAttributesUpdates<string>({
+    const originalAttrs = extractAttributes(original);
+    const updatedAttrs = extractAttributes(updated);
+    const attributesUpdates = computeAttributesUpdates<
+      string | Action | undefined
+    >({
       originalAttrs,
       updatedAttrs,
     })
-      .map(update => ({
+      .map((update) => ({
         originalNode: original,
         ...update,
-      }))
+      }));
 
     // Compare styles
-    const styleAttributesUpdates = computeAttributesUpdates<string | undefined>({
-      originalAttrs: original.style ?? {},
-      updatedAttrs: updated.style ?? {}
-    })
-      .map<Patch<Action>>(update => {
+    const styleAttributesUpdates = computeAttributesUpdates<string | undefined>(
+      {
+        originalAttrs: original.style as Record<string, string> ?? {},
+        updatedAttrs: updated.style as Record<string, string> ?? {},
+      },
+    )
+      .map<Patch<Action>>((update) => {
         switch (update.type) {
-          case 'remove_attribute':
+          case "remove_attribute":
             return {
               ...update,
               originalNode: original,
-              type: 'remove_style_attribute'
-            }
+              type: "remove_style_attribute",
+            };
 
-          case 'update_attribute':
+          case "update_attribute":
             return {
               ...update,
               originalNode: original,
-              type: 'update_style_attribute'
-            }
+              type: "update_style_attribute",
+            };
         }
-      })
-
-
-    // Compare event handlers
-    const eventAttributesUpdates = computeAttributesUpdates<Action | undefined>({
-      originalAttrs: original.events ?? {},
-      updatedAttrs: updated.events ?? {}
-    })
-      .map<Patch<Action>>(update => {
-        switch (update.type) {
-          case 'remove_attribute':
-            return {
-              originalNode: original,
-              type: 'remove_event_attribute',
-              attributeName: update.attributeName
-            }
-
-          case 'update_attribute':
-            return {
-              originalNode: original,
-              type: 'update_event_attribute',
-              attributeName: update.attributeName,
-              action: update.value
-            }
-        }
-      })
+      });
 
     // Compare child
-    // TODO: use optimized diff algorithm 
+    // TODO: use optimized diff algorithm
     // Now is using naive method
 
-    const addedChildren = updated.children?.slice(original.children?.length ?? 0) ?? []
-    const removedChildren = original.children?.slice(updated.children?.length ?? 0)
-      .map(child => child.ref) ?? []
+    const addedChildren =
+      updated.children?.slice(original.children?.length ?? 0) ?? [];
+    const removedChildren =
+      original.children?.slice(updated.children?.length ?? 0)
+        .map((child) => child.ref) ?? [];
 
-    const originalChildrenLength = original.children?.length ?? 0
-    const updatedChildrenLength = updated.children?.length ?? 0
+    const originalChildrenLength = original.children?.length ?? 0;
+    const updatedChildrenLength = updated.children?.length ?? 0;
     const minLength = originalChildrenLength < updatedChildrenLength
       ? originalChildrenLength
-      : updatedChildrenLength
+      : updatedChildrenLength;
 
     const childrenUpdates = original.children?.slice(0, minLength)
       .flatMap((child, index) => {
-        const updatedChild = updated.children?.[index]
+        const updatedChild = updated.children?.[index];
         if (updatedChild) {
           return diff({
             original: child,
             updated: updatedChild,
-            parentVirtualNode: original
-          })
+            parentVirtualNode: original,
+          });
+        } else {
+          return [];
         }
-        else {
-          return []
-        }
-      }) ?? []
-
+      }) ?? [];
 
     return [
       ...attributesUpdates,
       ...styleAttributesUpdates,
-      ...eventAttributesUpdates,
       ...childrenUpdates,
-      ...addedChildren.map(child => ({
+      ...addedChildren.map((child) => ({
         type: "add_node" as const,
         virtualNode: child,
-        originalNode: original
+        originalNode: original,
       })),
-      ...removedChildren.map(nodeToBeRemoved => ({
-        type: 'remove_node' as const,
+      ...removedChildren.map((nodeToBeRemoved) => ({
+        type: "remove_node" as const,
         nodeToBeRemoved,
         originalNode: original,
-      }))
-    ]
+      })),
+    ];
   }
 };

@@ -217,10 +217,8 @@ type ElementCreator<Action, T> = (
   props:
     & Omit<T, "$">
     & GlobalAttributes
-    & {
-      style?: VirtualNodeStyle;
-      events?: VirtualNodeEvents<Action>;
-    },
+    & VirtualNodeEvents<Action>
+    & { style?: VirtualNodeStyle },
   ...children: (VirtualNode<Action> | string)[]
 ) => VirtualNode<Action>;
 
@@ -233,12 +231,14 @@ const convertChildren = <Action>(
 };
 export const elementCreators = <Action>(): ElementCreators<Action> => {
   return new Proxy({}, {
-    get: function (target, prop, receiver) {
-      return (props: any, ...children: (VirtualNode<Action> | string)[]) => ({
-        $: prop,
-        ...props,
-        children: convertChildren(children),
-      });
+    get: function (target, key, receiver) {
+      return (props: any, ...children: (VirtualNode<Action> | string)[]) => {
+        return {
+          $: key,
+          ...props,
+          children: convertChildren(children),
+        };
+      };
     },
   }) as any;
 };

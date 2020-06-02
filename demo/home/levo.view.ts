@@ -6,14 +6,14 @@ import { elementCreators } from '../../src/element-creators.ts';
 export const view: LevoView<Model, Action> = (model) => {
   const h = elementCreators<Action>()
   return (
-    h.div({class: 'hi'},
-      h.link({rel: 'stylesheet', href: 'home/levo.assets/index.css'}),
-      h.button({events: {click: {type: 'minus'}}}, 'minus'),
+    h.div({ class: 'hi' },
+      h.link({ rel: 'stylesheet', href: 'home/levo.assets/index.css' }),
+      h.button({ onclick: { $: 'minus' } }, 'minus'),
       model.currentValue.toString(),
-      h.button({events: {click: {type: 'add'}}}, 'add'),
-      h.button({events: {click: {type: 'stop_interval'}}}, 'stop timer'),
-      h.button({events: {click: {type: 'fetch'}}}, 'fetch'),
-      h.base({href: 'https'}),
+      h.button({ onclick: { $: model.currentValue % 2 === 0 ? 'add' : 'minus'} }, 'add'),
+      h.button({ onclick: { $: 'stop_interval' } }, 'stop timer'),
+      h.button({ onclick: { $: 'fetch' } }, 'fetch'),
+      h.base({ href: 'https' }),
       `Text: ${model.text}`,
     )
   )

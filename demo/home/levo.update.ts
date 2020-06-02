@@ -3,7 +3,7 @@ import { Model } from './model.ts';
 import { LevoUpdate, Levo } from "../../src/levo.ts";
 
 export const update: LevoUpdate<Model, Action> = (model, action, event) => {
-  switch (action.type) {
+  switch (action.$) {
     case 'add': {
       return {
         newModel: {
@@ -30,7 +30,7 @@ export const update: LevoUpdate<Model, Action> = (model, action, event) => {
           fetch('https://raw.githubusercontent.com/denoland/deno/master/Cargo.toml')
             .then(res => res.text())
             .then(text => ({
-              type: 'text_fetched',
+              $: 'text_fetched',
               text
             }))
         

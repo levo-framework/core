@@ -1,12 +1,16 @@
-export const setEventHandler = <Action>(
-  element: HTMLElement,
-  eventName: string,
-  action: Action
-) => {
-  if(action !== undefined) {
+export const setEventHandler = <Action>({
+  element,
+  eventName,
+  action,
+}: {
+  element: HTMLElement;
+  eventName: string;
+  action: Action;
+}) => {
+  if (action !== undefined) {
     element.setAttribute(
-      "on" + eventName,
-      `$$h(${JSON.stringify(action).replace(/"([^"]+)":/g, '$1:')})`
+      eventName,
+      `$$h(${JSON.stringify(action).replace(/"([^"]+)":/g, "$1:")})`,
     );
   }
-}
+};

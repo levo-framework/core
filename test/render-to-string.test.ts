@@ -11,11 +11,7 @@ Deno.test('render-to-string', () => {
     }
   }, 
     el.input({value: 'hello'}),
-    el.button({
-      events: {
-        click:  {type: 'click', index: 2}
-      }
-    }, 
+    el.button({ onclick:  {type: 'click', index: 2}}, 
       'click me'
     )
   )

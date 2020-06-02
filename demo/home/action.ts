@@ -1,21 +1,21 @@
 export type Action = 
   | {
-    type: 'add'
+    $: 'add'
   } 
   | {
-    type: 'minus'
+    $: 'minus'
   }
   | {
-    type: 'set_interval_id',
+    $: 'set_interval_id',
     intervalId: number
   }
   | {
-    type: 'stop_interval'
+    $: 'stop_interval'
   }
   | {
-    type: 'fetch'
+    $: 'fetch'
   }
   | {
-    type: 'text_fetched',
+    $: 'text_fetched',
     text: string
   }
