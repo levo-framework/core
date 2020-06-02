@@ -1,10 +1,7 @@
 import { Properties } from './css-types.ts';
 import { AllElements } from './html-attributes-type.ts';
+import { VirtualNodeEvents } from './virtual-node-events.ts';
 
-// TODO: use refined type
-export type VirtualNodeEvents<Action> = Record<string, Action>
-
-// TODO: use refined type
 export type VirtualNodeStyle = Properties
 
 export type VirtualNode<Action> = (

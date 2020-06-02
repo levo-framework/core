@@ -62,9 +62,9 @@ import {
 } from "./html-attributes-type.ts";
 import {
   VirtualNode,
-  VirtualNodeEvents,
   VirtualNodeStyle,
 } from "./virtual-node.ts";
+import { VirtualNodeEvents } from "./virtual-node-events.ts";
 
 export type ElementCreators<Action> = {
   base: ElementCreator<Action, Element_base>;
