@@ -71,6 +71,7 @@ export type AllElements =
 
 export type ElementWithoutDedicatedAttributes = {
   $:
+    | "html"
     | "head"
     | "title"
     | "address"

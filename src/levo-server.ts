@@ -1,8 +1,7 @@
 import { levoTsconfigRaw } from "./levo-tsconfig-raw.ts";
 import { mimeLookup } from "./mime-lookup.ts";
 import { fileExists } from "./file-exists.ts";
-import { server } from "./deps.ts";
-import { path } from "./deps.ts";
+import { server, path, gzipEncode, brotliCompress } from "./deps.ts";
 import { levoRuntimeCode } from "../levo-runtime-raw.ts";
 
 export const levo = {
@@ -34,18 +33,22 @@ export const levo = {
           headers[key] = value;
         });
         console.log(new Date(), `${req.method}\nURL: ${req.url}`);
+        const acceptEncoding = req.headers.get('accept-encoding')
         if (req.url.includes("levo.assets")) {
           const file = await Deno.readFile("." + req.url);
-          const headers = new Headers();
+          const initialHeaders = new Headers();
           const contentType = mimeLookup(req.url);
           if (contentType) {
-            headers.set("content-type", contentType);
+            initialHeaders.set("content-type", contentType);
           }
-          req.respond({
-            body: file,
-            headers,
-          });
-          continue;
+
+          const { body, headers } = compress({
+            acceptEncoding,
+            headers: initialHeaders,
+            body: file
+          })
+          req.respond({ body, headers })
+          continue
         }
 
         const dirname = `.${req.url}${path.SEP}`;
@@ -68,7 +71,7 @@ export const levo = {
         });
         worker.addEventListener(
           "message",
-          async ({ data: {model, html, error} }: any) => {
+          async ({ data: { model, html, error } }: any) => {
             if (error) {
               console.error(error);
               req.respond({ status: 500 });
@@ -79,21 +82,23 @@ export const levo = {
               bundle(dirname + "levo.update.ts"),
               bundle(dirname + "levo.init.ts"),
             ]);
-            const headers = new Headers();
-            headers.set("content-type", "text/html");
-            req.respond({
-              headers,
-              body: `
-              ${html}
-              <script>
-                (()=>{${viewCode.replace(/export const/gi, "const")}})();
-                (()=>{${updateCode.replace(/export const/gi, "const")}})();
-                (()=>{${initCode.replace(/export const/gi, "const")}})();
-                (()=>{window.$levoModel=${JSON.stringify(model)}})();
-                (()=>{${levoRuntimeCode}})();
-              </script>
-            `.trim(),
-            });
+            const initialHeaders = new Headers();
+            initialHeaders.set("content-type", "text/html");
+            const { body, headers } = compress({
+              acceptEncoding,
+              headers: initialHeaders,
+              body: new TextEncoder().encode(`
+${html}
+<script>
+  (()=>{${viewCode.replace(/export const/gi, "const")}})();
+  (()=>{${updateCode.replace(/export const/gi, "const")}})();
+  (()=>{${initCode.replace(/export const/gi, "const")}})();
+  (()=>{window.$levoModel=${JSON.stringify(model)}})();
+  (()=>{${levoRuntimeCode}})();
+</script>
+              `.trim())
+            })
+            req.respond({ body, headers });
           },
         );
         worker.addEventListener("error", (error) => {
@@ -110,3 +115,32 @@ export const levo = {
     }
   },
 };
+
+const compress = ({
+  headers,
+  body,
+  acceptEncoding
+}: {
+  headers: Headers,
+  body: Uint8Array
+  acceptEncoding: string | null
+}): {
+  headers: Headers,
+  body: Uint8Array
+} => {
+  if (acceptEncoding?.includes('br')) {
+    headers.set("content-encoding", 'br')
+    const compressedFile = brotliCompress(body)
+    headers.set("content-length", compressedFile.length.toString())
+    return { headers, body: compressedFile, };
+  }
+  else if (acceptEncoding?.includes('gzip')) {
+    headers.set("content-encoding", 'gzip')
+    const compressedFile = gzipEncode(body)
+    headers.set("content-length", compressedFile.length.toString())
+    return { headers, body: compressedFile, };
+  }
+  else {
+    return { headers, body }
+  }
+}

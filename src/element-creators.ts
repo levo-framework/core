@@ -67,6 +67,7 @@ import {
 import { VirtualNodeEvents } from "./virtual-node-events.ts";
 
 export type ElementCreators<Action> = {
+  html: ElementCreator<Action, {}>;
   base: ElementCreator<Action, Element_base>;
   head: ElementCreator<Action, {}>;
   link: ElementCreator<Action, Element_link>;

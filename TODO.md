@@ -6,8 +6,9 @@
 - [x] how to bundle updater that uses DOM API?
 - [x] refined style CSS types
 - [x] refined attributes types
-- [] refined events types
-- [] compress content (gzip, uglify)
+- [x] refined events types
+- [x] compress content (gzip, uglify)
+- [] minify html/js/css
 - [] cache bundled view and updater (allow setting cache limit number)
 - [] CLI scafolding tools
 - [] make path resolution relative to path of entry file
