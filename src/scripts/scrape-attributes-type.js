@@ -5,62 +5,66 @@
 
 //@ts-nocheck
 (() => {
-  const data = Array.from(document.getElementsByTagName('tr')).slice(1).map(tr => {
-    const td1 = tr.children[0]
-    const a = td1.children[0]?.children[0]
-    const elements = tr.children[1].innerText.replace(/(<|>|,)/g, '').split(' ')
-    const description = tr.children[2].innerText
-    return {
-      attributeName: a?.innerText ?? td1.innerText,
-      link: a?.href,
-      elements,
-      description
-    }
-  })
+  const data = Array.from(document.getElementsByTagName("tr")).slice(1).map(
+    (tr) => {
+      const td1 = tr.children[0];
+      const a = td1.children[0]?.children[0];
+      const elements = tr.children[1].innerText.replace(/(<|>|,)/g, "").split(
+        " ",
+      );
+      const description = tr.children[2].innerText;
+      return {
+        attributeName: a?.innerText ?? td1.innerText,
+        link: a?.href,
+        elements,
+        description,
+      };
+    },
+  );
 
   const elements = data
-    .flatMap(({ attributeName, elements }) => elements.map(element => ({ element, attributeName })))
+    .flatMap(({ attributeName, elements }) =>
+      elements.map((element) => ({ element, attributeName }))
+    )
     .reduce((result, { attributeName, element }) => {
-      if (!element) return result
+      if (!element) return result;
       return {
         ...result,
-        [element]: [...(result[element] ?? []), attributeName]
-      }
-    }, {})
-  const attrTypeName = attr => `Attribute_${attr.replace(/(-|\*)/g, '_')}`
+        [element]: [...(result[element] ?? []), attributeName],
+      };
+    }, {});
+  const attrTypeName = (attr) => `Attribute_${attr.replace(/(-|\*)/g, "_")}`;
   const elementTypes = Object.entries(elements)
     .map(([element, attributes]) => {
       return `
 type Element_${element} = 
   & { $: '${element}' }
-${attributes.map(attr => `  & ${attrTypeName(attr)}`).join('\n')}
+${attributes.map((attr) => `  & ${attrTypeName(attr)}`).join("\n")}
 
-`.trim()
+`.trim();
     })
-    .join('\n\n')
+    .join("\n\n");
   const attributeTypes = data.map(({
     attributeName,
     link,
     elements,
-    description
+    description,
   }) => {
     return `
 type ${attrTypeName(attributeName)} = {
   /**
-${description.split('\n').map(d => '   * ' + d.trim()).join('\n')}  
-   * ${link ? `Reference: ${link}` : ''}
+${description.split("\n").map((d) => "   * " + d.trim()).join("\n")}  
+   * ${link ? `Reference: ${link}` : ""}
    */
   '${attributeName}'?: string
-}`
+}`;
   })
-    .join('\n')
+    .join("\n");
   const allElements = `
 export type AllElements = 
-${Object.keys(elements).map(element =>
-    `  | Element_${element}`
-  ).join('\n')}
+${Object.keys(elements).map((element) => `  | Element_${element}`).join("\n")}
 
-`
+`;
 
-  return allElements + elementTypes + '\n' + attributeTypes
-})()
+  return allElements + elementTypes + "\n" + attributeTypes;
+})();

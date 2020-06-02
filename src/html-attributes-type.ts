@@ -3,7 +3,8 @@
  */
 
 export type AllElements =
-  GlobalAttributes & (
+  & GlobalAttributes
+  & (
     | ElementWithoutDedicatedAttributes
     | Element_form
     | Element_input
@@ -66,99 +67,99 @@ export type AllElements =
     | Element_menu
     | Element_data
     | Element_li
-  )
+  );
 
 export type ElementWithoutDedicatedAttributes = {
   $:
-  | 'head'
-  | 'title'
-  | 'address'
-  | 'article'
-  | 'aside'
-  | 'footer'
-  | 'header'
-  | 'h1'
-  | 'h2'
-  | 'h3'
-  | 'h4'
-  | 'h5'
-  | 'h6'
-  | 'hgroup'
-  | 'main'
-  | 'nav'
-  | 'section'
-  | 'cite'
-  | 'dd'
-  | 'dt'
-  | 'dl'
-  | 'div'
-  | 'figcaption'
-  | 'figure'
-  | 'p'
-  | 'pre'
-  | 'ul'
-  | 'abbr'
-  | 'b'
-  | 'bdi'
-  | 'bdo'
-  | 'br'
-  | 'code'
-  | 'dfn'
-  | 'em'
-  | 'i'
-  | 'kbd'
-  | 'mark'
-  | 'rb'
-  | 'ruby'
-  | 'rp'
-  | 'rt'
-  | 'rtc'
-  | 's'
-  | 'samp'
-  | 'small'
-  | 'span'
-  | 'strong'
-  | 'sub'
-  | 'sup'
-  | 'u'
-  | 'var'
-  | 'wbr'
-  | 'picture'
-  | 'noscript'
-  | 'datalist'
-  | 'legend'
-  | 'dialog'
-  | 'summary'
-  | 'slot'
-  | 'template'
-  | 'acronym'
-  | 'big'
-  | 'blink'
-  | 'center'
-  | 'content'
-  | 'dir'
-  | 'element'
-  | 'frame'
-  | 'frameset'
-  | 'image'
-  | 'isindex'
-  | 'listing'
-  | 'menuitem'
-  | 'multicol'
-  | 'nextid'
-  | 'nobr'
-  | 'noembed'
-  | 'noframes'
-  | 'plaintext'
-  | 'shadow'
-  | 'spacer'
-  | 'strike'
-  | 'tt'
-  | 'xmp'
-}
+    | "head"
+    | "title"
+    | "address"
+    | "article"
+    | "aside"
+    | "footer"
+    | "header"
+    | "h1"
+    | "h2"
+    | "h3"
+    | "h4"
+    | "h5"
+    | "h6"
+    | "hgroup"
+    | "main"
+    | "nav"
+    | "section"
+    | "cite"
+    | "dd"
+    | "dt"
+    | "dl"
+    | "div"
+    | "figcaption"
+    | "figure"
+    | "p"
+    | "pre"
+    | "ul"
+    | "abbr"
+    | "b"
+    | "bdi"
+    | "bdo"
+    | "br"
+    | "code"
+    | "dfn"
+    | "em"
+    | "i"
+    | "kbd"
+    | "mark"
+    | "rb"
+    | "ruby"
+    | "rp"
+    | "rt"
+    | "rtc"
+    | "s"
+    | "samp"
+    | "small"
+    | "span"
+    | "strong"
+    | "sub"
+    | "sup"
+    | "u"
+    | "var"
+    | "wbr"
+    | "picture"
+    | "noscript"
+    | "datalist"
+    | "legend"
+    | "dialog"
+    | "summary"
+    | "slot"
+    | "template"
+    | "acronym"
+    | "big"
+    | "blink"
+    | "center"
+    | "content"
+    | "dir"
+    | "element"
+    | "frame"
+    | "frameset"
+    | "image"
+    | "isindex"
+    | "listing"
+    | "menuitem"
+    | "multicol"
+    | "nextid"
+    | "nobr"
+    | "noembed"
+    | "noframes"
+    | "plaintext"
+    | "shadow"
+    | "spacer"
+    | "strike"
+    | "tt"
+    | "xmp";
+};
 
 export type Element_form =
-  & { $: 'form' }
+  & { $: "form" }
   & Attribute_accept
   & Attribute_accept_charset
   & Attribute_action
@@ -167,10 +168,10 @@ export type Element_form =
   & Attribute_method
   & Attribute_name
   & Attribute_novalidate
-  & Attribute_target
+  & Attribute_target;
 
 export type Element_input =
-  & { $: 'input' }
+  & { $: "input" }
   & Attribute_accept
   & Attribute_alt
   & Attribute_autocomplete
@@ -203,7 +204,7 @@ export type Element_input =
   & Attribute_type
   & Attribute_usemap
   & Attribute_value
-  & Attribute_width
+  & Attribute_width;
 
 export type GlobalAttributes =
   & Attribute_accesskey
@@ -223,38 +224,38 @@ export type GlobalAttributes =
   & Attribute_spellcheck
   & Attribute_tabindex
   & Attribute_title
-  & Attribute_translate
+  & Attribute_translate;
 
 export type Element_applet =
-  & { $: 'applet' }
+  & { $: "applet" }
   & Attribute_align
   & Attribute_alt
   & Attribute_code
-  & Attribute_codebase
+  & Attribute_codebase;
 
 export type Element_caption =
-  & { $: 'caption' }
-  & Attribute_align
+  & { $: "caption" }
+  & Attribute_align;
 
 export type Element_col =
-  & { $: 'col' }
+  & { $: "col" }
   & Attribute_align
   & Attribute_bgcolor
-  & Attribute_span
+  & Attribute_span;
 
 export type Element_colgroup =
-  & { $: 'colgroup' }
+  & { $: "colgroup" }
   & Attribute_align
   & Attribute_bgcolor
-  & Attribute_span
+  & Attribute_span;
 
 export type Element_hr =
-  & { $: 'hr' }
+  & { $: "hr" }
   & Attribute_align
-  & Attribute_color
+  & Attribute_color;
 
 export type Element_iframe =
-  & { $: 'iframe' }
+  & { $: "iframe" }
   & Attribute_align
   & Attribute_allow
   & Attribute_csp
@@ -266,10 +267,10 @@ export type Element_iframe =
   & Attribute_sandbox
   & Attribute_src
   & Attribute_srcdoc
-  & Attribute_width
+  & Attribute_width;
 
 export type Element_img =
-  & { $: 'img' }
+  & { $: "img" }
   & Attribute_align
   & Attribute_alt
   & Attribute_border
@@ -285,56 +286,56 @@ export type Element_img =
   & Attribute_src
   & Attribute_srcset
   & Attribute_usemap
-  & Attribute_width
+  & Attribute_width;
 
 export type Element_table =
-  & { $: 'table' }
+  & { $: "table" }
   & Attribute_align
   & Attribute_background
   & Attribute_bgcolor
   & Attribute_border
-  & Attribute_summary
+  & Attribute_summary;
 
 export type Element_tbody =
-  & { $: 'tbody' }
+  & { $: "tbody" }
   & Attribute_align
-  & Attribute_bgcolor
+  & Attribute_bgcolor;
 
 export type Element_td =
-  & { $: 'td' }
+  & { $: "td" }
   & Attribute_align
   & Attribute_background
   & Attribute_bgcolor
   & Attribute_colspan
   & Attribute_headers
-  & Attribute_rowspan
+  & Attribute_rowspan;
 
 export type Element_tfoot =
-  & { $: 'tfoot' }
+  & { $: "tfoot" }
   & Attribute_align
-  & Attribute_bgcolor
+  & Attribute_bgcolor;
 
 export type Element_th =
-  & { $: 'th' }
+  & { $: "th" }
   & Attribute_align
   & Attribute_background
   & Attribute_bgcolor
   & Attribute_colspan
   & Attribute_headers
   & Attribute_rowspan
-  & Attribute_scope
+  & Attribute_scope;
 
 export type Element_thead =
-  & { $: 'thead' }
-  & Attribute_align
+  & { $: "thead" }
+  & Attribute_align;
 
 export type Element_tr =
-  & { $: 'tr' }
+  & { $: "tr" }
   & Attribute_align
-  & Attribute_bgcolor
+  & Attribute_bgcolor;
 
 export type Element_area =
-  & { $: 'area' }
+  & { $: "area" }
   & Attribute_alt
   & Attribute_coords
   & Attribute_download
@@ -345,10 +346,10 @@ export type Element_area =
   & Attribute_referrerpolicy
   & Attribute_rel
   & Attribute_shape
-  & Attribute_target
+  & Attribute_target;
 
 export type Element_script =
-  & { $: 'script' }
+  & { $: "script" }
   & Attribute_async
   & Attribute_charset
   & Attribute_crossorigin
@@ -358,10 +359,10 @@ export type Element_script =
   & Attribute_language
   & Attribute_referrerpolicy
   & Attribute_src
-  & Attribute_type
+  & Attribute_type;
 
 export type Element_select =
-  & { $: 'select' }
+  & { $: "select" }
   & Attribute_autocomplete
   & Attribute_autofocus
   & Attribute_disabled
@@ -369,10 +370,10 @@ export type Element_select =
   & Attribute_multiple
   & Attribute_name
   & Attribute_required
-  & Attribute_size
+  & Attribute_size;
 
 export type Element_textarea =
-  & { $: 'textarea' }
+  & { $: "textarea" }
   & Attribute_autocomplete
   & Attribute_autofocus
   & Attribute_cols
@@ -388,10 +389,10 @@ export type Element_textarea =
   & Attribute_readonly
   & Attribute_required
   & Attribute_rows
-  & Attribute_wrap
+  & Attribute_wrap;
 
 export type Element_button =
-  & { $: 'button' }
+  & { $: "button" }
   & Attribute_autofocus
   & Attribute_disabled
   & Attribute_form
@@ -402,19 +403,19 @@ export type Element_button =
   & Attribute_formtarget
   & Attribute_name
   & Attribute_type
-  & Attribute_value
+  & Attribute_value;
 
 export type Element_keygen =
-  & { $: 'keygen' }
+  & { $: "keygen" }
   & Attribute_autofocus
   & Attribute_challenge
   & Attribute_disabled
   & Attribute_form
   & Attribute_keytype
-  & Attribute_name
+  & Attribute_name;
 
 export type Element_audio =
-  & { $: 'audio' }
+  & { $: "audio" }
   & Attribute_autoplay
   & Attribute_buffered
   & Attribute_controls
@@ -422,10 +423,10 @@ export type Element_audio =
   & Attribute_loop
   & Attribute_muted
   & Attribute_preload
-  & Attribute_src
+  & Attribute_src;
 
 export type Element_video =
-  & { $: 'video' }
+  & { $: "video" }
   & Attribute_autoplay
   & Attribute_buffered
   & Attribute_controls
@@ -436,20 +437,20 @@ export type Element_video =
   & Attribute_poster
   & Attribute_preload
   & Attribute_src
-  & Attribute_width
+  & Attribute_width;
 
 export type Element_body =
-  & { $: 'body' }
+  & { $: "body" }
   & Attribute_background
-  & Attribute_bgcolor
+  & Attribute_bgcolor;
 
 export type Element_marquee =
-  & { $: 'marquee' }
+  & { $: "marquee" }
   & Attribute_bgcolor
-  & Attribute_loop
+  & Attribute_loop;
 
 export type Element_object =
-  & { $: 'object' }
+  & { $: "object" }
   & Attribute_border
   & Attribute_data
   & Attribute_form
@@ -457,51 +458,51 @@ export type Element_object =
   & Attribute_name
   & Attribute_type
   & Attribute_usemap
-  & Attribute_width
+  & Attribute_width;
 
 export type Element_meta =
-  & { $: 'meta' }
+  & { $: "meta" }
   & Attribute_charset
   & Attribute_content
   & Attribute_http_equiv
-  & Attribute_name
+  & Attribute_name;
 
 export type Element_command =
-  & { $: 'command' }
+  & { $: "command" }
   & Attribute_checked
   & Attribute_disabled
   & Attribute_icon
   & Attribute_radiogroup
-  & Attribute_type
+  & Attribute_type;
 
 export type Element_blockquote =
-  & { $: 'blockquote' }
-  & Attribute_cite
+  & { $: "blockquote" }
+  & Attribute_cite;
 
 export type Element_del =
-  & { $: 'del' }
+  & { $: "del" }
   & Attribute_cite
-  & Attribute_datetime
+  & Attribute_datetime;
 
 export type Element_ins =
-  & { $: 'ins' }
+  & { $: "ins" }
   & Attribute_cite
-  & Attribute_datetime
+  & Attribute_datetime;
 
 export type Element_q =
-  & { $: 'q' }
-  & Attribute_cite
+  & { $: "q" }
+  & Attribute_cite;
 
 export type Element_basefont =
-  & { $: 'basefont' }
-  & Attribute_color
+  & { $: "basefont" }
+  & Attribute_color;
 
 export type Element_font =
-  & { $: 'font' }
-  & Attribute_color
+  & { $: "font" }
+  & Attribute_color;
 
 export type Element_link =
-  & { $: 'link' }
+  & { $: "link" }
   & Attribute_crossorigin
   & Attribute_href
   & Attribute_hreflang
@@ -510,40 +511,40 @@ export type Element_link =
   & Attribute_media
   & Attribute_referrerpolicy
   & Attribute_rel
-  & Attribute_sizes
+  & Attribute_sizes;
 
 export type Element_time =
-  & { $: 'time' }
-  & Attribute_datetime
+  & { $: "time" }
+  & Attribute_datetime;
 
 export type Element_track =
-  & { $: 'track' }
+  & { $: "track" }
   & Attribute_default
   & Attribute_kind
   & Attribute_label
   & Attribute_src
-  & Attribute_srclang
+  & Attribute_srclang;
 
 export type Element_fieldset =
-  & { $: 'fieldset' }
+  & { $: "fieldset" }
   & Attribute_disabled
   & Attribute_form
-  & Attribute_name
+  & Attribute_name;
 
 export type Element_optgroup =
-  & { $: 'optgroup' }
+  & { $: "optgroup" }
   & Attribute_disabled
-  & Attribute_label
+  & Attribute_label;
 
 export type Element_option =
-  & { $: 'option' }
+  & { $: "option" }
   & Attribute_disabled
   & Attribute_label
   & Attribute_selected
-  & Attribute_value
+  & Attribute_value;
 
 export type Element_a =
-  & { $: 'a' }
+  & { $: "a" }
   & Attribute_download
   & Attribute_href
   & Attribute_hreflang
@@ -552,204 +553,204 @@ export type Element_a =
   & Attribute_referrerpolicy
   & Attribute_rel
   & Attribute_shape
-  & Attribute_target
+  & Attribute_target;
 
 export type Element_contenteditable =
-  & { $: 'contenteditable' }
+  & { $: "contenteditable" }
   & Attribute_enterkeyhint
-  & Attribute_inputmode
+  & Attribute_inputmode;
 
 export type Element_label =
-  & { $: 'label' }
+  & { $: "label" }
   & Attribute_for
-  & Attribute_form
+  & Attribute_form;
 
 export type Element_output =
-  & { $: 'output' }
+  & { $: "output" }
   & Attribute_for
   & Attribute_form
-  & Attribute_name
+  & Attribute_name;
 
 export type Element_meter =
-  & { $: 'meter' }
+  & { $: "meter" }
   & Attribute_form
   & Attribute_high
   & Attribute_low
   & Attribute_max
   & Attribute_min
   & Attribute_optimum
-  & Attribute_value
+  & Attribute_value;
 
 export type Element_progress =
-  & { $: 'progress' }
+  & { $: "progress" }
   & Attribute_form
   & Attribute_max
-  & Attribute_value
+  & Attribute_value;
 
 export type Element_canvas =
-  & { $: 'canvas' }
+  & { $: "canvas" }
   & Attribute_height
-  & Attribute_width
+  & Attribute_width;
 
 export type Element_embed =
-  & { $: 'embed' }
+  & { $: "embed" }
   & Attribute_height
   & Attribute_src
   & Attribute_type
-  & Attribute_width
+  & Attribute_width;
 
 export type Element_base =
-  & { $: 'base' }
+  & { $: "base" }
   & Attribute_href
-  & Attribute_target
+  & Attribute_target;
 
 export type Element_bgsound =
-  & { $: 'bgsound' }
-  & Attribute_loop
+  & { $: "bgsound" }
+  & Attribute_loop;
 
 export type Element_html =
-  & { $: 'html' }
-  & Attribute_manifest
+  & { $: "html" }
+  & Attribute_manifest;
 
 export type Element_source =
-  & { $: 'source' }
+  & { $: "source" }
   & Attribute_media
   & Attribute_sizes
   & Attribute_src
   & Attribute_srcset
-  & Attribute_type
+  & Attribute_type;
 
 export type Element_style =
-  & { $: 'style' }
+  & { $: "style" }
   & Attribute_media
   & Attribute_scoped
-  & Attribute_type
+  & Attribute_type;
 
 export type Element_map =
-  & { $: 'map' }
-  & Attribute_name
+  & { $: "map" }
+  & Attribute_name;
 
 export type Element_param =
-  & { $: 'param' }
+  & { $: "param" }
   & Attribute_name
-  & Attribute_value
+  & Attribute_value;
 
 export type Element_details =
-  & { $: 'details' }
-  & Attribute_open
+  & { $: "details" }
+  & Attribute_open;
 
 export type Element_ol =
-  & { $: 'ol' }
+  & { $: "ol" }
   & Attribute_reversed
-  & Attribute_start
+  & Attribute_start;
 
 export type Element_menu =
-  & { $: 'menu' }
-  & Attribute_type
+  & { $: "menu" }
+  & Attribute_type;
 
 export type Element_data =
-  & { $: 'data' }
-  & Attribute_value
+  & { $: "data" }
+  & Attribute_value;
 
 export type Element_li =
-  & { $: 'li' }
-  & Attribute_value
+  & { $: "li" }
+  & Attribute_value;
 
 export type Attribute_accept = {
   /**
    * List of types the server accepts, typically a file type.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/accept
    */
-  'accept'?: string
-}
+  "accept"?: string;
+};
 
 export type Attribute_accept_charset = {
   /**
    * List of supported charsets.  
    * 
    */
-  'accept-charset'?: string
-}
+  "accept-charset"?: string;
+};
 
 export type Attribute_accesskey = {
   /**
    * Keyboard shortcut to activate or add focus to the element.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/accesskey
    */
-  'accesskey'?: string
-}
+  "accesskey"?: string;
+};
 
 export type Attribute_action = {
   /**
    * The URI of a program that processes the information submitted via the form.  
    * 
    */
-  'action'?: string
-}
+  "action"?: string;
+};
 
 export type Attribute_align = {
   /**
    * Specifies the horizontal alignment of the element.  
    * 
    */
-  'align'?: string
-}
+  "align"?: string;
+};
 
 export type Attribute_allow = {
   /**
    * Specifies a feature-policy for the iframe.  
    * 
    */
-  'allow'?: string
-}
+  "allow"?: string;
+};
 
 export type Attribute_alt = {
   /**
    * Alternative text in case an image can't be displayed.  
    * 
    */
-  'alt'?: string
-}
+  "alt"?: string;
+};
 
 export type Attribute_async = {
   /**
    * Executes the script asynchronously.  
    * 
    */
-  'async'?: string
-}
+  "async"?: string;
+};
 
 export type Attribute_autocapitalize = {
   /**
    * Sets whether input is automatically capitalized when entered by user  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/autocapitalize
    */
-  'autocapitalize'?: string
-}
+  "autocapitalize"?: string;
+};
 
 export type Attribute_autocomplete = {
   /**
    * Indicates whether controls in this form can by default have their values automatically completed by the browser.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete
    */
-  'autocomplete'?: string
-}
+  "autocomplete"?: string;
+};
 
 export type Attribute_autofocus = {
   /**
    * The element should be automatically focused after the page loaded.  
    * 
    */
-  'autofocus'?: string
-}
+  "autofocus"?: string;
+};
 
 export type Attribute_autoplay = {
   /**
    * The audio or video should play as soon as possible.  
    * 
    */
-  'autoplay'?: string
-}
+  "autoplay"?: string;
+};
 
 export type Attribute_background = {
   /**
@@ -757,8 +758,8 @@ export type Attribute_background = {
    * Note: Although browsers and email clients may still support this attribute, it is obsolete. Use CSS background-image instead.  
    * 
    */
-  'background'?: string
-}
+  "background"?: string;
+};
 
 export type Attribute_bgcolor = {
   /**
@@ -767,8 +768,8 @@ export type Attribute_bgcolor = {
    * Note: This is a legacy attribute. Please use the CSS background-color property instead.  
    * 
    */
-  'bgcolor'?: string
-}
+  "bgcolor"?: string;
+};
 
 export type Attribute_border = {
   /**
@@ -777,16 +778,16 @@ export type Attribute_border = {
    * Note: This is a legacy attribute. Please use the CSS border property instead.  
    * 
    */
-  'border'?: string
-}
+  "border"?: string;
+};
 
 export type Attribute_buffered = {
   /**
    * Contains the time range of already buffered media.  
    * 
    */
-  'buffered'?: string
-}
+  "buffered"?: string;
+};
 
 export type Attribute_capture = {
   /**
@@ -794,64 +795,64 @@ export type Attribute_capture = {
    * The definition of 'media capture' in that specification.spec, specifies a new file can be captured.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/capture
    */
-  'capture'?: string
-}
+  "capture"?: string;
+};
 
 export type Attribute_challenge = {
   /**
    * A challenge string that is submitted along with the public key.  
    * 
    */
-  'challenge'?: string
-}
+  "challenge"?: string;
+};
 
 export type Attribute_charset = {
   /**
    * Declares the character encoding of the page or script.  
    * 
    */
-  'charset'?: string
-}
+  "charset"?: string;
+};
 
 export type Attribute_checked = {
   /**
    * Indicates whether the element should be checked on page load.  
    * 
    */
-  'checked'?: string
-}
+  "checked"?: string;
+};
 
 export type Attribute_cite = {
   /**
    * Contains a URI which points to the source of the quote or change.  
    * 
    */
-  'cite'?: string
-}
+  "cite"?: string;
+};
 
 export type Attribute_class = {
   /**
    * Often used with CSS to style elements with common properties.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/class
    */
-  'class'?: string
-}
+  "class"?: string;
+};
 
 export type Attribute_code = {
   /**
    * Specifies the URL of the applet's class file to be loaded and executed.  
    * 
    */
-  'code'?: string
-}
+  "code"?: string;
+};
 
 export type Attribute_codebase = {
   /**
    * This attribute gives the absolute or relative URL of the directory where applets' .class files referenced by the code attribute are stored.  
    * 
    */
-  'codebase'?: string
-}
+  "codebase"?: string;
+};
 
 export type Attribute_color = {
   /**
@@ -860,256 +861,256 @@ export type Attribute_color = {
    * Note: This is a legacy attribute. Please use the CSS color property instead.  
    * 
    */
-  'color'?: string
-}
+  "color"?: string;
+};
 
 export type Attribute_cols = {
   /**
    * Defines the number of columns in a textarea.  
    * 
    */
-  'cols'?: string
-}
+  "cols"?: string;
+};
 
 export type Attribute_colspan = {
   /**
    * The colspan attribute defines the number of columns a cell should span.  
    * 
    */
-  'colspan'?: string
-}
+  "colspan"?: string;
+};
 
 export type Attribute_content = {
   /**
    * A value associated with http-equiv or name depending on the context.  
    * 
    */
-  'content'?: string
-}
+  "content"?: string;
+};
 
 export type Attribute_contenteditable = {
   /**
    * Indicates whether the element's content is editable.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/contenteditable
    */
-  'contenteditable'?: string
-}
+  "contenteditable"?: string;
+};
 
 export type Attribute_contextmenu = {
   /**
    * Defines the ID of a <menu> element which will serve as the element's context menu.  
    * 
    */
-  'contextmenu'?: string
-}
+  "contextmenu"?: string;
+};
 
 export type Attribute_controls = {
   /**
    * Indicates whether the browser should show playback controls to the user.  
    * 
    */
-  'controls'?: string
-}
+  "controls"?: string;
+};
 
 export type Attribute_coords = {
   /**
    * A set of values specifying the coordinates of the hot-spot region.  
    * 
    */
-  'coords'?: string
-}
+  "coords"?: string;
+};
 
 export type Attribute_crossorigin = {
   /**
    * How the element handles cross-origin requests  
    * Reference: https://developer.mozilla.org/docs/Web/HTML/CORS_settings_attributes
    */
-  'crossorigin'?: string
-}
+  "crossorigin"?: string;
+};
 
 export type Attribute_csp = {
   /**
    * Specifies the Content Security Policy that an embedded document must agree to enforce upon itself.  
    * Reference: https://developer.mozilla.org/docs/Web/API/HTMLiframeElement/csp
    */
-  'csp'?: string
-}
+  "csp"?: string;
+};
 
 export type Attribute_data = {
   /**
    * Specifies the URL of the resource.  
    * 
    */
-  'data'?: string
-}
+  "data"?: string;
+};
 
 export type Attribute_data__ = {
   /**
    * Lets you attach custom attributes to an HTML element.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/data-*
    */
-  'data-*'?: string
-}
+  "data-*"?: string;
+};
 
 export type Attribute_datetime = {
   /**
    * Indicates the date and time associated with the element.  
    * 
    */
-  'datetime'?: string
-}
+  "datetime"?: string;
+};
 
 export type Attribute_decoding = {
   /**
    * Indicates the preferred method to decode the image.  
    * 
    */
-  'decoding'?: string
-}
+  "decoding"?: string;
+};
 
 export type Attribute_default = {
   /**
    * Indicates that the track should be enabled unless the user's preferences indicate something different.  
    * 
    */
-  'default'?: string
-}
+  "default"?: string;
+};
 
 export type Attribute_defer = {
   /**
    * Indicates that the script should be executed after the page has been parsed.  
    * 
    */
-  'defer'?: string
-}
+  "defer"?: string;
+};
 
 export type Attribute_dir = {
   /**
    * Defines the text direction. Allowed values are ltr (Left-To-Right) or rtl (Right-To-Left)  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/dir
    */
-  'dir'?: string
-}
+  "dir"?: string;
+};
 
 export type Attribute_dirname = {
   /**
    *   
    * 
    */
-  'dirname'?: string
-}
+  "dirname"?: string;
+};
 
 export type Attribute_disabled = {
   /**
    * Indicates whether the user can interact with the element.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/disabled
    */
-  'disabled'?: string
-}
+  "disabled"?: string;
+};
 
 export type Attribute_download = {
   /**
    * Indicates that the hyperlink is to be used for downloading a resource.  
    * 
    */
-  'download'?: string
-}
+  "download"?: string;
+};
 
 export type Attribute_draggable = {
   /**
    * Defines whether the element can be dragged.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/draggable
    */
-  'draggable'?: string
-}
+  "draggable"?: string;
+};
 
 export type Attribute_dropzone = {
   /**
    * Indicates that the element accepts the dropping of content onto it.  
    * 
    */
-  'dropzone'?: string
-}
+  "dropzone"?: string;
+};
 
 export type Attribute_enctype = {
   /**
    * Defines the content export type of the form data when the method is POST.  
    * 
    */
-  'enctype'?: string
-}
+  "enctype"?: string;
+};
 
 export type Attribute_enterkeyhint = {
   /**
    * The enterkeyhint specifies what action label (or icon) to present for the enter key on virtual keyboards. The attribute can be used with form controls (such as the value of textarea elements), or in elements in an editing host (e.g., using contenteditable attribute).  
    * 
    */
-  'enterkeyhint'?: string
-}
+  "enterkeyhint"?: string;
+};
 
 export type Attribute_for = {
   /**
    * Describes elements which belongs to this one.  
    * 
    */
-  'for'?: string
-}
+  "for"?: string;
+};
 
 export type Attribute_form = {
   /**
    * Indicates the form that is the owner of the element.  
    * 
    */
-  'form'?: string
-}
+  "form"?: string;
+};
 
 export type Attribute_formaction = {
   /**
    * Indicates the action of the element, overriding the action defined in the <form>.  
    * 
    */
-  'formaction'?: string
-}
+  "formaction"?: string;
+};
 
 export type Attribute_formenctype = {
   /**
    * If the button/input is a submit button (type="submit"), this attribute sets the encoding export type to use during form submission. If this attribute is specified, it overrides the encexport type attribute of the button's form owner.  
    * 
    */
-  'formenctype'?: string
-}
+  "formenctype"?: string;
+};
 
 export type Attribute_formmethod = {
   /**
    * If the button/input is a submit button (type="submit"), this attribute sets the submission method to use during form submission (GET, POST, etc.). If this attribute is specified, it overrides the method attribute of the button's form owner.  
    * 
    */
-  'formmethod'?: string
-}
+  "formmethod"?: string;
+};
 
 export type Attribute_formnovalidate = {
   /**
    * If the button/input is a submit button (type="submit"), this boolean attribute specifies that the form is not to be validated when it is submitted. If this attribute is specified, it overrides the novalidate attribute of the button's form owner.  
    * 
    */
-  'formnovalidate'?: string
-}
+  "formnovalidate"?: string;
+};
 
 export type Attribute_formtarget = {
   /**
    * If the button/input is a submit button (type="submit"), this attribute specifies the browsing context (for example, tab, window, or inline frame) in which to display the response that is received after submitting the form. If this attribute is specified, it overrides the target attribute of the button's form owner.  
    * 
    */
-  'formtarget'?: string
-}
+  "formtarget"?: string;
+};
 
 export type Attribute_headers = {
   /**
    * IDs of the <th> elements which applies to this element.  
    * 
    */
-  'headers'?: string
-}
+  "headers"?: string;
+};
 
 export type Attribute_height = {
   /**
@@ -1118,152 +1119,152 @@ export type Attribute_height = {
    * Note: In some instances, such as <div>, this is a legacy attribute, in which case the CSS height property should be used instead.  
    * 
    */
-  'height'?: string
-}
+  "height"?: string;
+};
 
 export type Attribute_hidden = {
   /**
    * Prevents rendering of given element, while keeping child elements, e.g. script elements, active.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/hidden
    */
-  'hidden'?: string
-}
+  "hidden"?: string;
+};
 
 export type Attribute_high = {
   /**
    * Indicates the lower bound of the upper range.  
    * 
    */
-  'high'?: string
-}
+  "high"?: string;
+};
 
 export type Attribute_href = {
   /**
    * The URL of a linked resource.  
    * 
    */
-  'href'?: string
-}
+  "href"?: string;
+};
 
 export type Attribute_hreflang = {
   /**
    * Specifies the language of the linked resource.  
    * 
    */
-  'hreflang'?: string
-}
+  "hreflang"?: string;
+};
 
 export type Attribute_http_equiv = {
   /**
    * Defines a pragma directive.  
    * 
    */
-  'http-equiv'?: string
-}
+  "http-equiv"?: string;
+};
 
 export type Attribute_icon = {
   /**
    * Specifies a picture which represents the command.  
    * 
    */
-  'icon'?: string
-}
+  "icon"?: string;
+};
 
 export type Attribute_id = {
   /**
    * Often used with CSS to style a specific element. The value of this attribute must be unique.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/id
    */
-  'id'?: string
-}
+  "id"?: string;
+};
 
 export type Attribute_importance = {
   /**
    * Indicates the relative fetch priority for the resource.  
    * 
    */
-  'importance'?: string
-}
+  "importance"?: string;
+};
 
 export type Attribute_integrity = {
   /**
    * Specifies a Subresource Integrity value that allows browsers to verify what they fetch.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
    */
-  'integrity'?: string
-}
+  "integrity"?: string;
+};
 
 export type Attribute_intrinsicsize = {
   /**
    * This attribute tells the browser to ignore the actual intrinsic size of the image and pretend it’s the size specified in the attribute.  
    * 
    */
-  'intrinsicsize'?: string
-}
+  "intrinsicsize"?: string;
+};
 
 export type Attribute_inputmode = {
   /**
    * Provides a hint as to the export type of data that might be entered by the user while editing the element or its contents. The attribute can be used with form controls (such as the value of textarea elements), or in elements in an editing host (e.g., using contenteditable attribute).  
    * 
    */
-  'inputmode'?: string
-}
+  "inputmode"?: string;
+};
 
 export type Attribute_ismap = {
   /**
    * Indicates that the image is part of a server-side image map.  
    * 
    */
-  'ismap'?: string
-}
+  "ismap"?: string;
+};
 
 export type Attribute_itemprop = {
   /**
    *   
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/itemprop
    */
-  'itemprop'?: string
-}
+  "itemprop"?: string;
+};
 
 export type Attribute_keytype = {
   /**
    * Specifies the export type of key generated.  
    * 
    */
-  'keytype'?: string
-}
+  "keytype"?: string;
+};
 
 export type Attribute_kind = {
   /**
    * Specifies the kind of text track.  
    * 
    */
-  'kind'?: string
-}
+  "kind"?: string;
+};
 
 export type Attribute_label = {
   /**
    * Specifies a user-readable title of the element.  
    * 
    */
-  'label'?: string
-}
+  "label"?: string;
+};
 
 export type Attribute_lang = {
   /**
    * Defines the language used in the element.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/lang
    */
-  'lang'?: string
-}
+  "lang"?: string;
+};
 
 export type Attribute_language = {
   /**
    * Defines the script language used in the element.  
    * 
    */
-  'language'?: string
-}
+  "language"?: string;
+};
 
 export type Attribute_loading = {
   /**
@@ -1271,32 +1272,32 @@ export type Attribute_loading = {
    * WIP: WHATWG PR #3752  
    * 
    */
-  'loading '?: string
-}
+  "loading "?: string;
+};
 
 export type Attribute_list = {
   /**
    * Identifies a list of pre-defined options to suggest to the user.  
    * 
    */
-  'list'?: string
-}
+  "list"?: string;
+};
 
 export type Attribute_loop = {
   /**
    * Indicates whether the media should start playing from the start when it's finished.  
    * 
    */
-  'loop'?: string
-}
+  "loop"?: string;
+};
 
 export type Attribute_low = {
   /**
    * Indicates the upper bound of the lower range.  
    * 
    */
-  'low'?: string
-}
+  "low"?: string;
+};
 
 export type Attribute_manifest = {
   /**
@@ -1304,400 +1305,400 @@ export type Attribute_manifest = {
    * Note: This attribute is obsolete, use <link rel="manifest"> instead.  
    * 
    */
-  'manifest'?: string
-}
+  "manifest"?: string;
+};
 
 export type Attribute_max = {
   /**
    * Indicates the maximum value allowed.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/max
    */
-  'max'?: string
-}
+  "max"?: string;
+};
 
 export type Attribute_maxlength = {
   /**
    * Defines the maximum number of characters allowed in the element.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/maxlength
    */
-  'maxlength'?: string
-}
+  "maxlength"?: string;
+};
 
 export type Attribute_minlength = {
   /**
    * Defines the minimum number of characters allowed in the element.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/minlength
    */
-  'minlength'?: string
-}
+  "minlength"?: string;
+};
 
 export type Attribute_media = {
   /**
    * Specifies a hint of the media for which the linked resource was designed.  
    * 
    */
-  'media'?: string
-}
+  "media"?: string;
+};
 
 export type Attribute_method = {
   /**
    * Defines which HTTP method to use when submitting the form. Can be GET (default) or POST.  
    * 
    */
-  'method'?: string
-}
+  "method"?: string;
+};
 
 export type Attribute_min = {
   /**
    * Indicates the minimum value allowed.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/min
    */
-  'min'?: string
-}
+  "min"?: string;
+};
 
 export type Attribute_multiple = {
   /**
    * Indicates whether multiple values can be entered in an input of the export type email or file.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/multiple
    */
-  'multiple'?: string
-}
+  "multiple"?: string;
+};
 
 export type Attribute_muted = {
   /**
    * Indicates whether the audio will be initially silenced on page load.  
    * 
    */
-  'muted'?: string
-}
+  "muted"?: string;
+};
 
 export type Attribute_name = {
   /**
    * Name of the element. For example used by the server to identify the fields in form submits.  
    * 
    */
-  'name'?: string
-}
+  "name"?: string;
+};
 
 export type Attribute_novalidate = {
   /**
    * This attribute indicates that the form shouldn't be validated when submitted.  
    * 
    */
-  'novalidate'?: string
-}
+  "novalidate"?: string;
+};
 
 export type Attribute_open = {
   /**
    * Indicates whether the details will be shown on page load.  
    * 
    */
-  'open'?: string
-}
+  "open"?: string;
+};
 
 export type Attribute_optimum = {
   /**
    * Indicates the optimal numeric value.  
    * 
    */
-  'optimum'?: string
-}
+  "optimum"?: string;
+};
 
 export type Attribute_pattern = {
   /**
    * Defines a regular expression which the element's value will be validated against.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern
    */
-  'pattern'?: string
-}
+  "pattern"?: string;
+};
 
 export type Attribute_ping = {
   /**
    * The ping attribute specifies a space-separated list of URLs to be notified if a user follows the hyperlink.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attr-ping
    */
-  'ping'?: string
-}
+  "ping"?: string;
+};
 
 export type Attribute_placeholder = {
   /**
    * Provides a hint to the user of what can be entered in the field.  
    * 
    */
-  'placeholder'?: string
-}
+  "placeholder"?: string;
+};
 
 export type Attribute_poster = {
   /**
    * A URL indicating a poster frame to show until the user plays or seeks.  
    * 
    */
-  'poster'?: string
-}
+  "poster"?: string;
+};
 
 export type Attribute_preload = {
   /**
    * Indicates whether the whole resource, parts of it or nothing should be preloaded.  
    * 
    */
-  'preload'?: string
-}
+  "preload"?: string;
+};
 
 export type Attribute_radiogroup = {
   /**
    *   
    * 
    */
-  'radiogroup'?: string
-}
+  "radiogroup"?: string;
+};
 
 export type Attribute_readonly = {
   /**
    * Indicates whether the element can be edited.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/readonly
    */
-  'readonly'?: string
-}
+  "readonly"?: string;
+};
 
 export type Attribute_referrerpolicy = {
   /**
    * Specifies which referrer is sent when fetching the resource.  
    * 
    */
-  'referrerpolicy'?: string
-}
+  "referrerpolicy"?: string;
+};
 
 export type Attribute_rel = {
   /**
    * Specifies the relationship of the target object to the link object.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel
    */
-  'rel'?: string
-}
+  "rel"?: string;
+};
 
 export type Attribute_required = {
   /**
    * Indicates whether this element is required to fill out or not.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/required
    */
-  'required'?: string
-}
+  "required"?: string;
+};
 
 export type Attribute_reversed = {
   /**
    * Indicates whether the list should be displayed in a descending order instead of a ascending.  
    * 
    */
-  'reversed'?: string
-}
+  "reversed"?: string;
+};
 
 export type Attribute_rows = {
   /**
    * Defines the number of rows in a text area.  
    * 
    */
-  'rows'?: string
-}
+  "rows"?: string;
+};
 
 export type Attribute_rowspan = {
   /**
    * Defines the number of rows a table cell should span over.  
    * 
    */
-  'rowspan'?: string
-}
+  "rowspan"?: string;
+};
 
 export type Attribute_sandbox = {
   /**
    * Stops a document loaded in an iframe from using certain features (such as submitting forms or opening new windows).  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox
    */
-  'sandbox'?: string
-}
+  "sandbox"?: string;
+};
 
 export type Attribute_scope = {
   /**
    * Defines the cells that the header test (defined in the th element) relates to.  
    * 
    */
-  'scope'?: string
-}
+  "scope"?: string;
+};
 
 export type Attribute_scoped = {
   /**
    *   
    * 
    */
-  'scoped'?: string
-}
+  "scoped"?: string;
+};
 
 export type Attribute_selected = {
   /**
    * Defines a value which will be selected on page load.  
    * 
    */
-  'selected'?: string
-}
+  "selected"?: string;
+};
 
 export type Attribute_shape = {
   /**
    *   
    * 
    */
-  'shape'?: string
-}
+  "shape"?: string;
+};
 
 export type Attribute_size = {
   /**
    * Defines the width of the element (in pixels). If the element's export type attribute is text or password then it's the number of characters.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/size
    */
-  'size'?: string
-}
+  "size"?: string;
+};
 
 export type Attribute_sizes = {
   /**
    *   
    * 
    */
-  'sizes'?: string
-}
+  "sizes"?: string;
+};
 
 export type Attribute_slot = {
   /**
    * Assigns a slot in a shadow DOM shadow tree to an element.  
    * 
    */
-  'slot'?: string
-}
+  "slot"?: string;
+};
 
 export type Attribute_span = {
   /**
    *   
    * 
    */
-  'span'?: string
-}
+  "span"?: string;
+};
 
 export type Attribute_spellcheck = {
   /**
    * Indicates whether spell checking is allowed for the element.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/spellcheck
    */
-  'spellcheck'?: string
-}
+  "spellcheck"?: string;
+};
 
 export type Attribute_src = {
   /**
    * The URL of the embeddable content.  
    * 
    */
-  'src'?: string
-}
+  "src"?: string;
+};
 
 export type Attribute_srcdoc = {
   /**
    *   
    * 
    */
-  'srcdoc'?: string
-}
+  "srcdoc"?: string;
+};
 
 export type Attribute_srclang = {
   /**
    *   
    * 
    */
-  'srclang'?: string
-}
+  "srclang"?: string;
+};
 
 export type Attribute_srcset = {
   /**
    * One or more responsive image candidates.  
    * 
    */
-  'srcset'?: string
-}
+  "srcset"?: string;
+};
 
 export type Attribute_start = {
   /**
    * Defines the first number if other than 1.  
    * 
    */
-  'start'?: string
-}
+  "start"?: string;
+};
 
 export type Attribute_step = {
   /**
    *   
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/step
    */
-  'step'?: string
-}
+  "step"?: string;
+};
 
 export type Attribute_summary = {
   /**
    *   
    * 
    */
-  'summary'?: string
-}
+  "summary"?: string;
+};
 
 export type Attribute_tabindex = {
   /**
    * Overrides the browser's default tab order and follows the one specified instead.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/tabindex
    */
-  'tabindex'?: string
-}
+  "tabindex"?: string;
+};
 
 export type Attribute_target = {
   /**
    *   
    * 
    */
-  'target'?: string
-}
+  "target"?: string;
+};
 
 export type Attribute_title = {
   /**
    * Text to be displayed in a tooltip when hovering over the element.  
    * Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/title
    */
-  'title'?: string
-}
+  "title"?: string;
+};
 
 export type Attribute_translate = {
   /**
    * Specify whether an element’s attribute values and the values of its Text node children are to be translated when the page is localized, or whether to leave them unchanged.  
    * 
    */
-  'translate'?: string
-}
+  "translate"?: string;
+};
 
 export type Attribute_type = {
   /**
    * Defines the export type of the element.  
    * 
    */
-  'type'?: string
-}
+  "type"?: string;
+};
 
 export type Attribute_usemap = {
   /**
    *   
    * 
    */
-  'usemap'?: string
-}
+  "usemap"?: string;
+};
 
 export type Attribute_value = {
   /**
    * Defines a default value which will be displayed in the element on page load.  
    * 
    */
-  'value'?: string
-}
+  "value"?: string;
+};
 
 export type Attribute_width = {
   /**
@@ -1706,13 +1707,13 @@ export type Attribute_width = {
    * Note: For all other instances, such as <div>, this is a legacy attribute, in which case the CSS width property should be used instead.  
    * 
    */
-  'width'?: string
-}
+  "width"?: string;
+};
 
 export type Attribute_wrap = {
   /**
    * Indicates whether the text should be wrapped.  
    * 
    */
-  'wrap'?: string
-}
+  "wrap"?: string;
+};

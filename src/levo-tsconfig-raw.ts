@@ -34,4 +34,4 @@ export const levoTsconfigRaw = `
       "useDefineForClassFields": false
     }
   }
-`
+`;

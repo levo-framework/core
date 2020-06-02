@@ -1,42 +1,40 @@
-import { MountedVirtualNode } from './virtual-node.ts';
+import { MountedVirtualNode } from "./virtual-node.ts";
 
 export const replaceVirtualNode = <Action>({
   mountedVirtualNode,
   at: ref,
-  replaceWith
+  replaceWith,
 }: {
-  mountedVirtualNode: MountedVirtualNode<Action>,
-  at: Node
-  replaceWith: MountedVirtualNode<Action>
+  mountedVirtualNode: MountedVirtualNode<Action>;
+  at: Node;
+  replaceWith: MountedVirtualNode<Action>;
 }): MountedVirtualNode<Action> => {
-  if(mountedVirtualNode.ref === ref) {
-    return replaceWith
-  }
-  else {
+  if (mountedVirtualNode.ref === ref) {
+    return replaceWith;
+  } else {
     return {
       ...mountedVirtualNode,
       children: mountedVirtualNode.children?.reduce<{
-        updated: boolean,
-        children: MountedVirtualNode<Action>[]
+        updated: boolean;
+        children: MountedVirtualNode<Action>[];
       }>(({ updated, children }, child) => {
-        if(updated) {
+        if (updated) {
           return {
             children: [...children, child],
-            updated
-          }
-        }
-        else {
-          const updatedChild =  replaceVirtualNode({
+            updated,
+          };
+        } else {
+          const updatedChild = replaceVirtualNode({
             mountedVirtualNode: child,
             at: ref,
-            replaceWith
-          })
+            replaceWith,
+          });
           return {
             children: [...children, updatedChild],
-            updated: updatedChild === replaceWith
-          }
+            updated: updatedChild === replaceWith,
+          };
         }
-      }, {updated: false, children: []}).children
-    }
+      }, { updated: false, children: [] }).children,
+    };
   }
-}
+};
