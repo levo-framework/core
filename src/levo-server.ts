@@ -80,9 +80,9 @@ export const levo = {
         }
 
         const dirname = `.${req.url}${path.SEP}`;
-        const handlerPath = dirname + `levo.handle.ts`;
+        const handlerPath = dirname + `levo.server.ts`;
         if (!(await fileExists(handlerPath))) {
-          console.error(`No levo.handle.ts found under ${dirname}`);
+          console.error(`No levo.server.ts found under ${dirname}`);
           req.respond({ status: 500 });
           continue;
         }
@@ -105,11 +105,7 @@ export const levo = {
               req.respond({ status: 500 });
               return;
             }
-            const [viewCode, updateCode, initCode] = await Promise.all([
-              bundle(dirname + "levo.view.ts"),
-              bundle(dirname + "levo.update.ts"),
-              bundle(dirname + "levo.init.ts"),
-            ]);
+            const code = await bundle(dirname + "levo.client.ts")
             const initialHeaders = new Headers();
             initialHeaders.set("content-type", "text/html");
             const { body, headers } = compress({
@@ -122,9 +118,7 @@ ${minifyJs
   : ``
 }
 <script>
-    (()=>{${viewCode}})();
-    (()=>{${updateCode}})();
-    (()=>{${initCode}})();
+    (()=>{${code}})();
     (()=>{window.$levoModel=${JSON.stringify(model)}})();
     (()=>{${minifiedLevoRuntimeCode}})();
 </script>

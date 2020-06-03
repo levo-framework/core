@@ -1,6 +1,6 @@
 import { Action } from './action.ts';
+import { LevoView } from './../../src/levo.ts';
 import { Model } from './model.ts';
-import { LevoView, Levo } from './../../src/levo.ts';
 import { elementCreator } from '../../src/element-creator.ts';
 import { actionCreator } from '../../src/action-creator.ts';
 
@@ -22,5 +22,3 @@ export const view: LevoView<Model, Action> = (model) => {
     )
   )
 }
-
-Levo<Model, Action>().registerView(view)

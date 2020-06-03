@@ -1,4 +1,4 @@
-import { view } from './levo.view.ts';
+import { view } from './view.ts';
 import { Action } from './action.ts';
 import { handle } from './../../src/levo-handle.ts';
 import { Model } from './model.ts';
