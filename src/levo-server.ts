@@ -3,24 +3,49 @@ import { mimeLookup } from "./mime-lookup.ts";
 import { fileExists } from "./file-exists.ts";
 import { server, path, gzipEncode, brotliCompress } from "./deps.ts";
 import { levoRuntimeCode } from "../levo-runtime-raw.ts";
+import { minify as minify$ } from "./minify.ts";
 
 export const levo = {
-  start: async (options: server.HTTPOptions) => {
+  start: async (options: server.HTTPOptions & {
+
+    /**
+     * Minify Javascript code that will be served to client.  
+     * Default to false as this feature is unstable at the moment.
+     */
+    minify?: boolean
+  }) => {
     const s = server.serve(options);
     const decoder = new TextDecoder("utf-8");
+
+    const minify = options.minify ? minify$ : (code: string) => ({code, error: undefined})
+
+    const minifiedLevoRuntimeCode = minify(levoRuntimeCode).code
 
     await Deno.writeFile(
       "levo.tsconfig.json",
       new TextEncoder().encode(levoTsconfigRaw),
     );
+    let cache: Record<string, string> = {}
     const bundle = async (filename: string) => {
-      return decoder.decode(
-        await Deno.run({
-          cmd: ["deno", "bundle", "--config", "levo.tsconfig.json", filename],
-          stdout: "piped",
-        })
-          .output(),
-      );
+      if(cache[filename]) {
+        return cache[filename]
+      }
+      else {
+        const bundled = decoder.decode(
+          await Deno.run({
+            cmd: ["deno", "bundle", "--config", "levo.tsconfig.json", filename],
+            stdout: "piped",
+          })
+            .output(),
+        );
+
+        const {code: minified, error} = minify(bundled);
+        if(error) {
+          console.error(`Failed to minify, using unminified code`, error); 
+        }
+        cache[filename] = error ? bundled : minified
+        return cache[filename]
+      }
     };
 
     console.log(
@@ -89,12 +114,13 @@ export const levo = {
               headers: initialHeaders,
               body: new TextEncoder().encode(`
 ${html}
+<script src="https://unpkg.com/regenerator-runtime@0.13.1/runtime.js"></script>
 <script>
-  (()=>{${viewCode.replace(/export const/gi, "const")}})();
-  (()=>{${updateCode.replace(/export const/gi, "const")}})();
-  (()=>{${initCode.replace(/export const/gi, "const")}})();
-  (()=>{window.$levoModel=${JSON.stringify(model)}})();
-  (()=>{${levoRuntimeCode}})();
+    (()=>{${viewCode.replace(/export const/gi, "const")}})();
+    (()=>{${updateCode.replace(/export const/gi, "const")}})();
+    (()=>{${initCode.replace(/export const/gi, "const")}})();
+    (()=>{window.$levoModel=${JSON.stringify(model)}})();
+    (()=>{${minifiedLevoRuntimeCode}})();
 </script>
               `.trim())
             })

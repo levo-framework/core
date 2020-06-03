@@ -9,7 +9,7 @@ handle<Model, Action>({
     return { 
       currentValue: req.url.length, 
       intervalId: undefined,
-      text: ''
+      text: new Date().toISOString()
     }
   }
 })
