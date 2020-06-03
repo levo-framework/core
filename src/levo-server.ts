@@ -1,21 +1,28 @@
 import { levoTsconfigRaw } from "./levo-tsconfig-raw.ts";
 import { mimeLookup } from "./mime-lookup.ts";
-import { fileExists } from "./file-exists.ts";
-import { server, path, gzipEncode, brotliCompress } from "./deps.ts";
+import { server, path, gzipEncode, brotliCompress, exists } from "./deps.ts";
 import { levoRuntimeCode } from "../levo-runtime-raw.ts";
 import { minify as minify$ } from "./minify.ts";
 
 export const levo = {
   start: async ({
     minifyJs = true,
+    cachedPages,
     ...options
   }: server.HTTPOptions & {
 
     /**
      * Minify Javascript code that will be served to client.  
-     * Default value is true
+     * Default value is true.
      */
     minifyJs?: boolean
+
+    /**
+     * Cache served pages. 
+     * Should be set to true in production environment, while false in development.
+     * Default value is false.
+     */
+    cachedPages?: boolean
   }) => {
     const s = server.serve(options);
     const decoder = new TextDecoder("utf-8");
@@ -30,7 +37,7 @@ export const levo = {
     );
     let cache: Record<string, string> = {}
     const bundle = async (filename: string) => {
-      if(cache[filename]) {
+      if(cachedPages && cache[filename]) {
         return cache[filename]
       }
       else {
@@ -81,9 +88,9 @@ export const levo = {
 
         const dirname = `.${req.url}${path.SEP}`;
         const handlerPath = dirname + `levo.server.ts`;
-        if (!(await fileExists(handlerPath))) {
+        if (!(await exists(handlerPath))) {
           console.error(`No levo.server.ts found under ${dirname}`);
-          req.respond({ status: 500 });
+          req.respond({ status: 404 });
           continue;
         }
         const worker = new Worker(handlerPath, {
