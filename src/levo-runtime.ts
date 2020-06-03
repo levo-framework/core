@@ -58,7 +58,7 @@ const start = <Model, Action>({
   onMount(currentModel, handler);
 
   //@ts-ignore
-  window.$$h = handler;
+  window.$$h = (action: string) => handler(JSON.parse(atob(action)));
 };
 
 //@ts-ignore

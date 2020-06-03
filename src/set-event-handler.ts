@@ -10,7 +10,7 @@ export const setEventHandler = <Action>({
   if (action !== undefined) {
     element.setAttribute(
       eventName,
-      `$$h(${JSON.stringify(action).replace(/"([^"]+)":/g, "$1:")})`,
+      `$$h('${btoa(JSON.stringify(action))}')`,
     );
   }
 };

@@ -8,7 +8,9 @@
 - [x] refined attributes types
 - [x] refined events types
 - [x] compress content (gzip, uglify)
-- [] minify html/js/css
+- [x] Action text mangling
+- [x] minify js
+- [] minify html/css
 - [] cache bundled view and updater (allow setting cache limit number)
 - [] CLI scafolding tools
 - [] make path resolution relative to path of entry file

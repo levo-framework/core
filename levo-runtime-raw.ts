@@ -3,6 +3,8 @@ export const levoRuntimeCode = `
 
 // This is a specialised implementation of a System module loader.
 
+"use strict";
+
 // @ts-nocheck
 /* eslint-disable */
 let System, __instantiateAsync, __instantiate;
@@ -506,7 +508,7 @@ System.register("set-event-handler", [], function (exports_11, context_11) {
           if (action !== undefined) {
             element.setAttribute(
               eventName,
-              \`$$h(\${JSON.stringify(action).replace(/"([^"]+)":/g, "$1:")})\`,
+              \`$$h('\${btoa(JSON.stringify(action))}')\`,
             );
           }
         },
@@ -648,13 +650,11 @@ System.register(
                       patch.value,
                     );
                   } else { // must be event update
-                    set_event_handler_ts_2.setEventHandler(
-                      {
-                        element: patch.originalNode.ref,
-                        eventName: patch.attributeName,
-                        action: patch.value,
-                      },
-                    );
+                    set_event_handler_ts_2.setEventHandler({
+                      element: patch.originalNode.ref,
+                      eventName: patch.attributeName,
+                      action: patch.value,
+                    });
                   }
                   patch.originalNode[patch.attributeName] = patch.value;
                   return updatedMountedVirtualNode;
@@ -745,7 +745,7 @@ System.register(
           };
           onMount(currentModel, handler);
           //@ts-ignore
-          window.$$h = handler;
+          window.$$h = (action) => handler(JSON.parse(atob(action)));
         };
         //@ts-ignore
         if (!window.$levoView) {

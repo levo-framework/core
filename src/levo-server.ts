@@ -6,18 +6,21 @@ import { levoRuntimeCode } from "../levo-runtime-raw.ts";
 import { minify as minify$ } from "./minify.ts";
 
 export const levo = {
-  start: async (options: server.HTTPOptions & {
+  start: async ({
+    minifyJs = true,
+    ...options
+  }: server.HTTPOptions & {
 
     /**
      * Minify Javascript code that will be served to client.  
-     * Default to false as this feature is unstable at the moment.
+     * Default value is true
      */
-    minify?: boolean
+    minifyJs?: boolean
   }) => {
     const s = server.serve(options);
     const decoder = new TextDecoder("utf-8");
 
-    const minify = options.minify ? minify$ : (code: string) => ({code, error: undefined})
+    const minify = minifyJs ? minify$ : (code: string) => ({code, error: undefined})
 
     const minifiedLevoRuntimeCode = minify(levoRuntimeCode).code
 
@@ -39,7 +42,7 @@ export const levo = {
             .output(),
         );
 
-        const {code: minified, error} = minify(bundled);
+        const {code: minified, error} = minify(bundled.replace(/export const/gi, "const"));
         if(error) {
           console.error(`Failed to minify, using unminified code`, error); 
         }
@@ -114,11 +117,14 @@ export const levo = {
               headers: initialHeaders,
               body: new TextEncoder().encode(`
 ${html}
-<script src="https://unpkg.com/regenerator-runtime@0.13.1/runtime.js"></script>
+${minifyJs 
+  ? `<script src="https://unpkg.com/regenerator-runtime@0.13.1/runtime.js"></script>`
+  : ``
+}
 <script>
-    (()=>{${viewCode.replace(/export const/gi, "const")}})();
-    (()=>{${updateCode.replace(/export const/gi, "const")}})();
-    (()=>{${initCode.replace(/export const/gi, "const")}})();
+    (()=>{${viewCode}})();
+    (()=>{${updateCode}})();
+    (()=>{${initCode}})();
     (()=>{window.$levoModel=${JSON.stringify(model)}})();
     (()=>{${minifiedLevoRuntimeCode}})();
 </script>
