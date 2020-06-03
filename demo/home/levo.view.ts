@@ -1,11 +1,11 @@
 import { Action } from './action.ts';
 import { Model } from './model.ts';
 import { LevoView, Levo } from './../../src/levo.ts';
-import { elementCreators } from '../../src/element-creators.ts';
+import { elementCreator } from '../../src/element-creator.ts';
 import { actionCreator } from '../../src/action-creator.ts';
 
 export const view: LevoView<Model, Action> = (model) => {
-  const h = elementCreators<Action>()
+  const h = elementCreator<Action>()
   const $ = actionCreator<Action>()
   return (
     h.html({},

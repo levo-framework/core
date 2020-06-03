@@ -230,7 +230,7 @@ const convertChildren = <Action>(
     typeof child === "string" ? { $: "_text", value: child } : child
   );
 };
-export const elementCreators = <Action>(): ElementCreators<Action> => {
+export const elementCreator = <Action>(): ElementCreators<Action> => {
   return new Proxy({}, {
     get: function (target, key, receiver) {
       return (props: any, ...children: (VirtualNode<Action> | string)[]) => {

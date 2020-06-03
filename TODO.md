@@ -10,6 +10,7 @@
 - [x] compress content (gzip, uglify)
 - [x] Action text mangling
 - [x] minify js
+- [] obfuscate $levoModel
 - [] minify html/css
 - [] cache bundled view and updater (allow setting cache limit number)
 - [] CLI scafolding tools
