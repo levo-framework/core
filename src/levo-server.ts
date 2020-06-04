@@ -85,11 +85,12 @@ export const levo = {
           headers[key] = value;
         });
         console.log(new Date(), `${req.method}\nURL: ${req.url}`);
+        const url = new URL('http://x' + req.url)
         const acceptEncoding = req.headers.get('accept-encoding')
-        if (req.url.includes("levo.assets")) {
-          const file = await Deno.readFile("." + req.url);
+        if (url.pathname.includes("levo.assets")) {
+          const file = await Deno.readFile("." + url.pathname);
           const initialHeaders = new Headers();
-          const contentType = mimeLookup(req.url);
+          const contentType = mimeLookup(url.pathname);
           if (contentType) {
             initialHeaders.set("content-type", contentType);
           }
@@ -103,7 +104,7 @@ export const levo = {
           continue
         }
 
-        const dirname = `.${req.url}${path.SEP}`;
+        const dirname = `.${url.pathname}${path.SEP}`;
         const handlerPath = dirname + `levo.server.ts`;
         if (!(await exists(handlerPath))) {
           console.error(`No levo.server.ts found under ${dirname}`);

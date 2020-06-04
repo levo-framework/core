@@ -33,6 +33,28 @@ Deno.test({
 })
 
 Deno.test({
+  name: 'handle URL with trailing slash', 
+  fn: async () => {
+    const result = await fetch('http://localhost:3000/home')
+    assertEquals(result.headers.get('content-type'), 'text/html')
+    assertEquals(result.status, 200)
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+})
+
+Deno.test({
+  name: 'handle URL with query params', 
+  fn: async () => {
+    const result = await fetch('http://localhost:3000/home?title=123')
+    assertEquals(result.headers.get('content-type'), 'text/html')
+    assertEquals(result.status, 200)
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+})
+
+Deno.test({
   name: 'serve asset under levo.assets', 
   fn: async () => {
     const result = await fetch('http://localhost:3000/home/levo.assets/index.css')

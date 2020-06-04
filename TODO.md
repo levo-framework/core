@@ -13,7 +13,9 @@
 - [] self-vendor runtime.js (instead of loading from a CDN)
 - [] write test for implemented features
 - [] option to disable client side logging
-- [] handle URL with query params
+- [x] handle URL with query params
+- [] setup CI/CD
+- [] commit based on issues
 - [] obfuscate $levoModel
 - [] minify html/css
 - [x] allow caching bundled levo.client.ts
