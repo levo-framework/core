@@ -5,6 +5,7 @@ export type LevoRequest = {
   body: any;
   method: string;
   headers: Headers;
+  search: string;
 };
 
 export const handle = <Model, Action>({

@@ -47,9 +47,23 @@ Deno.test({
 Deno.test({
   name: "handle URL with query params",
   fn: async () => {
-    const result = await fetch("http://localhost:3000/home?title=123");
+    const result = await fetch("http://localhost:3000/home?title=spongebob");
+    assertEquals((await result.text()).includes("spongebob"), true);
     assertEquals(result.headers.get("content-type"), "text/html");
     assertEquals(result.status, 200);
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "handle path param wildcard",
+  fn: async () => {
+    const result1 = await fetch("http://localhost:3000/user/xxx");
+    assertEquals((await result1.text()).includes("I am xxx"), true);
+
+    const result2 = await fetch("http://localhost:3000/user/jojo");
+    assertEquals((await result2.text()).includes("I am jojo"), true);
   },
   sanitizeResources: false,
   sanitizeOps: false,

@@ -1,15 +1,13 @@
 import { view } from "./view.ts";
 import { Action } from "./action.ts";
-import { handle } from "./../../src/levo-handle.ts";
+import { handle } from "./../../../src/levo-handle.ts";
 import { Model } from "./model.ts";
 
 handle<Model, Action>({
   view,
   getModel: async (req) => {
     return {
-      currentValue: req.url.length,
-      intervalId: undefined,
-      text: new URLSearchParams(req.search).get('title') ?? '',
+      name: req.url.split('/').slice(-1)[0]
     };
   },
 });

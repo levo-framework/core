@@ -3,6 +3,8 @@ import { mimeLookup } from "./mime-lookup.ts";
 import { server, path, gzipEncode, brotliCompress, exists } from "./deps.ts";
 import { levoRuntimeCode } from "../levo-runtime-raw.ts";
 import { minify as minify$ } from "./minify.ts";
+import { resolveUrl } from "./resolve-url.ts";
+import { getDirectoryTree } from "./get-directory-tree.ts";
 
 export const levo = {
   start: async ({
@@ -80,19 +82,26 @@ export const levo = {
     console.log(
       `Server listening on ${options.hostname ?? "0.0.0.0"}:${options.port}`,
     );
+
+    const cachedDirectoryTree = getDirectoryTree(".");
     for await (const req of s) {
       try {
-        const headers: Record<string, string> = {};
-        req.headers.forEach((value, key) => {
-          headers[key] = value;
-        });
-        console.log(new Date(), `${req.method}\nURL: ${req.url}`);
-        const url = new URL("http://x" + req.url);
+        console.log(new Date(), `${req.method} ${req.url}`);
+        const url = new URL("http://x/" + req.url);
+        const resolvedUrl = resolveUrl(
+          cachePages ? cachedDirectoryTree : getDirectoryTree("."),
+          url.pathname,
+        );
+        if (!resolvedUrl) {
+          req.respond({ status: 404 });
+          continue;
+        }
+        const pathname = path.SEP + resolvedUrl;
         const acceptEncoding = req.headers.get("accept-encoding");
-        if (url.pathname.includes("levo.assets")) {
-          const file = await Deno.readFile("." + url.pathname);
+        if (pathname.includes("levo.assets")) {
+          const file = await Deno.readFile("." + pathname);
           const initialHeaders = new Headers();
-          const contentType = mimeLookup(url.pathname);
+          const contentType = mimeLookup(pathname);
           if (contentType) {
             initialHeaders.set("content-type", contentType);
           }
@@ -106,8 +115,9 @@ export const levo = {
           continue;
         }
 
-        const dirname = `.${url.pathname}${path.SEP}`;
+        const dirname = `.${pathname}${path.SEP}`;
         const handlerPath = dirname + `levo.server.ts`;
+        console.log(handlerPath);
         if (!(await exists(handlerPath))) {
           console.error(`No levo.server.ts found under ${dirname}`);
           req.respond({ status: 404 });
@@ -123,6 +133,7 @@ export const levo = {
           body: req.body,
           method: req.method,
           headers: req.headers,
+          search: url.search,
         });
         worker.addEventListener(
           "message",
