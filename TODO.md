@@ -10,11 +10,15 @@
 - [x] compress content (gzip, uglify)
 - [x] Action text mangling
 - [x] minify js
+- [] write test for implemented features
+- [] option to disable client side logging
+- [] handle URL with query params
 - [] obfuscate $levoModel
 - [] minify html/css
-- [] cache bundled view and updater (allow setting cache limit number)
+- [x] allow caching bundled levo.client.ts
 - [] CLI scafolding tools
 - [] make path resolution relative to path of entry file
 - [] test async request per seconds limit
+- [] support wildcard path (e.g. /agent/_/profile)
 - [] delete framework.ts
 - [] documentation

@@ -7,10 +7,9 @@ import { minify as minify$ } from "./minify.ts";
 export const levo = {
   start: async ({
     minifyJs = true,
-    cachedPages,
+    cachePages,
     ...options
   }: server.HTTPOptions & {
-
     /**
      * Minify Javascript code that will be served to client.  
      * Default value is true.
@@ -18,27 +17,25 @@ export const levo = {
     minifyJs?: boolean
 
     /**
-     * Cache served pages. 
+     * Generate cached pages on startup and serve only cached pages.  
      * Should be set to true in production environment, while false in development.
      * Default value is false.
      */
-    cachedPages?: boolean
+    cachePages?: boolean
   }) => {
     const s = server.serve(options);
-    const decoder = new TextDecoder("utf-8");
+    const decoder = new TextDecoder("utf-8")
+    const encoder = new TextEncoder()
 
     const minify = minifyJs ? minify$ : (code: string) => ({code, error: undefined})
 
     const minifiedLevoRuntimeCode = minify(levoRuntimeCode).code
 
-    await Deno.writeFile(
-      "levo.tsconfig.json",
-      new TextEncoder().encode(levoTsconfigRaw),
-    );
-    let cache: Record<string, string> = {}
+    await Deno.writeFile("levo.tsconfig.json", encoder.encode(levoTsconfigRaw));
     const bundle = async (filename: string) => {
-      if(cachedPages && cache[filename]) {
-        return cache[filename]
+      const cachePath = filename + ".cache"
+      if(cachePages && await exists(cachePath)) {
+        return decoder.decode(await Deno.readFile(cachePath))
       }
       else {
         const bundled = decoder.decode(
@@ -53,10 +50,29 @@ export const levo = {
         if(error) {
           console.error(`Failed to minify, using unminified code`, error); 
         }
-        cache[filename] = error ? bundled : minified
-        return cache[filename]
+        const final = error ? bundled : minified
+        if(cachePages) {
+          await Deno.writeFile(cachePath, encoder.encode(final))
+        }
+        return final
       }
     };
+
+    if(cachePages) {
+      const scanDir = (dirname: string) =>
+        Array.from(Deno.readDirSync(dirname)).forEach(dir => {
+          if(dir.isDirectory) {
+            scanDir(dirname + path.SEP + dir.name)
+          }
+          else if(dir.isFile && dir.name === 'levo.client.ts') {
+            const filename = dirname + path.SEP + dir.name
+            console.log(`Generating cached bundle for ${filename}`)
+            bundle(filename)
+          }
+        })
+
+      scanDir('.')
+    }
 
     console.log(
       `Server listening on ${options.hostname ?? "0.0.0.0"}:${options.port}`,
@@ -118,7 +134,7 @@ export const levo = {
             const { body, headers } = compress({
               acceptEncoding,
               headers: initialHeaders,
-              body: new TextEncoder().encode(`
+              body: encoder.encode(`
 ${html}
 ${minifyJs 
   ? `<script src="https://unpkg.com/regenerator-runtime@0.13.1/runtime.js"></script>`
