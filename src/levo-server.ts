@@ -179,15 +179,17 @@ const compress = ({
 } => {
   if (acceptEncoding?.includes('br')) {
     headers.set("content-encoding", 'br')
-    const compressedFile = brotliCompress(body)
-    headers.set("content-length", compressedFile.length.toString())
-    return { headers, body: compressedFile, };
+    headers.set("levo-content-encoding", "br") // for testing purpose
+    const compressedBody = brotliCompress(body)
+    headers.set("content-length", compressedBody.length.toString())
+    return { headers, body: compressedBody, };
   }
   else if (acceptEncoding?.includes('gzip')) {
     headers.set("content-encoding", 'gzip')
-    const compressedFile = gzipEncode(body)
-    headers.set("content-length", compressedFile.length.toString())
-    return { headers, body: compressedFile, };
+    headers.set("levo-content-encoding", "gzip") // for testing purpose
+    const compressedBody = gzipEncode(body)
+    headers.set("content-length", compressedBody.length.toString())
+    return { headers, body: compressedBody, };
   }
   else {
     return { headers, body }
