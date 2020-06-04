@@ -1,5 +1,5 @@
-import { computeAttributesUpdates } from './../src/compute-attributes-updates.ts';
-import { assertEquals } from "../src/deps.ts";
+import { computeAttributesUpdates } from '../../src/compute-attributes-updates.ts';
+import { assertEquals } from "../../src/deps.ts";
 
 Deno.test('compute-attributes-updates', () => {
   assertEquals(computeAttributesUpdates({

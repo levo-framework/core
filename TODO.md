@@ -10,6 +10,7 @@
 - [x] compress content (gzip, uglify)
 - [x] Action text mangling
 - [x] minify js
+- [] self-vendor runtime.js (instead of loading from a CDN)
 - [] write test for implemented features
 - [] option to disable client side logging
 - [] handle URL with query params

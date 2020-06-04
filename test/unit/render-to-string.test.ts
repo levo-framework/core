@@ -1,6 +1,6 @@
-import { renderToString } from './../src/render-to-string.ts';
-import { assertEquals } from "../src/deps.ts";
-import { elementCreator } from './../src/element-creator.ts';
+import { renderToString } from '../../src/render-to-string.ts';
+import { assertEquals } from "../../src/deps.ts";
+import { elementCreator } from '../../src/element-creator.ts';
 
 Deno.test('render-to-string', () => {
   const el = elementCreator<{type: 'click', index: number}>()

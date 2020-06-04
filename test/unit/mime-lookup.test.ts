@@ -1,5 +1,5 @@
-import { mimeLookup } from './../src/mime-lookup.ts';
-import { assertEquals } from "../src/deps.ts"
+import { mimeLookup } from '../../src/mime-lookup.ts';
+import { assertEquals } from "../../src/deps.ts"
 
 Deno.test('mime-lookup', () => {
   assertEquals(mimeLookup('home/test.js'), 'application/javascript')
