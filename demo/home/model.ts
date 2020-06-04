@@ -1,5 +1,5 @@
 export type Model = {
-  currentValue: number
-  intervalId: number | undefined
-  text: string
-}
+  currentValue: number;
+  intervalId: number | undefined;
+  text: string;
+};

@@ -5,7 +5,7 @@ import { view } from "./view.ts";
 import { init } from "./init.ts";
 import { update } from "./update.ts";
 
-const levo = Levo<Model, Action>()
-levo.registerView(view)
-levo.registerInit(init)
-levo.registerUpdate(update)
+const levo = Levo<Model, Action>();
+levo.registerView(view);
+levo.registerInit(init);
+levo.registerUpdate(update);

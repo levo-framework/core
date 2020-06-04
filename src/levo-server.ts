@@ -14,32 +14,33 @@ export const levo = {
      * Minify Javascript code that will be served to client.  
      * Default value is true.
      */
-    minifyJs?: boolean
+    minifyJs?: boolean;
 
     /**
      * Generate cached pages on startup and serve only cached pages.  
      * Should be set to true in production environment, while false in development.
      * Default value is false.
      */
-    cachePages?: boolean
+    cachePages?: boolean;
   }) => {
     const s = server.serve(options);
-    const decoder = new TextDecoder("utf-8")
-    const encoder = new TextEncoder()
+    const decoder = new TextDecoder("utf-8");
+    const encoder = new TextEncoder();
 
-    const minify = minifyJs ? minify$ : (code: string) => ({code, error: undefined})
+    const minify = minifyJs
+      ? minify$
+      : (code: string) => ({ code, error: undefined });
 
-    const minifiedLevoRuntimeCode = minify(levoRuntimeCode).code
+    const minifiedLevoRuntimeCode = minify(levoRuntimeCode).code;
 
     await Deno.writeFile("levo.tsconfig.json", encoder.encode(levoTsconfigRaw));
     const bundle = async (filename: string, options?: {
-      overrideCache: boolean
+      overrideCache: boolean;
     }) => {
-      const cachePath = filename + ".cache"
-      if(cachePages && !options?.overrideCache && await exists(cachePath)) {
-        return decoder.decode(await Deno.readFile(cachePath))
-      }
-      else {
+      const cachePath = filename + ".cache";
+      if (cachePages && !options?.overrideCache && await exists(cachePath)) {
+        return decoder.decode(await Deno.readFile(cachePath));
+      } else {
         const bundled = decoder.decode(
           await Deno.run({
             cmd: ["deno", "bundle", "--config", "levo.tsconfig.json", filename],
@@ -48,31 +49,32 @@ export const levo = {
             .output(),
         );
 
-        const {code: minified, error} = minify(bundled.replace(/export const/gi, "const"));
-        if(error) {
-          console.error(`Failed to minify, using unminified code`, error); 
+        const { code: minified, error } = minify(
+          bundled.replace(/export const/gi, "const"),
+        );
+        if (error) {
+          console.error(`Failed to minify, using unminified code`, error);
         }
-        const final = error ? bundled : minified
-        if(cachePages) {
-          await Deno.writeFile(cachePath, encoder.encode(final))
+        const final = error ? bundled : minified;
+        if (cachePages) {
+          await Deno.writeFile(cachePath, encoder.encode(final));
         }
-        return final
+        return final;
       }
     };
 
-    if(cachePages) {
+    if (cachePages) {
       const scanDir = (dirname: string) =>
-        Array.from(Deno.readDirSync(dirname)).forEach(dir => {
-          if(dir.isDirectory) {
-            scanDir(dirname + path.SEP + dir.name)
+        Array.from(Deno.readDirSync(dirname)).forEach((dir) => {
+          if (dir.isDirectory) {
+            scanDir(dirname + path.SEP + dir.name);
+          } else if (dir.isFile && dir.name === "levo.client.ts") {
+            const filename = dirname + path.SEP + dir.name;
+            bundle(filename, { overrideCache: true });
           }
-          else if(dir.isFile && dir.name === 'levo.client.ts') {
-            const filename = dirname + path.SEP + dir.name
-            bundle(filename, {overrideCache: true})
-          }
-        })
+        });
 
-      scanDir('.')
+      scanDir(".");
     }
 
     console.log(
@@ -85,8 +87,8 @@ export const levo = {
           headers[key] = value;
         });
         console.log(new Date(), `${req.method}\nURL: ${req.url}`);
-        const url = new URL('http://x' + req.url)
-        const acceptEncoding = req.headers.get('accept-encoding')
+        const url = new URL("http://x" + req.url);
+        const acceptEncoding = req.headers.get("accept-encoding");
         if (url.pathname.includes("levo.assets")) {
           const file = await Deno.readFile("." + url.pathname);
           const initialHeaders = new Headers();
@@ -98,10 +100,10 @@ export const levo = {
           const { body, headers } = compress({
             acceptEncoding,
             headers: initialHeaders,
-            body: file
-          })
-          req.respond({ body, headers })
-          continue
+            body: file,
+          });
+          req.respond({ body, headers });
+          continue;
         }
 
         const dirname = `.${url.pathname}${path.SEP}`;
@@ -130,7 +132,7 @@ export const levo = {
               req.respond({ status: 500 });
               return;
             }
-            const code = await bundle(dirname + "levo.client.ts")
+            const code = await bundle(dirname + "levo.client.ts");
             const initialHeaders = new Headers();
             initialHeaders.set("content-type", "text/html");
             const { body, headers } = compress({
@@ -139,17 +141,18 @@ export const levo = {
               body: encoder.encode(`
 <!DOCTYPE html>
 ${html}
-${minifyJs 
-  ? `<script src="https://unpkg.com/regenerator-runtime@0.13.1/runtime.js"></script>`
-  : ``
-}
+${
+                minifyJs
+                  ? `<script src="https://unpkg.com/regenerator-runtime@0.13.1/runtime.js"></script>`
+                  : ``
+              }
 <script>
     (()=>{${code}})();
     (()=>{window.$levoModel=${JSON.stringify(model)}})();
     (()=>{${minifiedLevoRuntimeCode}})();
 </script>
-              `.trim())
-            })
+              `.trim()),
+            });
             req.respond({ body, headers });
           },
         );
@@ -171,30 +174,28 @@ ${minifyJs
 const compress = ({
   headers,
   body,
-  acceptEncoding
+  acceptEncoding,
 }: {
-  headers: Headers,
-  body: Uint8Array
-  acceptEncoding: string | null
+  headers: Headers;
+  body: Uint8Array;
+  acceptEncoding: string | null;
 }): {
-  headers: Headers,
-  body: Uint8Array
+  headers: Headers;
+  body: Uint8Array;
 } => {
-  if (acceptEncoding?.includes('br')) {
-    headers.set("content-encoding", 'br')
-    headers.set("levo-content-encoding", "br") // for testing purpose
-    const compressedBody = brotliCompress(body)
-    headers.set("content-length", compressedBody.length.toString())
-    return { headers, body: compressedBody, };
+  if (acceptEncoding?.includes("br")) {
+    headers.set("content-encoding", "br");
+    headers.set("levo-content-encoding", "br"); // for testing purpose
+    const compressedBody = brotliCompress(body);
+    headers.set("content-length", compressedBody.length.toString());
+    return { headers, body: compressedBody };
+  } else if (acceptEncoding?.includes("gzip")) {
+    headers.set("content-encoding", "gzip");
+    headers.set("levo-content-encoding", "gzip"); // for testing purpose
+    const compressedBody = gzipEncode(body);
+    headers.set("content-length", compressedBody.length.toString());
+    return { headers, body: compressedBody };
+  } else {
+    return { headers, body };
   }
-  else if (acceptEncoding?.includes('gzip')) {
-    headers.set("content-encoding", 'gzip')
-    headers.set("levo-content-encoding", "gzip") // for testing purpose
-    const compressedBody = gzipEncode(body)
-    headers.set("content-length", compressedBody.length.toString())
-    return { headers, body: compressedBody, };
-  }
-  else {
-    return { headers, body }
-  }
-}
+};
