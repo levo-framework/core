@@ -1,5 +1,5 @@
-import { renderToString } from "./render-to-string.ts";
-import { VirtualNode } from "./virtual-node.ts";
+import { renderToString } from "../src/render-to-string.ts";
+import { VirtualNode } from "../src/virtual-node.ts";
 export type LevoRequest = {
   url: string;
   body: any;
@@ -8,7 +8,7 @@ export type LevoRequest = {
   search: string;
 };
 
-export const handle = <Model, Action>({
+export const serve = <Model, Action>({
   getModel,
   view,
 }: {

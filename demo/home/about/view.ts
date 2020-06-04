@@ -1,5 +1,5 @@
 import { Action } from "./action.ts";
-import { LevoView } from "../../../src/levo.ts";
+import { LevoView } from "../../../mod/levo-view.ts";
 import { Model } from "./model.ts";
 import { elementCreator } from "../../../src/element-creator.ts";
 import { actionCreator } from "../../../src/action-creator.ts";

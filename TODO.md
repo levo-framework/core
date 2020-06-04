@@ -22,6 +22,7 @@
 - [] CLI scafolding tools
 - [] make path resolution relative to path of entry file
 - [] test async request per seconds limit
-- [] support wildcard path (e.g. /agent/_/profile)
+- [x] support wildcard path (e.g. /agent/_/profile)
+- [] improve bundling speed
 - [] delete framework.ts
 - [] documentation

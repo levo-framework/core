@@ -50,6 +50,7 @@ export const levo = {
           })
             .output(),
         );
+        console.log(`Finish bundle: ${cachePath}`);
 
         const { code: minified, error } = minify(
           bundled.replace(/export const/gi, "const"),
@@ -117,7 +118,6 @@ export const levo = {
 
         const dirname = `.${pathname}${path.SEP}`;
         const handlerPath = dirname + `levo.server.ts`;
-        console.log(handlerPath);
         if (!(await exists(handlerPath))) {
           console.error(`No levo.server.ts found under ${dirname}`);
           req.respond({ status: 404 });

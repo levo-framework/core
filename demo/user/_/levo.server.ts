@@ -1,13 +1,13 @@
 import { view } from "./view.ts";
 import { Action } from "./action.ts";
-import { handle } from "./../../../src/levo-handle.ts";
+import { serve } from "./../../../mod/levo-serve.ts";
 import { Model } from "./model.ts";
 
-handle<Model, Action>({
+serve<Model, Action>({
   view,
   getModel: async (req) => {
     return {
-      name: req.url.split('/').slice(-1)[0]
+      name: req.url.split("/").slice(-1)[0],
     };
   },
 });

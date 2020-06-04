@@ -1,3 +1,3 @@
 export type Model = {
-  name: string
+  name: string;
 };
