@@ -32,9 +32,11 @@ export const levo = {
     const minifiedLevoRuntimeCode = minify(levoRuntimeCode).code
 
     await Deno.writeFile("levo.tsconfig.json", encoder.encode(levoTsconfigRaw));
-    const bundle = async (filename: string) => {
+    const bundle = async (filename: string, options?: {
+      overrideCache: boolean
+    }) => {
       const cachePath = filename + ".cache"
-      if(cachePages && await exists(cachePath)) {
+      if(cachePages && !options?.overrideCache && await exists(cachePath)) {
         return decoder.decode(await Deno.readFile(cachePath))
       }
       else {
@@ -66,8 +68,7 @@ export const levo = {
           }
           else if(dir.isFile && dir.name === 'levo.client.ts') {
             const filename = dirname + path.SEP + dir.name
-            console.log(`Generating cached bundle for ${filename}`)
-            bundle(filename)
+            bundle(filename, {overrideCache: true})
           }
         })
 
@@ -135,6 +136,7 @@ export const levo = {
               acceptEncoding,
               headers: initialHeaders,
               body: encoder.encode(`
+<!DOCTYPE html>
 ${html}
 ${minifyJs 
   ? `<script src="https://unpkg.com/regenerator-runtime@0.13.1/runtime.js"></script>`

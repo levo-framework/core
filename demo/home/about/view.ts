@@ -9,8 +9,10 @@ export const view: LevoView<Model, Action> = (model) => {
   const $ = actionCreator<Action>()
   return (
     h.html({},
-      h.base({ href: 'home/about'}),
-      h.button({onclick: $["say hello"]()}, 'Hello world!')
+      h.body({}, 
+        h.base({ href: 'home/about'}),
+        h.button({onclick: $["say hello"]()}, 'Hello babeh!')
+      )
     )
   )
 }
