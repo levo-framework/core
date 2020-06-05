@@ -1,6 +1,6 @@
 import { LevoUpdate } from "./levo-update.ts";
-import { LevoView } from "./levo-view.ts";
 import { LevoInit } from "./levo-init.ts";
+import { Levo } from "./levo-view.ts";
 
 export const client = <Model, Action>() => {
   return {
@@ -15,7 +15,7 @@ export const client = <Model, Action>() => {
         } catch {}
       }
     },
-    registerView: (view: LevoView<Model, Action>) => {
+    registerView: (view: (model: Model) => Levo.Element<Action>) => {
       //@ts-ignore
       if (typeof window !== undefined) {
         // This is to prevent Deno from throwing error when some Worker tried to execute

@@ -1,8 +1,8 @@
 import { Action } from "./action.ts";
-import { LevoView, render, createActions } from "./../../mod/levo-view.ts";
+import { render, createActions, Levo } from "./../../mod/levo-view.ts";
 import { Model } from "./model.ts";
 
-export const view: LevoView<Model, Action> = (model) => {
+export const view = (model: Model): Levo.Element<Action> => {
   const $ = createActions<Action>();
   return render<Action>(
     ["html", {}, [

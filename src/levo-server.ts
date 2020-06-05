@@ -8,13 +8,14 @@ import { getDirectoryTree } from "./get-directory-tree.ts";
 
 export const levo = {
   start: async ({
-    minifyJs = true,
+    minifyJs,
     cachePages,
     ...options
   }: server.HTTPOptions & {
     /**
      * Minify Javascript code that will be served to client.  
-     * Default value is true.
+     * Should be set to true in production environment, while false in development.
+     * Default value is false.
      */
     minifyJs?: boolean;
 
