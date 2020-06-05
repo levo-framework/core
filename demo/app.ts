@@ -1,6 +1,6 @@
-import { levo } from "../src/levo-server.ts";
+import { LevoApp } from "../mod/levo-app.ts";
 
-levo.start({
+LevoApp.start({
   port: 3000,
   minifyJs: false,
   cachePages: false,

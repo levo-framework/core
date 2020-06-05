@@ -6,7 +6,7 @@ import { minify as minify$ } from "./minify.ts";
 import { resolveUrl } from "./resolve-url.ts";
 import { getDirectoryTree } from "./get-directory-tree.ts";
 
-export const levo = {
+export const LevoApp = {
   start: async ({
     minifyJs,
     cachePages,
