@@ -130,11 +130,15 @@ export const levo = {
           continue;
         }
         const bundlePromise = bundle(dirname + "levo.client.ts");
-        const worker = new Worker(handlerPath, {
-          type: "module",
-          //@ts-ignore
-          deno: true,
-        });
+        const worker = new Worker(
+          // Refer: https://stackoverflow.com/a/41790024/6587634
+          handlerPath + (cachePages ? "" : `?${(Math.random() * 1000000)}`),
+          {
+            type: "module",
+            //@ts-ignore
+            deno: true,
+          },
+        );
         worker.postMessage({
           url: req.url,
           body: req.body,

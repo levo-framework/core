@@ -133,3 +133,28 @@ Deno.test({
   sanitizeResources: false,
   sanitizeOps: false,
 });
+
+Deno.test({
+  name:
+    "updating levo.server.ts should work when server is running in no-cache mode",
+  fn: async () => {
+    const result = await fetch("http://localhost:3000/banana");
+    assertEquals((await result.text()).includes("i am banana"), true);
+    const decoder = new TextDecoder();
+    const encoder = new TextEncoder();
+    const path = "banana/levo.server.ts";
+    const fileContent = decoder.decode(await Deno.readFile(path));
+    await Deno.writeFile(
+      path,
+      encoder.encode(fileContent.replace(/banana/, "coconut")),
+    );
+
+    const result2 = await fetch("http://localhost:3000/banana");
+
+    // reset the file
+    await Deno.writeFile(path, encoder.encode(fileContent));
+    assertEquals((await result2.text()).includes("i am coconut"), true);
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
