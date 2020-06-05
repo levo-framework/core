@@ -25,7 +25,7 @@ export interface StandardLonghandProperties<TLength = string | 0> {
   backgroundPositionY?: BackgroundPositionYProperty<TLength>;
   backgroundRepeat?: BackgroundRepeatProperty;
   backgroundSize?: BackgroundSizeProperty<TLength>;
-  
+
   blockOverflow?: BlockOverflowProperty;
   blockSize?: BlockSizeProperty<TLength>;
   borderBlockColor?: BorderBlockColorProperty;
@@ -143,7 +143,7 @@ export interface StandardLonghandProperties<TLength = string | 0> {
   hyphens?: HyphensProperty;
   imageOrientation?: ImageOrientationProperty;
   imageRendering?: ImageRenderingProperty;
-  
+
   imageResolution?: ImageResolutionProperty;
   initialLetter?: InitialLetterProperty;
   inlineSize?: InlineSizeProperty<TLength>;
@@ -176,17 +176,11 @@ export interface StandardLonghandProperties<TLength = string | 0> {
   marginLeft?: MarginLeftProperty<TLength>;
   marginRight?: MarginRightProperty<TLength>;
   marginTop?: MarginTopProperty<TLength>;
-  
   maskBorderMode?: MaskBorderModeProperty;
-  
   maskBorderOutset?: MaskBorderOutsetProperty<TLength>;
-  
   maskBorderRepeat?: MaskBorderRepeatProperty;
-  
   maskBorderSlice?: MaskBorderSliceProperty;
-  
   maskBorderSource?: MaskBorderSourceProperty;
-  
   maskBorderWidth?: MaskBorderWidthProperty<TLength>;
   maskClip?: MaskClipProperty;
   maskComposite?: MaskCompositeProperty;
@@ -200,7 +194,6 @@ export interface StandardLonghandProperties<TLength = string | 0> {
   maxBlockSize?: MaxBlockSizeProperty<TLength>;
   maxHeight?: MaxHeightProperty<TLength>;
   maxInlineSize?: MaxInlineSizeProperty<TLength>;
-  
   maxLines?: MaxLinesProperty;
   maxWidth?: MaxWidthProperty<TLength>;
   minBlockSize?: MinBlockSizeProperty<TLength>;
@@ -262,7 +255,6 @@ export interface StandardLonghandProperties<TLength = string | 0> {
   rotate?: RotateProperty;
   rowGap?: RowGapProperty<TLength>;
   rubyAlign?: RubyAlignProperty;
-  
   rubyMerge?: RubyMergeProperty;
   rubyPosition?: RubyPositionProperty;
   scale?: ScaleProperty;
@@ -385,7 +377,6 @@ export interface StandardShorthandProperties<TLength = string | 0> {
   gridColumn?: GridColumnProperty;
   gridRow?: GridRowProperty;
   gridTemplate?: GridTemplateProperty;
-  
   lineClamp?: LineClampProperty;
   listStyle?: ListStyleProperty;
   margin?: MarginProperty<TLength>;
@@ -409,494 +400,434 @@ export interface StandardProperties<TLength = string | 0>
     StandardShorthandProperties<TLength> {}
 
 export interface VendorLonghandProperties<TLength = string | 0> {
-  
   MozAnimationDelay?: GlobalsString;
-  
   MozAnimationDirection?: AnimationDirectionProperty;
-  
   MozAnimationDuration?: GlobalsString;
-  
   MozAnimationFillMode?: AnimationFillModeProperty;
-  
   MozAnimationIterationCount?: AnimationIterationCountProperty;
-  
   MozAnimationName?: AnimationNameProperty;
-  
   MozAnimationPlayState?: AnimationPlayStateProperty;
-  
   MozAnimationTimingFunction?: AnimationTimingFunctionProperty;
-  
   MozAppearance?: MozAppearanceProperty;
-  
   MozBackfaceVisibility?: BackfaceVisibilityProperty;
-  
   MozBorderEndColor?: BorderInlineEndColorProperty;
-  
   MozBorderEndStyle?: BorderInlineEndStyleProperty;
-  
   MozBorderEndWidth?: BorderInlineEndWidthProperty<TLength>;
-  
   MozBorderStartColor?: BorderInlineStartColorProperty;
-  
   MozBorderStartStyle?: BorderInlineStartStyleProperty;
-  
   MozBoxSizing?: BoxSizingProperty;
-  
   MozColumnCount?: ColumnCountProperty;
-  
   MozColumnFill?: ColumnFillProperty;
-  
   MozColumnGap?: ColumnGapProperty<TLength>;
-  
   MozColumnRuleColor?: ColumnRuleColorProperty;
-  
   MozColumnRuleStyle?: ColumnRuleStyleProperty;
-  
   MozColumnRuleWidth?: ColumnRuleWidthProperty<TLength>;
-  
   MozColumnWidth?: ColumnWidthProperty<TLength>;
-  
   MozContextProperties?: MozContextPropertiesProperty;
-  
   MozFloatEdge?: MozFloatEdgeProperty;
-  
   MozFontFeatureSettings?: FontFeatureSettingsProperty;
-  
   MozFontLanguageOverride?: FontLanguageOverrideProperty;
-  
   MozForceBrokenImageIcon?: GlobalsNumber;
-  
   MozHyphens?: HyphensProperty;
-  
   MozImageRegion?: MozImageRegionProperty;
-  
   MozMarginEnd?: MarginInlineEndProperty<TLength>;
-  
   MozMarginStart?: MarginInlineStartProperty<TLength>;
-  
   MozOrient?: MozOrientProperty;
-  
   MozOutlineRadiusBottomleft?: MozOutlineRadiusBottomleftProperty<TLength>;
-  
   MozOutlineRadiusBottomright?: MozOutlineRadiusBottomrightProperty<TLength>;
-  
   MozOutlineRadiusTopleft?: MozOutlineRadiusTopleftProperty<TLength>;
-  
   MozOutlineRadiusTopright?: MozOutlineRadiusToprightProperty<TLength>;
-  
   MozPaddingEnd?: PaddingInlineEndProperty<TLength>;
-  
   MozPaddingStart?: PaddingInlineStartProperty<TLength>;
-  
   MozPerspective?: PerspectiveProperty<TLength>;
-  
   MozPerspectiveOrigin?: PerspectiveOriginProperty<TLength>;
-  
   MozStackSizing?: MozStackSizingProperty;
-  
   MozTabSize?: TabSizeProperty<TLength>;
-  
   MozTextSizeAdjust?: TextSizeAdjustProperty;
-  
   MozTransformOrigin?: TransformOriginProperty<TLength>;
-  
   MozTransformStyle?: TransformStyleProperty;
-  
   MozTransitionDelay?: GlobalsString;
-  
   MozTransitionDuration?: GlobalsString;
-  
   MozTransitionProperty?: TransitionPropertyProperty;
-  
   MozTransitionTimingFunction?: TransitionTimingFunctionProperty;
-  
   MozUserFocus?: MozUserFocusProperty;
-  
   MozUserModify?: MozUserModifyProperty;
-  
   MozUserSelect?: UserSelectProperty;
-  
   MozWindowDragging?: MozWindowDraggingProperty;
-  
   msAccelerator?: MsAcceleratorProperty;
-  
   msAlignSelf?: AlignSelfProperty;
-  
   msBlockProgression?: MsBlockProgressionProperty;
-  
   msContentZoomChaining?: MsContentZoomChainingProperty;
-  
   msContentZoomLimitMax?: GlobalsString;
-  
+
   msContentZoomLimitMin?: GlobalsString;
-  
+
   msContentZoomSnapPoints?: GlobalsString;
-  
+
   msContentZoomSnapType?: MsContentZoomSnapTypeProperty;
-  
+
   msContentZooming?: MsContentZoomingProperty;
-  
+
   msFilter?: GlobalsString;
-  
+
   msFlexDirection?: FlexDirectionProperty;
-  
+
   msFlexPositive?: GlobalsNumber;
-  
+
   msFlowFrom?: MsFlowFromProperty;
-  
+
   msFlowInto?: MsFlowIntoProperty;
-  
+
   msGridColumns?: GridAutoColumnsProperty<TLength>;
-  
+
   msGridRows?: GridAutoRowsProperty<TLength>;
-  
+
   msHighContrastAdjust?: MsHighContrastAdjustProperty;
-  
+
   msHyphenateLimitChars?: MsHyphenateLimitCharsProperty;
-  
+
   msHyphenateLimitLines?: MsHyphenateLimitLinesProperty;
-  
+
   msHyphenateLimitZone?: MsHyphenateLimitZoneProperty<TLength>;
-  
+
   msHyphens?: HyphensProperty;
-  
+
   msImeAlign?: MsImeAlignProperty;
-  
+
   msLineBreak?: LineBreakProperty;
-  
+
   msOrder?: GlobalsNumber;
-  
+
   msOverflowStyle?: MsOverflowStyleProperty;
-  
+
   msOverflowX?: OverflowXProperty;
-  
+
   msOverflowY?: OverflowYProperty;
-  
+
   msScrollChaining?: MsScrollChainingProperty;
-  
+
   msScrollLimitXMax?: MsScrollLimitXMaxProperty<TLength>;
-  
+
   msScrollLimitXMin?: MsScrollLimitXMinProperty<TLength>;
-  
+
   msScrollLimitYMax?: MsScrollLimitYMaxProperty<TLength>;
-  
+
   msScrollLimitYMin?: MsScrollLimitYMinProperty<TLength>;
-  
+
   msScrollRails?: MsScrollRailsProperty;
-  
+
   msScrollSnapPointsX?: GlobalsString;
-  
+
   msScrollSnapPointsY?: GlobalsString;
-  
+
   msScrollSnapType?: MsScrollSnapTypeProperty;
-  
+
   msScrollTranslation?: MsScrollTranslationProperty;
-  
+
   msScrollbar3dlightColor?: MsScrollbar3dlightColorProperty;
-  
+
   msScrollbarArrowColor?: MsScrollbarArrowColorProperty;
-  
+
   msScrollbarBaseColor?: MsScrollbarBaseColorProperty;
-  
+
   msScrollbarDarkshadowColor?: MsScrollbarDarkshadowColorProperty;
-  
+
   msScrollbarFaceColor?: MsScrollbarFaceColorProperty;
-  
+
   msScrollbarHighlightColor?: MsScrollbarHighlightColorProperty;
-  
+
   msScrollbarShadowColor?: MsScrollbarShadowColorProperty;
-  
+
   msTextAutospace?: MsTextAutospaceProperty;
-  
+
   msTextCombineHorizontal?: TextCombineUprightProperty;
-  
+
   msTextOverflow?: TextOverflowProperty;
-  
+
   msTouchAction?: TouchActionProperty;
-  
+
   msTouchSelect?: MsTouchSelectProperty;
-  
+
   msTransform?: TransformProperty;
-  
+
   msTransformOrigin?: TransformOriginProperty<TLength>;
-  
+
   msTransitionDelay?: GlobalsString;
-  
+
   msTransitionDuration?: GlobalsString;
-  
+
   msTransitionProperty?: TransitionPropertyProperty;
-  
+
   msTransitionTimingFunction?: TransitionTimingFunctionProperty;
-  
+
   msUserSelect?: MsUserSelectProperty;
-  
+
   msWordBreak?: WordBreakProperty;
-  
+
   msWrapFlow?: MsWrapFlowProperty;
-  
+
   msWrapMargin?: MsWrapMarginProperty<TLength>;
-  
+
   msWrapThrough?: MsWrapThroughProperty;
-  
+
   msWritingMode?: WritingModeProperty;
-  
+
   OObjectFit?: ObjectFitProperty;
-  
+
   OObjectPosition?: ObjectPositionProperty<TLength>;
-  
+
   OTabSize?: TabSizeProperty<TLength>;
-  
+
   OTextOverflow?: TextOverflowProperty;
-  
+
   OTransformOrigin?: TransformOriginProperty<TLength>;
-  
+
   WebkitAlignContent?: AlignContentProperty;
-  
+
   WebkitAlignItems?: AlignItemsProperty;
-  
+
   WebkitAlignSelf?: AlignSelfProperty;
-  
+
   WebkitAnimationDelay?: GlobalsString;
-  
+
   WebkitAnimationDirection?: AnimationDirectionProperty;
-  
+
   WebkitAnimationDuration?: GlobalsString;
-  
+
   WebkitAnimationFillMode?: AnimationFillModeProperty;
-  
+
   WebkitAnimationIterationCount?: AnimationIterationCountProperty;
-  
+
   WebkitAnimationName?: AnimationNameProperty;
-  
+
   WebkitAnimationPlayState?: AnimationPlayStateProperty;
-  
+
   WebkitAnimationTimingFunction?: AnimationTimingFunctionProperty;
-  
+
   WebkitAppearance?: WebkitAppearanceProperty;
-  
+
   WebkitBackdropFilter?: BackdropFilterProperty;
-  
+
   WebkitBackfaceVisibility?: BackfaceVisibilityProperty;
-  
+
   WebkitBackgroundClip?: BackgroundClipProperty;
-  
+
   WebkitBackgroundOrigin?: BackgroundOriginProperty;
-  
+
   WebkitBackgroundSize?: BackgroundSizeProperty<TLength>;
-  
+
   WebkitBorderBeforeColor?: WebkitBorderBeforeColorProperty;
-  
+
   WebkitBorderBeforeStyle?: WebkitBorderBeforeStyleProperty;
-  
+
   WebkitBorderBeforeWidth?: WebkitBorderBeforeWidthProperty<TLength>;
-  
+
   WebkitBorderBottomLeftRadius?: BorderBottomLeftRadiusProperty<TLength>;
-  
+
   WebkitBorderBottomRightRadius?: BorderBottomRightRadiusProperty<TLength>;
-  
+
   WebkitBorderImageSlice?: BorderImageSliceProperty;
-  
+
   WebkitBorderTopLeftRadius?: BorderTopLeftRadiusProperty<TLength>;
-  
+
   WebkitBorderTopRightRadius?: BorderTopRightRadiusProperty<TLength>;
-  
+
   WebkitBoxDecorationBreak?: BoxDecorationBreakProperty;
-  
+
   WebkitBoxReflect?: WebkitBoxReflectProperty<TLength>;
-  
+
   WebkitBoxShadow?: BoxShadowProperty;
-  
+
   WebkitBoxSizing?: BoxSizingProperty;
-  
+
   WebkitClipPath?: ClipPathProperty;
-  
+
   WebkitColorAdjust?: ColorAdjustProperty;
-  
+
   WebkitColumnCount?: ColumnCountProperty;
-  
+
   WebkitColumnFill?: ColumnFillProperty;
-  
+
   WebkitColumnGap?: ColumnGapProperty<TLength>;
-  
+
   WebkitColumnRuleColor?: ColumnRuleColorProperty;
-  
+
   WebkitColumnRuleStyle?: ColumnRuleStyleProperty;
-  
+
   WebkitColumnRuleWidth?: ColumnRuleWidthProperty<TLength>;
-  
+
   WebkitColumnSpan?: ColumnSpanProperty;
-  
+
   WebkitColumnWidth?: ColumnWidthProperty<TLength>;
-  
+
   WebkitFilter?: FilterProperty;
-  
+
   WebkitFlexBasis?: FlexBasisProperty<TLength>;
-  
+
   WebkitFlexDirection?: FlexDirectionProperty;
-  
+
   WebkitFlexGrow?: GlobalsNumber;
-  
+
   WebkitFlexShrink?: GlobalsNumber;
-  
+
   WebkitFlexWrap?: FlexWrapProperty;
-  
+
   WebkitFontFeatureSettings?: FontFeatureSettingsProperty;
-  
+
   WebkitFontKerning?: FontKerningProperty;
-  
+
   WebkitFontVariantLigatures?: FontVariantLigaturesProperty;
-  
+
   WebkitHyphens?: HyphensProperty;
-  
+
   WebkitJustifyContent?: JustifyContentProperty;
-  
+
   WebkitLineBreak?: LineBreakProperty;
-  
+
   WebkitLineClamp?: WebkitLineClampProperty;
-  
+
   WebkitMarginEnd?: MarginInlineEndProperty<TLength>;
-  
+
   WebkitMarginStart?: MarginInlineStartProperty<TLength>;
-  
+
   WebkitMaskAttachment?: WebkitMaskAttachmentProperty;
-  
+
   WebkitMaskClip?: WebkitMaskClipProperty;
-  
+
   WebkitMaskComposite?: WebkitMaskCompositeProperty;
-  
+
   WebkitMaskImage?: WebkitMaskImageProperty;
-  
+
   WebkitMaskOrigin?: WebkitMaskOriginProperty;
-  
+
   WebkitMaskPosition?: WebkitMaskPositionProperty<TLength>;
-  
+
   WebkitMaskPositionX?: WebkitMaskPositionXProperty<TLength>;
-  
+
   WebkitMaskPositionY?: WebkitMaskPositionYProperty<TLength>;
-  
+
   WebkitMaskRepeat?: WebkitMaskRepeatProperty;
-  
+
   WebkitMaskRepeatX?: WebkitMaskRepeatXProperty;
-  
+
   WebkitMaskRepeatY?: WebkitMaskRepeatYProperty;
-  
+
   WebkitMaskSize?: WebkitMaskSizeProperty<TLength>;
-  
+
   WebkitMaxInlineSize?: MaxInlineSizeProperty<TLength>;
-  
+
   WebkitOrder?: GlobalsNumber;
-  
+
   WebkitOverflowScrolling?: WebkitOverflowScrollingProperty;
-  
+
   WebkitPaddingEnd?: PaddingInlineEndProperty<TLength>;
-  
+
   WebkitPaddingStart?: PaddingInlineStartProperty<TLength>;
-  
+
   WebkitPerspective?: PerspectiveProperty<TLength>;
-  
+
   WebkitPerspectiveOrigin?: PerspectiveOriginProperty<TLength>;
-  
+
   WebkitScrollSnapType?: ScrollSnapTypeProperty;
-  
+
   WebkitShapeMargin?: ShapeMarginProperty<TLength>;
-  
+
   WebkitTapHighlightColor?: WebkitTapHighlightColorProperty;
-  
+
   WebkitTextCombine?: TextCombineUprightProperty;
-  
+
   WebkitTextDecorationColor?: TextDecorationColorProperty;
-  
+
   WebkitTextDecorationLine?: TextDecorationLineProperty;
-  
+
   WebkitTextDecorationSkip?: TextDecorationSkipProperty;
-  
+
   WebkitTextDecorationStyle?: TextDecorationStyleProperty;
-  
+
   WebkitTextEmphasisColor?: TextEmphasisColorProperty;
-  
+
   WebkitTextEmphasisPosition?: GlobalsString;
-  
+
   WebkitTextEmphasisStyle?: TextEmphasisStyleProperty;
-  
+
   WebkitTextFillColor?: WebkitTextFillColorProperty;
-  
+
   WebkitTextOrientation?: TextOrientationProperty;
-  
+
   WebkitTextSizeAdjust?: TextSizeAdjustProperty;
-  
+
   WebkitTextStrokeColor?: WebkitTextStrokeColorProperty;
-  
+
   WebkitTextStrokeWidth?: WebkitTextStrokeWidthProperty<TLength>;
-  
+
   WebkitTouchCallout?: WebkitTouchCalloutProperty;
-  
+
   WebkitTransform?: TransformProperty;
-  
+
   WebkitTransformOrigin?: TransformOriginProperty<TLength>;
-  
+
   WebkitTransformStyle?: TransformStyleProperty;
-  
+
   WebkitTransitionDelay?: GlobalsString;
-  
+
   WebkitTransitionDuration?: GlobalsString;
-  
+
   WebkitTransitionProperty?: TransitionPropertyProperty;
-  
+
   WebkitTransitionTimingFunction?: TransitionTimingFunctionProperty;
-  
+
   WebkitUserModify?: WebkitUserModifyProperty;
-  
+
   WebkitUserSelect?: UserSelectProperty;
-  
+
   WebkitWritingMode?: WritingModeProperty;
-  
+
   WebkittextUnderlinePosition?: TextUnderlinePositionProperty;
 }
 
 export interface VendorShorthandProperties<TLength = string | 0> {
-  
   MozAnimation?: AnimationProperty;
   MozBorderImage?: BorderImageProperty;
-  
+
   MozColumnRule?: ColumnRuleProperty<TLength>;
-  
+
   MozColumns?: ColumnsProperty<TLength>;
-  
+
   MozTransition?: TransitionProperty;
-  
+
   msContentZoomLimit?: GlobalsString;
-  
+
   msContentZoomSnap?: MsContentZoomSnapProperty;
-  
+
   msFlex?: FlexProperty<TLength>;
-  
+
   msScrollLimit?: GlobalsString;
-  
+
   msScrollSnapX?: GlobalsString;
-  
+
   msScrollSnapY?: GlobalsString;
-  
+
   msTransition?: TransitionProperty;
-  
+
   WebkitAnimation?: AnimationProperty;
-  
+
   WebkitBorderBefore?: WebkitBorderBeforeProperty<TLength>;
   WebkitBorderImage?: BorderImageProperty;
   WebkitBorderRadius?: BorderRadiusProperty<TLength>;
-  
+
   WebkitColumnRule?: ColumnRuleProperty<TLength>;
-  
+
   WebkitColumns?: ColumnsProperty<TLength>;
-  
+
   WebkitFlex?: FlexProperty<TLength>;
-  
+
   WebkitFlexFlow?: FlexFlowProperty;
   WebkitMask?: WebkitMaskProperty<TLength>;
-  
+
   WebkitTextEmphasis?: TextEmphasisProperty;
-  
+
   WebkitTextStroke?: WebkitTextStrokeProperty<TLength>;
-  
+
   WebkitTransition?: TransitionProperty;
 }
 
@@ -906,206 +837,205 @@ export interface VendorProperties<TLength = string | 0>
     VendorShorthandProperties<TLength> {}
 
 export interface ObsoleteProperties<TLength = string | 0> {
-  
   boxAlign?: BoxAlignProperty;
-  
+
   boxDirection?: BoxDirectionProperty;
-  
+
   boxFlex?: GlobalsNumber;
-  
+
   boxFlexGroup?: GlobalsNumber;
-  
+
   boxLines?: BoxLinesProperty;
-  
+
   boxOrdinalGroup?: GlobalsNumber;
-  
+
   boxOrient?: BoxOrientProperty;
-  
+
   boxPack?: BoxPackProperty;
-  
+
   clip?: ClipProperty;
-  
+
   fontVariantAlternates?: FontVariantAlternatesProperty;
-  
+
   gridColumnGap?: GridColumnGapProperty<TLength>;
-  
+
   gridGap?: GridGapProperty<TLength>;
-  
+
   gridRowGap?: GridRowGapProperty<TLength>;
-  
+
   imeMode?: ImeModeProperty;
-  
+
   offsetBlock?: InsetBlockProperty<TLength>;
-  
+
   offsetBlockEnd?: InsetBlockEndProperty<TLength>;
-  
+
   offsetBlockStart?: InsetBlockStartProperty<TLength>;
-  
+
   offsetInline?: InsetInlineProperty<TLength>;
-  
+
   offsetInlineEnd?: InsetInlineEndProperty<TLength>;
-  
+
   offsetInlineStart?: InsetInlineStartProperty<TLength>;
-  
+
   scrollSnapCoordinate?: ScrollSnapCoordinateProperty<TLength>;
-  
+
   scrollSnapDestination?: ScrollSnapDestinationProperty<TLength>;
-  
+
   scrollSnapPointsX?: ScrollSnapPointsXProperty;
-  
+
   scrollSnapPointsY?: ScrollSnapPointsYProperty;
-  
+
   scrollSnapTypeX?: ScrollSnapTypeXProperty;
-  
+
   scrollSnapTypeY?: ScrollSnapTypeYProperty;
-  
+
   scrollbarTrackColor?: MsScrollbarTrackColorProperty;
-  
+
   textCombineHorizontal?: TextCombineUprightProperty;
-  
+
   KhtmlBoxAlign?: BoxAlignProperty;
-  
+
   KhtmlBoxDirection?: BoxDirectionProperty;
-  
+
   KhtmlBoxFlex?: GlobalsNumber;
-  
+
   KhtmlBoxFlexGroup?: GlobalsNumber;
-  
+
   KhtmlBoxLines?: BoxLinesProperty;
-  
+
   KhtmlBoxOrdinalGroup?: GlobalsNumber;
-  
+
   KhtmlBoxOrient?: BoxOrientProperty;
-  
+
   KhtmlBoxPack?: BoxPackProperty;
-  
+
   KhtmlLineBreak?: LineBreakProperty;
-  
+
   KhtmlOpacity?: OpacityProperty;
-  
+
   KhtmlUserSelect?: UserSelectProperty;
-  
+
   MozBackgroundClip?: BackgroundClipProperty;
-  
+
   MozBackgroundInlinePolicy?: BoxDecorationBreakProperty;
-  
+
   MozBackgroundOrigin?: BackgroundOriginProperty;
-  
+
   MozBackgroundSize?: BackgroundSizeProperty<TLength>;
-  
+
   MozBinding?: MozBindingProperty;
-  
+
   MozBorderBottomColors?: MozBorderBottomColorsProperty;
-  
+
   MozBorderLeftColors?: MozBorderLeftColorsProperty;
   MozBorderRadius?: BorderRadiusProperty<TLength>;
-  
+
   MozBorderRadiusBottomleft?: BorderBottomLeftRadiusProperty<TLength>;
-  
+
   MozBorderRadiusBottomright?: BorderBottomRightRadiusProperty<TLength>;
-  
+
   MozBorderRadiusTopleft?: BorderTopLeftRadiusProperty<TLength>;
-  
+
   MozBorderRadiusTopright?: BorderTopRightRadiusProperty<TLength>;
-  
+
   MozBorderRightColors?: MozBorderRightColorsProperty;
-  
+
   MozBorderTopColors?: MozBorderTopColorsProperty;
-  
+
   MozBoxAlign?: BoxAlignProperty;
-  
+
   MozBoxDirection?: BoxDirectionProperty;
-  
+
   MozBoxFlex?: GlobalsNumber;
-  
+
   MozBoxOrdinalGroup?: GlobalsNumber;
-  
+
   MozBoxOrient?: BoxOrientProperty;
-  
+
   MozBoxPack?: BoxPackProperty;
-  
+
   MozBoxShadow?: BoxShadowProperty;
-  
+
   MozOpacity?: OpacityProperty;
-  
+
   MozOutline?: OutlineProperty<TLength>;
-  
+
   MozOutlineColor?: OutlineColorProperty;
   MozOutlineRadius?: MozOutlineRadiusProperty<TLength>;
-  
+
   MozOutlineStyle?: OutlineStyleProperty;
-  
+
   MozOutlineWidth?: OutlineWidthProperty<TLength>;
-  
+
   MozTextAlignLast?: TextAlignLastProperty;
-  
+
   MozTextBlink?: MozTextBlinkProperty;
-  
+
   MozTextDecorationColor?: TextDecorationColorProperty;
-  
+
   MozTextDecorationLine?: TextDecorationLineProperty;
-  
+
   MozTextDecorationStyle?: TextDecorationStyleProperty;
-  
+
   MozUserInput?: MozUserInputProperty;
-  
+
   MozWindowShadow?: MozWindowShadowProperty;
-  
+
   msImeMode?: ImeModeProperty;
-  
+
   msScrollbarTrackColor?: MsScrollbarTrackColorProperty;
-  
+
   OAnimation?: AnimationProperty;
-  
+
   OAnimationDelay?: GlobalsString;
-  
+
   OAnimationDirection?: AnimationDirectionProperty;
-  
+
   OAnimationDuration?: GlobalsString;
-  
+
   OAnimationFillMode?: AnimationFillModeProperty;
-  
+
   OAnimationIterationCount?: AnimationIterationCountProperty;
-  
+
   OAnimationName?: AnimationNameProperty;
-  
+
   OAnimationPlayState?: AnimationPlayStateProperty;
-  
+
   OAnimationTimingFunction?: AnimationTimingFunctionProperty;
-  
+
   OBackgroundSize?: BackgroundSizeProperty<TLength>;
   OBorderImage?: BorderImageProperty;
-  
+
   OTransform?: TransformProperty;
-  
+
   OTransition?: TransitionProperty;
-  
+
   OTransitionDelay?: GlobalsString;
-  
+
   OTransitionDuration?: GlobalsString;
-  
+
   OTransitionProperty?: TransitionPropertyProperty;
-  
+
   OTransitionTimingFunction?: TransitionTimingFunctionProperty;
-  
+
   WebkitBoxAlign?: BoxAlignProperty;
-  
+
   WebkitBoxDirection?: BoxDirectionProperty;
-  
+
   WebkitBoxFlex?: GlobalsNumber;
-  
+
   WebkitBoxFlexGroup?: GlobalsNumber;
-  
+
   WebkitBoxLines?: BoxLinesProperty;
-  
+
   WebkitBoxOrdinalGroup?: GlobalsNumber;
-  
+
   WebkitBoxOrient?: BoxOrientProperty;
-  
+
   WebkitBoxPack?: BoxPackProperty;
-  
+
   WebkitScrollSnapPointsX?: ScrollSnapPointsXProperty;
-  
+
   WebkitScrollSnapPointsY?: ScrollSnapPointsYProperty;
 }
 
@@ -1179,7 +1109,6 @@ export interface Properties<TLength = string | 0>
     ObsoleteProperties<TLength>,
     SvgProperties<TLength> {}
 
-
 export interface StandardLonghandPropertiesFallback<TLength = string | 0> {
   alignContent?: AlignContentProperty | AlignContentProperty[];
   alignItems?: AlignItemsProperty | AlignItemsProperty[];
@@ -1229,7 +1158,7 @@ export interface StandardLonghandPropertiesFallback<TLength = string | 0> {
   backgroundSize?:
     | BackgroundSizeProperty<TLength>
     | BackgroundSizeProperty<TLength>[];
-  
+
   blockOverflow?: BlockOverflowProperty | BlockOverflowProperty[];
   blockSize?: BlockSizeProperty<TLength> | BlockSizeProperty<TLength>[];
   borderBlockColor?: BorderBlockColorProperty | BorderBlockColorProperty[];
@@ -1433,7 +1362,7 @@ export interface StandardLonghandPropertiesFallback<TLength = string | 0> {
   hyphens?: HyphensProperty | HyphensProperty[];
   imageOrientation?: ImageOrientationProperty | ImageOrientationProperty[];
   imageRendering?: ImageRenderingProperty | ImageRenderingProperty[];
-  
+
   imageResolution?: ImageResolutionProperty | ImageResolutionProperty[];
   initialLetter?: InitialLetterProperty | InitialLetterProperty[];
   inlineSize?: InlineSizeProperty<TLength> | InlineSizeProperty<TLength>[];
@@ -1490,19 +1419,19 @@ export interface StandardLonghandPropertiesFallback<TLength = string | 0> {
   marginLeft?: MarginLeftProperty<TLength> | MarginLeftProperty<TLength>[];
   marginRight?: MarginRightProperty<TLength> | MarginRightProperty<TLength>[];
   marginTop?: MarginTopProperty<TLength> | MarginTopProperty<TLength>[];
-  
+
   maskBorderMode?: MaskBorderModeProperty | MaskBorderModeProperty[];
-  
+
   maskBorderOutset?:
     | MaskBorderOutsetProperty<TLength>
     | MaskBorderOutsetProperty<TLength>[];
-  
+
   maskBorderRepeat?: MaskBorderRepeatProperty | MaskBorderRepeatProperty[];
-  
+
   maskBorderSlice?: MaskBorderSliceProperty | MaskBorderSliceProperty[];
-  
+
   maskBorderSource?: MaskBorderSourceProperty | MaskBorderSourceProperty[];
-  
+
   maskBorderWidth?:
     | MaskBorderWidthProperty<TLength>
     | MaskBorderWidthProperty<TLength>[];
@@ -1524,7 +1453,7 @@ export interface StandardLonghandPropertiesFallback<TLength = string | 0> {
   maxInlineSize?:
     | MaxInlineSizeProperty<TLength>
     | MaxInlineSizeProperty<TLength>[];
-  
+
   maxLines?: MaxLinesProperty | MaxLinesProperty[];
   maxWidth?: MaxWidthProperty<TLength> | MaxWidthProperty<TLength>[];
   minBlockSize?:
@@ -1630,7 +1559,7 @@ export interface StandardLonghandPropertiesFallback<TLength = string | 0> {
   rotate?: RotateProperty | RotateProperty[];
   rowGap?: RowGapProperty<TLength> | RowGapProperty<TLength>[];
   rubyAlign?: RubyAlignProperty | RubyAlignProperty[];
-  
+
   rubyMerge?: RubyMergeProperty | RubyMergeProperty[];
   rubyPosition?: RubyPositionProperty | RubyPositionProperty[];
   scale?: ScaleProperty | ScaleProperty[];
@@ -1851,7 +1780,7 @@ export interface StandardShorthandPropertiesFallback<TLength = string | 0> {
   gridColumn?: GridColumnProperty | GridColumnProperty[];
   gridRow?: GridRowProperty | GridRowProperty[];
   gridTemplate?: GridTemplateProperty | GridTemplateProperty[];
-  
+
   lineClamp?: LineClampProperty | LineClampProperty[];
   listStyle?: ListStyleProperty | ListStyleProperty[];
   margin?: MarginProperty<TLength> | MarginProperty<TLength>[];
@@ -1877,693 +1806,691 @@ export interface StandardPropertiesFallback<TLength = string | 0>
     StandardShorthandPropertiesFallback<TLength> {}
 
 export interface VendorLonghandPropertiesFallback<TLength = string | 0> {
-  
   MozAnimationDelay?: GlobalsString | GlobalsString[];
-  
+
   MozAnimationDirection?:
     | AnimationDirectionProperty
     | AnimationDirectionProperty[];
-  
+
   MozAnimationDuration?: GlobalsString | GlobalsString[];
-  
+
   MozAnimationFillMode?:
     | AnimationFillModeProperty
     | AnimationFillModeProperty[];
-  
+
   MozAnimationIterationCount?:
     | AnimationIterationCountProperty
     | AnimationIterationCountProperty[];
-  
+
   MozAnimationName?: AnimationNameProperty | AnimationNameProperty[];
-  
+
   MozAnimationPlayState?:
     | AnimationPlayStateProperty
     | AnimationPlayStateProperty[];
-  
+
   MozAnimationTimingFunction?:
     | AnimationTimingFunctionProperty
     | AnimationTimingFunctionProperty[];
-  
+
   MozAppearance?: MozAppearanceProperty | MozAppearanceProperty[];
-  
+
   MozBackfaceVisibility?:
     | BackfaceVisibilityProperty
     | BackfaceVisibilityProperty[];
-  
+
   MozBorderEndColor?:
     | BorderInlineEndColorProperty
     | BorderInlineEndColorProperty[];
-  
+
   MozBorderEndStyle?:
     | BorderInlineEndStyleProperty
     | BorderInlineEndStyleProperty[];
-  
+
   MozBorderEndWidth?:
     | BorderInlineEndWidthProperty<TLength>
     | BorderInlineEndWidthProperty<TLength>[];
-  
+
   MozBorderStartColor?:
     | BorderInlineStartColorProperty
     | BorderInlineStartColorProperty[];
-  
+
   MozBorderStartStyle?:
     | BorderInlineStartStyleProperty
     | BorderInlineStartStyleProperty[];
-  
+
   MozBoxSizing?: BoxSizingProperty | BoxSizingProperty[];
-  
+
   MozColumnCount?: ColumnCountProperty | ColumnCountProperty[];
-  
+
   MozColumnFill?: ColumnFillProperty | ColumnFillProperty[];
-  
+
   MozColumnGap?: ColumnGapProperty<TLength> | ColumnGapProperty<TLength>[];
-  
+
   MozColumnRuleColor?: ColumnRuleColorProperty | ColumnRuleColorProperty[];
-  
+
   MozColumnRuleStyle?: ColumnRuleStyleProperty | ColumnRuleStyleProperty[];
-  
+
   MozColumnRuleWidth?:
     | ColumnRuleWidthProperty<TLength>
     | ColumnRuleWidthProperty<TLength>[];
-  
+
   MozColumnWidth?:
     | ColumnWidthProperty<TLength>
     | ColumnWidthProperty<TLength>[];
-  
+
   MozContextProperties?:
     | MozContextPropertiesProperty
     | MozContextPropertiesProperty[];
-  
+
   MozFloatEdge?: MozFloatEdgeProperty | MozFloatEdgeProperty[];
-  
+
   MozFontFeatureSettings?:
     | FontFeatureSettingsProperty
     | FontFeatureSettingsProperty[];
-  
+
   MozFontLanguageOverride?:
     | FontLanguageOverrideProperty
     | FontLanguageOverrideProperty[];
-  
+
   MozForceBrokenImageIcon?: GlobalsNumber | GlobalsNumber[];
-  
+
   MozHyphens?: HyphensProperty | HyphensProperty[];
-  
+
   MozImageRegion?: MozImageRegionProperty | MozImageRegionProperty[];
-  
+
   MozMarginEnd?:
     | MarginInlineEndProperty<TLength>
     | MarginInlineEndProperty<TLength>[];
-  
+
   MozMarginStart?:
     | MarginInlineStartProperty<TLength>
     | MarginInlineStartProperty<TLength>[];
-  
+
   MozOrient?: MozOrientProperty | MozOrientProperty[];
-  
+
   MozOutlineRadiusBottomleft?:
     | MozOutlineRadiusBottomleftProperty<TLength>
     | MozOutlineRadiusBottomleftProperty<TLength>[];
-  
+
   MozOutlineRadiusBottomright?:
     | MozOutlineRadiusBottomrightProperty<TLength>
     | MozOutlineRadiusBottomrightProperty<TLength>[];
-  
+
   MozOutlineRadiusTopleft?:
     | MozOutlineRadiusTopleftProperty<TLength>
     | MozOutlineRadiusTopleftProperty<TLength>[];
-  
+
   MozOutlineRadiusTopright?:
     | MozOutlineRadiusToprightProperty<TLength>
     | MozOutlineRadiusToprightProperty<TLength>[];
-  
+
   MozPaddingEnd?:
     | PaddingInlineEndProperty<TLength>
     | PaddingInlineEndProperty<TLength>[];
-  
+
   MozPaddingStart?:
     | PaddingInlineStartProperty<TLength>
     | PaddingInlineStartProperty<TLength>[];
-  
+
   MozPerspective?:
     | PerspectiveProperty<TLength>
     | PerspectiveProperty<TLength>[];
-  
+
   MozPerspectiveOrigin?:
     | PerspectiveOriginProperty<TLength>
     | PerspectiveOriginProperty<TLength>[];
-  
+
   MozStackSizing?: MozStackSizingProperty | MozStackSizingProperty[];
-  
+
   MozTabSize?: TabSizeProperty<TLength> | TabSizeProperty<TLength>[];
-  
+
   MozTextSizeAdjust?: TextSizeAdjustProperty | TextSizeAdjustProperty[];
-  
+
   MozTransformOrigin?:
     | TransformOriginProperty<TLength>
     | TransformOriginProperty<TLength>[];
-  
+
   MozTransformStyle?: TransformStyleProperty | TransformStyleProperty[];
-  
+
   MozTransitionDelay?: GlobalsString | GlobalsString[];
-  
+
   MozTransitionDuration?: GlobalsString | GlobalsString[];
-  
+
   MozTransitionProperty?:
     | TransitionPropertyProperty
     | TransitionPropertyProperty[];
-  
+
   MozTransitionTimingFunction?:
     | TransitionTimingFunctionProperty
     | TransitionTimingFunctionProperty[];
-  
+
   MozUserFocus?: MozUserFocusProperty | MozUserFocusProperty[];
-  
+
   MozUserModify?: MozUserModifyProperty | MozUserModifyProperty[];
-  
+
   MozUserSelect?: UserSelectProperty | UserSelectProperty[];
-  
+
   MozWindowDragging?: MozWindowDraggingProperty | MozWindowDraggingProperty[];
-  
+
   msAccelerator?: MsAcceleratorProperty | MsAcceleratorProperty[];
-  
+
   msAlignSelf?: AlignSelfProperty | AlignSelfProperty[];
-  
+
   msBlockProgression?:
     | MsBlockProgressionProperty
     | MsBlockProgressionProperty[];
-  
+
   msContentZoomChaining?:
     | MsContentZoomChainingProperty
     | MsContentZoomChainingProperty[];
-  
+
   msContentZoomLimitMax?: GlobalsString | GlobalsString[];
-  
+
   msContentZoomLimitMin?: GlobalsString | GlobalsString[];
-  
+
   msContentZoomSnapPoints?: GlobalsString | GlobalsString[];
-  
+
   msContentZoomSnapType?:
     | MsContentZoomSnapTypeProperty
     | MsContentZoomSnapTypeProperty[];
-  
+
   msContentZooming?: MsContentZoomingProperty | MsContentZoomingProperty[];
-  
+
   msFilter?: GlobalsString | GlobalsString[];
-  
+
   msFlexDirection?: FlexDirectionProperty | FlexDirectionProperty[];
-  
+
   msFlexPositive?: GlobalsNumber | GlobalsNumber[];
-  
+
   msFlowFrom?: MsFlowFromProperty | MsFlowFromProperty[];
-  
+
   msFlowInto?: MsFlowIntoProperty | MsFlowIntoProperty[];
-  
+
   msGridColumns?:
     | GridAutoColumnsProperty<TLength>
     | GridAutoColumnsProperty<TLength>[];
-  
+
   msGridRows?: GridAutoRowsProperty<TLength> | GridAutoRowsProperty<TLength>[];
-  
+
   msHighContrastAdjust?:
     | MsHighContrastAdjustProperty
     | MsHighContrastAdjustProperty[];
-  
+
   msHyphenateLimitChars?:
     | MsHyphenateLimitCharsProperty
     | MsHyphenateLimitCharsProperty[];
-  
+
   msHyphenateLimitLines?:
     | MsHyphenateLimitLinesProperty
     | MsHyphenateLimitLinesProperty[];
-  
+
   msHyphenateLimitZone?:
     | MsHyphenateLimitZoneProperty<TLength>
     | MsHyphenateLimitZoneProperty<TLength>[];
-  
+
   msHyphens?: HyphensProperty | HyphensProperty[];
-  
+
   msImeAlign?: MsImeAlignProperty | MsImeAlignProperty[];
-  
+
   msLineBreak?: LineBreakProperty | LineBreakProperty[];
-  
+
   msOrder?: GlobalsNumber | GlobalsNumber[];
-  
+
   msOverflowStyle?: MsOverflowStyleProperty | MsOverflowStyleProperty[];
-  
+
   msOverflowX?: OverflowXProperty | OverflowXProperty[];
-  
+
   msOverflowY?: OverflowYProperty | OverflowYProperty[];
-  
+
   msScrollChaining?: MsScrollChainingProperty | MsScrollChainingProperty[];
-  
+
   msScrollLimitXMax?:
     | MsScrollLimitXMaxProperty<TLength>
     | MsScrollLimitXMaxProperty<TLength>[];
-  
+
   msScrollLimitXMin?:
     | MsScrollLimitXMinProperty<TLength>
     | MsScrollLimitXMinProperty<TLength>[];
-  
+
   msScrollLimitYMax?:
     | MsScrollLimitYMaxProperty<TLength>
     | MsScrollLimitYMaxProperty<TLength>[];
-  
+
   msScrollLimitYMin?:
     | MsScrollLimitYMinProperty<TLength>
     | MsScrollLimitYMinProperty<TLength>[];
-  
+
   msScrollRails?: MsScrollRailsProperty | MsScrollRailsProperty[];
-  
+
   msScrollSnapPointsX?: GlobalsString | GlobalsString[];
-  
+
   msScrollSnapPointsY?: GlobalsString | GlobalsString[];
-  
+
   msScrollSnapType?: MsScrollSnapTypeProperty | MsScrollSnapTypeProperty[];
-  
+
   msScrollTranslation?:
     | MsScrollTranslationProperty
     | MsScrollTranslationProperty[];
-  
+
   msScrollbar3dlightColor?:
     | MsScrollbar3dlightColorProperty
     | MsScrollbar3dlightColorProperty[];
-  
+
   msScrollbarArrowColor?:
     | MsScrollbarArrowColorProperty
     | MsScrollbarArrowColorProperty[];
-  
+
   msScrollbarBaseColor?:
     | MsScrollbarBaseColorProperty
     | MsScrollbarBaseColorProperty[];
-  
+
   msScrollbarDarkshadowColor?:
     | MsScrollbarDarkshadowColorProperty
     | MsScrollbarDarkshadowColorProperty[];
-  
+
   msScrollbarFaceColor?:
     | MsScrollbarFaceColorProperty
     | MsScrollbarFaceColorProperty[];
-  
+
   msScrollbarHighlightColor?:
     | MsScrollbarHighlightColorProperty
     | MsScrollbarHighlightColorProperty[];
-  
+
   msScrollbarShadowColor?:
     | MsScrollbarShadowColorProperty
     | MsScrollbarShadowColorProperty[];
-  
+
   msTextAutospace?: MsTextAutospaceProperty | MsTextAutospaceProperty[];
-  
+
   msTextCombineHorizontal?:
     | TextCombineUprightProperty
     | TextCombineUprightProperty[];
-  
+
   msTextOverflow?: TextOverflowProperty | TextOverflowProperty[];
-  
+
   msTouchAction?: TouchActionProperty | TouchActionProperty[];
-  
+
   msTouchSelect?: MsTouchSelectProperty | MsTouchSelectProperty[];
-  
+
   msTransform?: TransformProperty | TransformProperty[];
-  
+
   msTransformOrigin?:
     | TransformOriginProperty<TLength>
     | TransformOriginProperty<TLength>[];
-  
+
   msTransitionDelay?: GlobalsString | GlobalsString[];
-  
+
   msTransitionDuration?: GlobalsString | GlobalsString[];
-  
+
   msTransitionProperty?:
     | TransitionPropertyProperty
     | TransitionPropertyProperty[];
-  
+
   msTransitionTimingFunction?:
     | TransitionTimingFunctionProperty
     | TransitionTimingFunctionProperty[];
-  
+
   msUserSelect?: MsUserSelectProperty | MsUserSelectProperty[];
-  
+
   msWordBreak?: WordBreakProperty | WordBreakProperty[];
-  
+
   msWrapFlow?: MsWrapFlowProperty | MsWrapFlowProperty[];
-  
+
   msWrapMargin?:
     | MsWrapMarginProperty<TLength>
     | MsWrapMarginProperty<TLength>[];
-  
+
   msWrapThrough?: MsWrapThroughProperty | MsWrapThroughProperty[];
-  
+
   msWritingMode?: WritingModeProperty | WritingModeProperty[];
-  
+
   OObjectFit?: ObjectFitProperty | ObjectFitProperty[];
-  
+
   OObjectPosition?:
     | ObjectPositionProperty<TLength>
     | ObjectPositionProperty<TLength>[];
-  
+
   OTabSize?: TabSizeProperty<TLength> | TabSizeProperty<TLength>[];
-  
+
   OTextOverflow?: TextOverflowProperty | TextOverflowProperty[];
-  
+
   OTransformOrigin?:
     | TransformOriginProperty<TLength>
     | TransformOriginProperty<TLength>[];
-  
+
   WebkitAlignContent?: AlignContentProperty | AlignContentProperty[];
-  
+
   WebkitAlignItems?: AlignItemsProperty | AlignItemsProperty[];
-  
+
   WebkitAlignSelf?: AlignSelfProperty | AlignSelfProperty[];
-  
+
   WebkitAnimationDelay?: GlobalsString | GlobalsString[];
-  
+
   WebkitAnimationDirection?:
     | AnimationDirectionProperty
     | AnimationDirectionProperty[];
-  
+
   WebkitAnimationDuration?: GlobalsString | GlobalsString[];
-  
+
   WebkitAnimationFillMode?:
     | AnimationFillModeProperty
     | AnimationFillModeProperty[];
-  
+
   WebkitAnimationIterationCount?:
     | AnimationIterationCountProperty
     | AnimationIterationCountProperty[];
-  
+
   WebkitAnimationName?: AnimationNameProperty | AnimationNameProperty[];
-  
+
   WebkitAnimationPlayState?:
     | AnimationPlayStateProperty
     | AnimationPlayStateProperty[];
-  
+
   WebkitAnimationTimingFunction?:
     | AnimationTimingFunctionProperty
     | AnimationTimingFunctionProperty[];
-  
+
   WebkitAppearance?: WebkitAppearanceProperty | WebkitAppearanceProperty[];
-  
+
   WebkitBackdropFilter?: BackdropFilterProperty | BackdropFilterProperty[];
-  
+
   WebkitBackfaceVisibility?:
     | BackfaceVisibilityProperty
     | BackfaceVisibilityProperty[];
-  
+
   WebkitBackgroundClip?: BackgroundClipProperty | BackgroundClipProperty[];
-  
+
   WebkitBackgroundOrigin?:
     | BackgroundOriginProperty
     | BackgroundOriginProperty[];
-  
+
   WebkitBackgroundSize?:
     | BackgroundSizeProperty<TLength>
     | BackgroundSizeProperty<TLength>[];
-  
+
   WebkitBorderBeforeColor?:
     | WebkitBorderBeforeColorProperty
     | WebkitBorderBeforeColorProperty[];
-  
+
   WebkitBorderBeforeStyle?:
     | WebkitBorderBeforeStyleProperty
     | WebkitBorderBeforeStyleProperty[];
-  
+
   WebkitBorderBeforeWidth?:
     | WebkitBorderBeforeWidthProperty<TLength>
     | WebkitBorderBeforeWidthProperty<TLength>[];
-  
+
   WebkitBorderBottomLeftRadius?:
     | BorderBottomLeftRadiusProperty<TLength>
     | BorderBottomLeftRadiusProperty<TLength>[];
-  
+
   WebkitBorderBottomRightRadius?:
     | BorderBottomRightRadiusProperty<TLength>
     | BorderBottomRightRadiusProperty<TLength>[];
-  
+
   WebkitBorderImageSlice?:
     | BorderImageSliceProperty
     | BorderImageSliceProperty[];
-  
+
   WebkitBorderTopLeftRadius?:
     | BorderTopLeftRadiusProperty<TLength>
     | BorderTopLeftRadiusProperty<TLength>[];
-  
+
   WebkitBorderTopRightRadius?:
     | BorderTopRightRadiusProperty<TLength>
     | BorderTopRightRadiusProperty<TLength>[];
-  
+
   WebkitBoxDecorationBreak?:
     | BoxDecorationBreakProperty
     | BoxDecorationBreakProperty[];
-  
+
   WebkitBoxReflect?:
     | WebkitBoxReflectProperty<TLength>
     | WebkitBoxReflectProperty<TLength>[];
-  
+
   WebkitBoxShadow?: BoxShadowProperty | BoxShadowProperty[];
-  
+
   WebkitBoxSizing?: BoxSizingProperty | BoxSizingProperty[];
-  
+
   WebkitClipPath?: ClipPathProperty | ClipPathProperty[];
-  
+
   WebkitColorAdjust?: ColorAdjustProperty | ColorAdjustProperty[];
-  
+
   WebkitColumnCount?: ColumnCountProperty | ColumnCountProperty[];
-  
+
   WebkitColumnFill?: ColumnFillProperty | ColumnFillProperty[];
-  
+
   WebkitColumnGap?: ColumnGapProperty<TLength> | ColumnGapProperty<TLength>[];
-  
+
   WebkitColumnRuleColor?: ColumnRuleColorProperty | ColumnRuleColorProperty[];
-  
+
   WebkitColumnRuleStyle?: ColumnRuleStyleProperty | ColumnRuleStyleProperty[];
-  
+
   WebkitColumnRuleWidth?:
     | ColumnRuleWidthProperty<TLength>
     | ColumnRuleWidthProperty<TLength>[];
-  
+
   WebkitColumnSpan?: ColumnSpanProperty | ColumnSpanProperty[];
-  
+
   WebkitColumnWidth?:
     | ColumnWidthProperty<TLength>
     | ColumnWidthProperty<TLength>[];
-  
+
   WebkitFilter?: FilterProperty | FilterProperty[];
-  
+
   WebkitFlexBasis?: FlexBasisProperty<TLength> | FlexBasisProperty<TLength>[];
-  
+
   WebkitFlexDirection?: FlexDirectionProperty | FlexDirectionProperty[];
-  
+
   WebkitFlexGrow?: GlobalsNumber | GlobalsNumber[];
-  
+
   WebkitFlexShrink?: GlobalsNumber | GlobalsNumber[];
-  
+
   WebkitFlexWrap?: FlexWrapProperty | FlexWrapProperty[];
-  
+
   WebkitFontFeatureSettings?:
     | FontFeatureSettingsProperty
     | FontFeatureSettingsProperty[];
-  
+
   WebkitFontKerning?: FontKerningProperty | FontKerningProperty[];
-  
+
   WebkitFontVariantLigatures?:
     | FontVariantLigaturesProperty
     | FontVariantLigaturesProperty[];
-  
+
   WebkitHyphens?: HyphensProperty | HyphensProperty[];
-  
+
   WebkitJustifyContent?: JustifyContentProperty | JustifyContentProperty[];
-  
+
   WebkitLineBreak?: LineBreakProperty | LineBreakProperty[];
-  
+
   WebkitLineClamp?: WebkitLineClampProperty | WebkitLineClampProperty[];
-  
+
   WebkitMarginEnd?:
     | MarginInlineEndProperty<TLength>
     | MarginInlineEndProperty<TLength>[];
-  
+
   WebkitMarginStart?:
     | MarginInlineStartProperty<TLength>
     | MarginInlineStartProperty<TLength>[];
-  
+
   WebkitMaskAttachment?:
     | WebkitMaskAttachmentProperty
     | WebkitMaskAttachmentProperty[];
-  
+
   WebkitMaskClip?: WebkitMaskClipProperty | WebkitMaskClipProperty[];
-  
+
   WebkitMaskComposite?:
     | WebkitMaskCompositeProperty
     | WebkitMaskCompositeProperty[];
-  
+
   WebkitMaskImage?: WebkitMaskImageProperty | WebkitMaskImageProperty[];
-  
+
   WebkitMaskOrigin?: WebkitMaskOriginProperty | WebkitMaskOriginProperty[];
-  
+
   WebkitMaskPosition?:
     | WebkitMaskPositionProperty<TLength>
     | WebkitMaskPositionProperty<TLength>[];
-  
+
   WebkitMaskPositionX?:
     | WebkitMaskPositionXProperty<TLength>
     | WebkitMaskPositionXProperty<TLength>[];
-  
+
   WebkitMaskPositionY?:
     | WebkitMaskPositionYProperty<TLength>
     | WebkitMaskPositionYProperty<TLength>[];
-  
+
   WebkitMaskRepeat?: WebkitMaskRepeatProperty | WebkitMaskRepeatProperty[];
-  
+
   WebkitMaskRepeatX?: WebkitMaskRepeatXProperty | WebkitMaskRepeatXProperty[];
-  
+
   WebkitMaskRepeatY?: WebkitMaskRepeatYProperty | WebkitMaskRepeatYProperty[];
-  
+
   WebkitMaskSize?:
     | WebkitMaskSizeProperty<TLength>
     | WebkitMaskSizeProperty<TLength>[];
-  
+
   WebkitMaxInlineSize?:
     | MaxInlineSizeProperty<TLength>
     | MaxInlineSizeProperty<TLength>[];
-  
+
   WebkitOrder?: GlobalsNumber | GlobalsNumber[];
-  
+
   WebkitOverflowScrolling?:
     | WebkitOverflowScrollingProperty
     | WebkitOverflowScrollingProperty[];
-  
+
   WebkitPaddingEnd?:
     | PaddingInlineEndProperty<TLength>
     | PaddingInlineEndProperty<TLength>[];
-  
+
   WebkitPaddingStart?:
     | PaddingInlineStartProperty<TLength>
     | PaddingInlineStartProperty<TLength>[];
-  
+
   WebkitPerspective?:
     | PerspectiveProperty<TLength>
     | PerspectiveProperty<TLength>[];
-  
+
   WebkitPerspectiveOrigin?:
     | PerspectiveOriginProperty<TLength>
     | PerspectiveOriginProperty<TLength>[];
-  
+
   WebkitScrollSnapType?: ScrollSnapTypeProperty | ScrollSnapTypeProperty[];
-  
+
   WebkitShapeMargin?:
     | ShapeMarginProperty<TLength>
     | ShapeMarginProperty<TLength>[];
-  
+
   WebkitTapHighlightColor?:
     | WebkitTapHighlightColorProperty
     | WebkitTapHighlightColorProperty[];
-  
+
   WebkitTextCombine?: TextCombineUprightProperty | TextCombineUprightProperty[];
-  
+
   WebkitTextDecorationColor?:
     | TextDecorationColorProperty
     | TextDecorationColorProperty[];
-  
+
   WebkitTextDecorationLine?:
     | TextDecorationLineProperty
     | TextDecorationLineProperty[];
-  
+
   WebkitTextDecorationSkip?:
     | TextDecorationSkipProperty
     | TextDecorationSkipProperty[];
-  
+
   WebkitTextDecorationStyle?:
     | TextDecorationStyleProperty
     | TextDecorationStyleProperty[];
-  
+
   WebkitTextEmphasisColor?:
     | TextEmphasisColorProperty
     | TextEmphasisColorProperty[];
-  
+
   WebkitTextEmphasisPosition?: GlobalsString | GlobalsString[];
-  
+
   WebkitTextEmphasisStyle?:
     | TextEmphasisStyleProperty
     | TextEmphasisStyleProperty[];
-  
+
   WebkitTextFillColor?:
     | WebkitTextFillColorProperty
     | WebkitTextFillColorProperty[];
-  
+
   WebkitTextOrientation?: TextOrientationProperty | TextOrientationProperty[];
-  
+
   WebkitTextSizeAdjust?: TextSizeAdjustProperty | TextSizeAdjustProperty[];
-  
+
   WebkitTextStrokeColor?:
     | WebkitTextStrokeColorProperty
     | WebkitTextStrokeColorProperty[];
-  
+
   WebkitTextStrokeWidth?:
     | WebkitTextStrokeWidthProperty<TLength>
     | WebkitTextStrokeWidthProperty<TLength>[];
-  
+
   WebkitTouchCallout?:
     | WebkitTouchCalloutProperty
     | WebkitTouchCalloutProperty[];
-  
+
   WebkitTransform?: TransformProperty | TransformProperty[];
-  
+
   WebkitTransformOrigin?:
     | TransformOriginProperty<TLength>
     | TransformOriginProperty<TLength>[];
-  
+
   WebkitTransformStyle?: TransformStyleProperty | TransformStyleProperty[];
-  
+
   WebkitTransitionDelay?: GlobalsString | GlobalsString[];
-  
+
   WebkitTransitionDuration?: GlobalsString | GlobalsString[];
-  
+
   WebkitTransitionProperty?:
     | TransitionPropertyProperty
     | TransitionPropertyProperty[];
-  
+
   WebkitTransitionTimingFunction?:
     | TransitionTimingFunctionProperty
     | TransitionTimingFunctionProperty[];
-  
+
   WebkitUserModify?: WebkitUserModifyProperty | WebkitUserModifyProperty[];
-  
+
   WebkitUserSelect?: UserSelectProperty | UserSelectProperty[];
-  
+
   WebkitWritingMode?: WritingModeProperty | WritingModeProperty[];
-  
+
   WebkittextUnderlinePosition?:
     | TextUnderlinePositionProperty
     | TextUnderlinePositionProperty[];
 }
 
 export interface VendorShorthandPropertiesFallback<TLength = string | 0> {
-  
   MozAnimation?: AnimationProperty | AnimationProperty[];
   MozBorderImage?: BorderImageProperty | BorderImageProperty[];
-  
+
   MozColumnRule?: ColumnRuleProperty<TLength> | ColumnRuleProperty<TLength>[];
-  
+
   MozColumns?: ColumnsProperty<TLength> | ColumnsProperty<TLength>[];
-  
+
   MozTransition?: TransitionProperty | TransitionProperty[];
-  
+
   msContentZoomLimit?: GlobalsString | GlobalsString[];
-  
+
   msContentZoomSnap?: MsContentZoomSnapProperty | MsContentZoomSnapProperty[];
-  
+
   msFlex?: FlexProperty<TLength> | FlexProperty<TLength>[];
-  
+
   msScrollLimit?: GlobalsString | GlobalsString[];
-  
+
   msScrollSnapX?: GlobalsString | GlobalsString[];
-  
+
   msScrollSnapY?: GlobalsString | GlobalsString[];
-  
+
   msTransition?: TransitionProperty | TransitionProperty[];
-  
+
   WebkitAnimation?: AnimationProperty | AnimationProperty[];
-  
+
   WebkitBorderBefore?:
     | WebkitBorderBeforeProperty<TLength>
     | WebkitBorderBeforeProperty<TLength>[];
@@ -2571,24 +2498,24 @@ export interface VendorShorthandPropertiesFallback<TLength = string | 0> {
   WebkitBorderRadius?:
     | BorderRadiusProperty<TLength>
     | BorderRadiusProperty<TLength>[];
-  
+
   WebkitColumnRule?:
     | ColumnRuleProperty<TLength>
     | ColumnRuleProperty<TLength>[];
-  
+
   WebkitColumns?: ColumnsProperty<TLength> | ColumnsProperty<TLength>[];
-  
+
   WebkitFlex?: FlexProperty<TLength> | FlexProperty<TLength>[];
-  
+
   WebkitFlexFlow?: FlexFlowProperty | FlexFlowProperty[];
   WebkitMask?: WebkitMaskProperty<TLength> | WebkitMaskProperty<TLength>[];
-  
+
   WebkitTextEmphasis?: TextEmphasisProperty | TextEmphasisProperty[];
-  
+
   WebkitTextStroke?:
     | WebkitTextStrokeProperty<TLength>
     | WebkitTextStrokeProperty<TLength>[];
-  
+
   WebkitTransition?: TransitionProperty | TransitionProperty[];
 }
 
@@ -2598,276 +2525,275 @@ export interface VendorPropertiesFallback<TLength = string | 0>
     VendorShorthandPropertiesFallback<TLength> {}
 
 export interface ObsoletePropertiesFallback<TLength = string | 0> {
-  
   boxAlign?: BoxAlignProperty | BoxAlignProperty[];
-  
+
   boxDirection?: BoxDirectionProperty | BoxDirectionProperty[];
-  
+
   boxFlex?: GlobalsNumber | GlobalsNumber[];
-  
+
   boxFlexGroup?: GlobalsNumber | GlobalsNumber[];
-  
+
   boxLines?: BoxLinesProperty | BoxLinesProperty[];
-  
+
   boxOrdinalGroup?: GlobalsNumber | GlobalsNumber[];
-  
+
   boxOrient?: BoxOrientProperty | BoxOrientProperty[];
-  
+
   boxPack?: BoxPackProperty | BoxPackProperty[];
-  
+
   clip?: ClipProperty | ClipProperty[];
-  
+
   fontVariantAlternates?:
     | FontVariantAlternatesProperty
     | FontVariantAlternatesProperty[];
-  
+
   gridColumnGap?:
     | GridColumnGapProperty<TLength>
     | GridColumnGapProperty<TLength>[];
-  
+
   gridGap?: GridGapProperty<TLength> | GridGapProperty<TLength>[];
-  
+
   gridRowGap?: GridRowGapProperty<TLength> | GridRowGapProperty<TLength>[];
-  
+
   imeMode?: ImeModeProperty | ImeModeProperty[];
-  
+
   offsetBlock?: InsetBlockProperty<TLength> | InsetBlockProperty<TLength>[];
-  
+
   offsetBlockEnd?:
     | InsetBlockEndProperty<TLength>
     | InsetBlockEndProperty<TLength>[];
-  
+
   offsetBlockStart?:
     | InsetBlockStartProperty<TLength>
     | InsetBlockStartProperty<TLength>[];
-  
+
   offsetInline?: InsetInlineProperty<TLength> | InsetInlineProperty<TLength>[];
-  
+
   offsetInlineEnd?:
     | InsetInlineEndProperty<TLength>
     | InsetInlineEndProperty<TLength>[];
-  
+
   offsetInlineStart?:
     | InsetInlineStartProperty<TLength>
     | InsetInlineStartProperty<TLength>[];
-  
+
   scrollSnapCoordinate?:
     | ScrollSnapCoordinateProperty<TLength>
     | ScrollSnapCoordinateProperty<TLength>[];
-  
+
   scrollSnapDestination?:
     | ScrollSnapDestinationProperty<TLength>
     | ScrollSnapDestinationProperty<TLength>[];
-  
+
   scrollSnapPointsX?: ScrollSnapPointsXProperty | ScrollSnapPointsXProperty[];
-  
+
   scrollSnapPointsY?: ScrollSnapPointsYProperty | ScrollSnapPointsYProperty[];
-  
+
   scrollSnapTypeX?: ScrollSnapTypeXProperty | ScrollSnapTypeXProperty[];
-  
+
   scrollSnapTypeY?: ScrollSnapTypeYProperty | ScrollSnapTypeYProperty[];
-  
+
   scrollbarTrackColor?:
     | MsScrollbarTrackColorProperty
     | MsScrollbarTrackColorProperty[];
-  
+
   textCombineHorizontal?:
     | TextCombineUprightProperty
     | TextCombineUprightProperty[];
-  
+
   KhtmlBoxAlign?: BoxAlignProperty | BoxAlignProperty[];
-  
+
   KhtmlBoxDirection?: BoxDirectionProperty | BoxDirectionProperty[];
-  
+
   KhtmlBoxFlex?: GlobalsNumber | GlobalsNumber[];
-  
+
   KhtmlBoxFlexGroup?: GlobalsNumber | GlobalsNumber[];
-  
+
   KhtmlBoxLines?: BoxLinesProperty | BoxLinesProperty[];
-  
+
   KhtmlBoxOrdinalGroup?: GlobalsNumber | GlobalsNumber[];
-  
+
   KhtmlBoxOrient?: BoxOrientProperty | BoxOrientProperty[];
-  
+
   KhtmlBoxPack?: BoxPackProperty | BoxPackProperty[];
-  
+
   KhtmlLineBreak?: LineBreakProperty | LineBreakProperty[];
-  
+
   KhtmlOpacity?: OpacityProperty | OpacityProperty[];
-  
+
   KhtmlUserSelect?: UserSelectProperty | UserSelectProperty[];
-  
+
   MozBackgroundClip?: BackgroundClipProperty | BackgroundClipProperty[];
-  
+
   MozBackgroundInlinePolicy?:
     | BoxDecorationBreakProperty
     | BoxDecorationBreakProperty[];
-  
+
   MozBackgroundOrigin?: BackgroundOriginProperty | BackgroundOriginProperty[];
-  
+
   MozBackgroundSize?:
     | BackgroundSizeProperty<TLength>
     | BackgroundSizeProperty<TLength>[];
-  
+
   MozBinding?: MozBindingProperty | MozBindingProperty[];
-  
+
   MozBorderBottomColors?:
     | MozBorderBottomColorsProperty
     | MozBorderBottomColorsProperty[];
-  
+
   MozBorderLeftColors?:
     | MozBorderLeftColorsProperty
     | MozBorderLeftColorsProperty[];
   MozBorderRadius?:
     | BorderRadiusProperty<TLength>
     | BorderRadiusProperty<TLength>[];
-  
+
   MozBorderRadiusBottomleft?:
     | BorderBottomLeftRadiusProperty<TLength>
     | BorderBottomLeftRadiusProperty<TLength>[];
-  
+
   MozBorderRadiusBottomright?:
     | BorderBottomRightRadiusProperty<TLength>
     | BorderBottomRightRadiusProperty<TLength>[];
-  
+
   MozBorderRadiusTopleft?:
     | BorderTopLeftRadiusProperty<TLength>
     | BorderTopLeftRadiusProperty<TLength>[];
-  
+
   MozBorderRadiusTopright?:
     | BorderTopRightRadiusProperty<TLength>
     | BorderTopRightRadiusProperty<TLength>[];
-  
+
   MozBorderRightColors?:
     | MozBorderRightColorsProperty
     | MozBorderRightColorsProperty[];
-  
+
   MozBorderTopColors?:
     | MozBorderTopColorsProperty
     | MozBorderTopColorsProperty[];
-  
+
   MozBoxAlign?: BoxAlignProperty | BoxAlignProperty[];
-  
+
   MozBoxDirection?: BoxDirectionProperty | BoxDirectionProperty[];
-  
+
   MozBoxFlex?: GlobalsNumber | GlobalsNumber[];
-  
+
   MozBoxOrdinalGroup?: GlobalsNumber | GlobalsNumber[];
-  
+
   MozBoxOrient?: BoxOrientProperty | BoxOrientProperty[];
-  
+
   MozBoxPack?: BoxPackProperty | BoxPackProperty[];
-  
+
   MozBoxShadow?: BoxShadowProperty | BoxShadowProperty[];
-  
+
   MozOpacity?: OpacityProperty | OpacityProperty[];
-  
+
   MozOutline?: OutlineProperty<TLength> | OutlineProperty<TLength>[];
-  
+
   MozOutlineColor?: OutlineColorProperty | OutlineColorProperty[];
   MozOutlineRadius?:
     | MozOutlineRadiusProperty<TLength>
     | MozOutlineRadiusProperty<TLength>[];
-  
+
   MozOutlineStyle?: OutlineStyleProperty | OutlineStyleProperty[];
-  
+
   MozOutlineWidth?:
     | OutlineWidthProperty<TLength>
     | OutlineWidthProperty<TLength>[];
-  
+
   MozTextAlignLast?: TextAlignLastProperty | TextAlignLastProperty[];
-  
+
   MozTextBlink?: MozTextBlinkProperty | MozTextBlinkProperty[];
-  
+
   MozTextDecorationColor?:
     | TextDecorationColorProperty
     | TextDecorationColorProperty[];
-  
+
   MozTextDecorationLine?:
     | TextDecorationLineProperty
     | TextDecorationLineProperty[];
-  
+
   MozTextDecorationStyle?:
     | TextDecorationStyleProperty
     | TextDecorationStyleProperty[];
-  
+
   MozUserInput?: MozUserInputProperty | MozUserInputProperty[];
-  
+
   MozWindowShadow?: MozWindowShadowProperty | MozWindowShadowProperty[];
-  
+
   msImeMode?: ImeModeProperty | ImeModeProperty[];
-  
+
   msScrollbarTrackColor?:
     | MsScrollbarTrackColorProperty
     | MsScrollbarTrackColorProperty[];
-  
+
   OAnimation?: AnimationProperty | AnimationProperty[];
-  
+
   OAnimationDelay?: GlobalsString | GlobalsString[];
-  
+
   OAnimationDirection?:
     | AnimationDirectionProperty
     | AnimationDirectionProperty[];
-  
+
   OAnimationDuration?: GlobalsString | GlobalsString[];
-  
+
   OAnimationFillMode?: AnimationFillModeProperty | AnimationFillModeProperty[];
-  
+
   OAnimationIterationCount?:
     | AnimationIterationCountProperty
     | AnimationIterationCountProperty[];
-  
+
   OAnimationName?: AnimationNameProperty | AnimationNameProperty[];
-  
+
   OAnimationPlayState?:
     | AnimationPlayStateProperty
     | AnimationPlayStateProperty[];
-  
+
   OAnimationTimingFunction?:
     | AnimationTimingFunctionProperty
     | AnimationTimingFunctionProperty[];
-  
+
   OBackgroundSize?:
     | BackgroundSizeProperty<TLength>
     | BackgroundSizeProperty<TLength>[];
   OBorderImage?: BorderImageProperty | BorderImageProperty[];
-  
+
   OTransform?: TransformProperty | TransformProperty[];
-  
+
   OTransition?: TransitionProperty | TransitionProperty[];
-  
+
   OTransitionDelay?: GlobalsString | GlobalsString[];
-  
+
   OTransitionDuration?: GlobalsString | GlobalsString[];
-  
+
   OTransitionProperty?:
     | TransitionPropertyProperty
     | TransitionPropertyProperty[];
-  
+
   OTransitionTimingFunction?:
     | TransitionTimingFunctionProperty
     | TransitionTimingFunctionProperty[];
-  
+
   WebkitBoxAlign?: BoxAlignProperty | BoxAlignProperty[];
-  
+
   WebkitBoxDirection?: BoxDirectionProperty | BoxDirectionProperty[];
-  
+
   WebkitBoxFlex?: GlobalsNumber | GlobalsNumber[];
-  
+
   WebkitBoxFlexGroup?: GlobalsNumber | GlobalsNumber[];
-  
+
   WebkitBoxLines?: BoxLinesProperty | BoxLinesProperty[];
-  
+
   WebkitBoxOrdinalGroup?: GlobalsNumber | GlobalsNumber[];
-  
+
   WebkitBoxOrient?: BoxOrientProperty | BoxOrientProperty[];
-  
+
   WebkitBoxPack?: BoxPackProperty | BoxPackProperty[];
-  
+
   WebkitScrollSnapPointsX?:
     | ScrollSnapPointsXProperty
     | ScrollSnapPointsXProperty[];
-  
+
   WebkitScrollSnapPointsY?:
     | ScrollSnapPointsYProperty
     | ScrollSnapPointsYProperty[];
@@ -3030,7 +2956,6 @@ export interface FontFaceFallback {
   src?: string | string[];
   unicodeRange?: string | string[];
 }
-
 
 export interface Viewport<TLength = string | 0> {
   msHeight?: ViewportHeightProperty<TLength>;

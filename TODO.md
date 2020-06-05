@@ -11,6 +11,7 @@
 - [x] Action text mangling
 - [x] minify js
 - [] self-vendor runtime.js (instead of loading from a CDN)
+- [] unify top-components and sub-components interface usage
 - [] write test for implemented features
 - [] option to disable client side logging
 - [x] handle URL with query params
@@ -23,6 +24,6 @@
 - [] make path resolution relative to path of entry file
 - [] test async request per seconds limit
 - [x] support wildcard path (e.g. /agent/_/profile)
-- [] improve bundling speed
+- [x] improve bundling speed
 - [] delete framework.ts
 - [] documentation

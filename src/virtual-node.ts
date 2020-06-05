@@ -1,22 +1,25 @@
-import { Properties } from "./css-types.ts";
-import { AllElements } from "./html-attributes-type.ts";
-import { VirtualNodeEvents } from "./virtual-node-events.ts";
-
-export type VirtualNodeStyle = Properties;
-
+/**
+ * Note: 'on*' and '*' do not represent the actual type, they are just to ease typechecking on 
+ *      levo-runtime.ts
+ */
 export type VirtualNode<Action> = (
-  & VirtualNodeEvents<Action>
-  & {
-    style?: VirtualNodeStyle;
+  | {
+    $: "_text"; // not a tag, but a text node
+    value: string;
+
+    style?: undefined;
+    children?: undefined;
+    ref?: undefined;
+    "on*"?: undefined;
+    "*"?: undefined;
+  }
+  | ({
+    $: "_other";
+
+    style?: Partial<Record<string, string>>;
     children?: VirtualNode<Action>[];
     ref?: undefined;
-  }
-  & (
-    | {
-      $: "_text"; // not a tag, but a text node
-      value: string;
-      children?: undefined;
-    }
-    | AllElements
-  )
+    "on*"?: Action;
+    "*"?: string;
+  })
 );

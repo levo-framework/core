@@ -10,7 +10,7 @@ export const mount = <Action>({ virtualNode }: {
   virtualNode: MountedVirtualNode<Action>;
 } => {
   if (virtualNode.$ === "_text") {
-    const node = document.createTextNode(virtualNode.value);
+    const node = document.createTextNode(virtualNode.value as string);
     return { node, virtualNode: { ...virtualNode, ref: node } };
   }
   const node = document.createElement(virtualNode.$);

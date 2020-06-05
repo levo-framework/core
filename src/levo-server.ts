@@ -43,6 +43,7 @@ export const levo = {
       if (cachePages && !options?.overrideCache && await exists(cachePath)) {
         return decoder.decode(await Deno.readFile(cachePath));
       } else {
+        const now = Date.now();
         const bundled = decoder.decode(
           await Deno.run({
             cmd: ["deno", "bundle", "--config", "levo.tsconfig.json", filename],
@@ -50,7 +51,11 @@ export const levo = {
           })
             .output(),
         );
-        console.log(`Finish bundle: ${cachePath}`);
+        console.log(
+          `Finish bundle (${
+            ((Date.now() - now) / 1000).toFixed(2)
+          }s): ${cachePath}`,
+        );
 
         const { code: minified, error } = minify(
           bundled.replace(/export const/gi, "const"),
@@ -123,6 +128,7 @@ export const levo = {
           req.respond({ status: 404 });
           continue;
         }
+        const bundlePromise = bundle(dirname + "levo.client.ts");
         const worker = new Worker(handlerPath, {
           type: "module",
           //@ts-ignore
@@ -143,7 +149,7 @@ export const levo = {
               req.respond({ status: 500 });
               return;
             }
-            const code = await bundle(dirname + "levo.client.ts");
+            const code = await bundlePromise;
             const initialHeaders = new Headers();
             initialHeaders.set("content-type", "text/html");
             const { body, headers } = compress({

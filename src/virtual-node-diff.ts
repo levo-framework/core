@@ -42,7 +42,10 @@ export const diff = <Action>({
     // Compare styles
     const styleAttributesUpdates = computeAttributesUpdates<string | undefined>(
       {
-        originalAttrs: original.style as Record<string, string> ?? {},
+        // TODO: No need to cast to `unknown` when negated types is released
+        // Reference: https://github.com/microsoft/TypeScript/pull/29317
+        originalAttrs: original.style as unknown as Record<string, string> ??
+          {},
         updatedAttrs: updated.style as Record<string, string> ?? {},
       },
     )
