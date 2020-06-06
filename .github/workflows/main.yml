@@ -34,7 +34,7 @@ jobs:
         run: deno bundle --config tsconfig.json src/levo-runtime.ts > /dev/null
       
       - name: Unit Test
-        run: deno test --allow-all --unstable test/unit/
+        run: deno test --allow-all --unstable test/unit/array-diff.test.ts 
 
       - name: Server Test
         run: deno test --allow-all --unstable test/server
