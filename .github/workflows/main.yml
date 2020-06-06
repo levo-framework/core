@@ -31,7 +31,7 @@ jobs:
           deno fmt --check test
 
       - name: Bundle levo-runtime.ts
-        run: deno bundle --config levo.tsconfig.json src/levo-runtime.ts > /dev/null
+        run: deno bundle --config tsconfig.json src/levo-runtime.ts > /dev/null
       
       - name: Unit Test
         run: deno test --allow-all --unstable test/unit/
