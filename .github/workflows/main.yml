@@ -19,7 +19,9 @@ jobs:
       - uses: actions/checkout@master
       - uses: denolib/setup-deno@master
         with:
-          deno-version: v1.0.2
+          # Why don't use latest version? Refer https://github.com/denosaurs/deno_brotli/issues/2
+          deno-version: v1.0.2 
+
       - name: Log Deno Version
         run: deno --version
 
@@ -33,9 +35,6 @@ jobs:
       - name: Bundle levo-runtime.ts
         run: deno bundle --config tsconfig.json src/levo-runtime.ts > /dev/null
 
-      - name: Sample test
-        run: deno test --unstable sample.test.ts
-      
       - name: Unit Test
         run: deno test --allow-all --unstable test/unit
 
