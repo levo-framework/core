@@ -1,4 +1,7 @@
 # Levo
+
+![](https://github.com/levo-framework/core/workflows/CI/badge.svg)
+
 ## Background story
 Why do I want to create another web framework?  
 
