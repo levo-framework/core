@@ -23,5 +23,5 @@ jobs:
       - run: |
           ls
           pwd
-          deno test --allow-all --unstable
+          deno test --allow-all --unstable test/unit
 
