@@ -20,6 +20,7 @@ jobs:
         with:
           deno-version: v1.0.5
       - run: |
+          ls
           pwd
           deno test --allow-all --unstable
 
