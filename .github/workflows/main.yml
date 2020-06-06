@@ -33,17 +33,14 @@ jobs:
       - name: Bundle levo-runtime.ts
         run: deno bundle --config tsconfig.json src/levo-runtime.ts > /dev/null
 
+      - name: Server Test
+        run: deno test --allow-all --unstable test/server
+
       - name: Sample test
         run: deno test --unstable sample.test.ts
       
       - name: Unit Test
-        run: |
-          ls
-          ls test
-          ls test/unit
-          deno test --allow-all --unstable test/unit
+        run: deno test --allow-all --unstable test/unit
 
-      - name: Server Test
-        run: deno test --allow-all --unstable test/server
 
 
