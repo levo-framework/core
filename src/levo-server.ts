@@ -1,6 +1,6 @@
 import { levoTsconfigRaw } from "./levo-tsconfig-raw.ts";
 import { mimeLookup } from "./mime-lookup.ts";
-import { server, path, gzipEncode, brotliCompress, exists  } from "./deps.ts";
+import { server, path, gzipEncode, brotliCompress, exists } from "./deps.ts";
 import { levoRuntimeCode } from "../levo-runtime-raw.ts";
 import { minify as minify$ } from "./minify.ts";
 import { resolveUrl } from "./resolve-url.ts";
