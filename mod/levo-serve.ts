@@ -8,18 +8,36 @@ export type LevoRequest = {
   search: string;
 };
 
+type Response<Model> = {
+  $: 'model'
+  model: Model
+} | {
+  $: 'redirect'
+  url: string
+}
+
 export const serve = <Model, Action>({
   getModel,
   view,
 }: {
-  getModel: (req: LevoRequest) => Promise<Model>;
+  getModel: (req: LevoRequest) => Promise<Response<Model>>;
   view: (model: Model) => VirtualNode<Action>;
 }) => {
   self.onmessage = async (event: { data: LevoRequest }) => {
     try {
-      const model = await getModel(event.data);
-      const html = renderToString(view(model));
-      self.postMessage({ model, html });
+      const response = await getModel(event.data);
+      switch(response.$) {
+        case 'model': {
+          const html = renderToString(view(model));
+          self.postMessage({ $: 'model', model, html });
+          break;
+        }
+        case 'redirect': {
+          self.postMessage({ $: 'redirect', url: response.url });
+          break;
+        }
+      }
+
     } catch (error) {
       self.postMessage({ error }); // TODO: handle gracefully
     }
