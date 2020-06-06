@@ -8,7 +8,7 @@ const worker = new Worker("./demo/app.ts", {
 });
 
 // Wait for server to startup
-await new Promise((resolve) => setTimeout(resolve, 3000));
+await new Promise((resolve) => setTimeout(resolve, 5000));
 
 Deno.test({
   name: "serve webpage based on directory that has levo.client.ts (top-level)",
