@@ -8,13 +8,7 @@ export type LevoRequest = {
   search: string;
 };
 
-type Response<Model> = {
-  $: 'model'
-  model: Model
-} | {
-  $: 'redirect'
-  url: string
-}
+type Response<Model> = ['model', Model] | ['redirect', {url: string}]
 
 export const serve = <Model, Action>({
   getModel,
@@ -26,14 +20,14 @@ export const serve = <Model, Action>({
   self.onmessage = async (event: { data: LevoRequest }) => {
     try {
       const response = await getModel(event.data);
-      switch(response.$) {
+      switch(response[0]) {
         case 'model': {
           const html = renderToString(view(model));
-          self.postMessage({ $: 'model', model, html });
+          self.postMessage({ $: 'model', model: response[1], html });
           break;
         }
         case 'redirect': {
-          self.postMessage({ $: 'redirect', url: response.url });
+          self.postMessage({ $: 'redirect', url: response[1]?.url });
           break;
         }
       }
