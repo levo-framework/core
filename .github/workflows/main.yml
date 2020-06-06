@@ -12,7 +12,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  test:
+  build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     steps:
@@ -20,5 +20,10 @@ jobs:
       - uses: denolib/setup-deno@master
         with:
           deno-version: v1.0.5
-      - run: deno run https://deno.land/std/examples/welcome.ts
+      - name: Format Check
+        run: |
+          deno fmt --check demo
+          deno fmt --check mod
+          deno fmt --check src
+          deno fmt --check test
 
