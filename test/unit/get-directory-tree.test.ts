@@ -2,10 +2,8 @@ import { assertEquals } from "../../src/deps.ts";
 import { getDirectoryTree } from "../../src/get-directory-tree.ts";
 
 Deno.test("get directory tree", () => {
-  // why './home/' instead of './demo/home' ?
-  // Because inside `main.test.ts`, already change directory to `demo` via Deno.chdir
   assertEquals(
-    getDirectoryTree("./home/user", {
+    getDirectoryTree("./demo/home/user", {
       ignoreFiles: ["levo.client.ts.cache"],
     }),
     [
