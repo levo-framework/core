@@ -178,7 +178,7 @@ export const LevoApp = {
         });
         worker.addEventListener(
           "message",
-          async ({ data: { model, html, error } }: any) => {
+          async ({ data: { $, url, model, html, error } }: any) => {
             if (error) {
               console.error(error);
               req.respond({ status: 500 });
@@ -190,7 +190,7 @@ export const LevoApp = {
             const { body, headers } = compress({
               acceptEncoding,
               headers: initialHeaders,
-              body: encoder.encode(`
+              body: encoder.encode($ === 'redirect' ? `<script>window.location.href="${url}"</script>` : `
 <!DOCTYPE html>
 ${html}
 ${
