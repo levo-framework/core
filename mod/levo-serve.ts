@@ -11,10 +11,10 @@ export type LevoRequest = {
 type Response<Model> = ['model', Model] | ['redirect', {url: string}]
 
 export const serve = <Model, Action>({
-  getModel,
+  getResponse,
   view,
 }: {
-  getModel: (req: LevoRequest) => Promise<Response<Model>>;
+  getResponse: (req: LevoRequest) => Promise<Response<Model>>;
   view: (model: Model) => VirtualNode<Action>;
 }) => {
   self.onmessage = async (event: { data: LevoRequest }) => {
