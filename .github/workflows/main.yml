@@ -34,7 +34,7 @@ jobs:
         run: deno bundle --config tsconfig.json src/levo-runtime.ts > /dev/null
 
       - name: Sample test
-        run: deno test --unstable sample.test.ts
+        run: deno test sample.test.ts
       
       - name: Unit Test
         run: |
