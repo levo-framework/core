@@ -19,7 +19,7 @@ export const serve = <Model, Action>({
 }) => {
   self.onmessage = async (event: { data: LevoRequest }) => {
     try {
-      const response = await getModel(event.data);
+      const response = await getResponse(event.data);
       switch(response[0]) {
         case 'model': {
           const html = renderToString(view(model));
