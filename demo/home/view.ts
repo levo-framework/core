@@ -6,7 +6,6 @@ export const view = (model: Model): Levo.Element<Action> => {
   const $ = createActions<Action>();
   return render<Action>(
     ["html", {}, [
-      ["base", { href: "home/", style: { textAlign: "center" } }],
       ["head", {}, [
         ["link", { rel: "stylesheet", href: "./levo.assets/index.css" }],
       ]],

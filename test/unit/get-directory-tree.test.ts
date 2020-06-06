@@ -5,18 +5,11 @@ Deno.test("get directory tree", () => {
   // why './home/' instead of './demo/home' ?
   // Because inside `main.test.ts`, already change directory to `demo` via Deno.chdir
   assertEquals(
-    getDirectoryTree("./home", {
+    getDirectoryTree("./home/user", {
       ignoreFiles: ["levo.client.ts.cache"],
     }),
     [
-      ["levo.server.ts"],
-      ["levo.assets", [
-        ["index.css"],
-      ]],
-      ["init.ts"],
-      ["levo.client.ts"],
-      ["view.ts"],
-      ["about", [
+      ["xxx", [
         ["levo.server.ts"],
         ["init.ts"],
         ["levo.client.ts"],
@@ -25,9 +18,15 @@ Deno.test("get directory tree", () => {
         ["action.ts"],
         ["update.ts"],
       ]],
-      ["model.ts"],
-      ["action.ts"],
-      ["update.ts"],
+      ["_", [
+        ["levo.server.ts"],
+        ["init.ts"],
+        ["levo.client.ts"],
+        ["view.ts"],
+        ["model.ts"],
+        ["action.ts"],
+        ["update.ts"],
+      ]],
     ],
   );
 });

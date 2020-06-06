@@ -6,6 +6,8 @@ import { Model } from "./model.ts";
 serve<Model, Action>({
   view,
   getModel: async (req) => {
-    return {};
+    return {
+      word: "i am banana",
+    };
   },
 });

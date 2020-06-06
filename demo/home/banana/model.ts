@@ -1,3 +1,3 @@
 export type Model = {
-  word: string
+  word: string;
 };

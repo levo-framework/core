@@ -13,7 +13,7 @@ await new Promise((resolve) => setTimeout(resolve, 3000));
 Deno.test({
   name: "serve webpage based on directory that has levo.client.ts (top-level)",
   fn: async () => {
-    const result = await fetch("http://localhost:3000/home");
+    const result = await fetch("http://localhost:3000");
     assertEquals(result.headers.get("content-type"), "text/html");
     assertEquals(result.status, 200);
   },
@@ -25,7 +25,7 @@ Deno.test({
   name:
     "serve webpage based on directory that has levo.client.ts (nested directory)",
   fn: async () => {
-    const result = await fetch("http://localhost:3000/home/about");
+    const result = await fetch("http://localhost:3000/about");
     assertEquals(result.headers.get("content-type"), "text/html");
     assertEquals(result.status, 200);
   },
@@ -36,7 +36,7 @@ Deno.test({
 Deno.test({
   name: "handle URL with trailing slash",
   fn: async () => {
-    const result = await fetch("http://localhost:3000/home");
+    const result = await fetch("http://localhost:3000");
     assertEquals(result.headers.get("content-type"), "text/html");
     assertEquals(result.status, 200);
   },
@@ -47,7 +47,7 @@ Deno.test({
 Deno.test({
   name: "handle URL with query params",
   fn: async () => {
-    const result = await fetch("http://localhost:3000/home?title=spongebob");
+    const result = await fetch("http://localhost:3000?title=spongebob");
     assertEquals((await result.text()).includes("spongebob"), true);
     assertEquals(result.headers.get("content-type"), "text/html");
     assertEquals(result.status, 200);
@@ -73,7 +73,7 @@ Deno.test({
   name: "serve asset under levo.assets",
   fn: async () => {
     const result = await fetch(
-      "http://localhost:3000/home/levo.assets/index.css",
+      "http://localhost:3000/levo.assets/index.css",
     );
     assertEquals(result.headers.get("content-type"), "text/css");
     assertEquals(result.status, 200);
@@ -88,7 +88,7 @@ Deno.test({
     const headers = new Headers();
     headers.set("Accept-Encoding", "br, gzip");
     const result = await fetch(
-      "http://localhost:3000/home/levo.assets/index.css",
+      "http://localhost:3000/levo.assets/index.css",
       {
         headers,
       },
@@ -107,7 +107,7 @@ Deno.test({
     const headers = new Headers();
     headers.set("Accept-Encoding", "gzip");
     const result = await fetch(
-      "http://localhost:3000/home/levo.assets/index.css",
+      "http://localhost:3000/levo.assets/index.css",
       {
         headers,
       },
@@ -142,7 +142,7 @@ Deno.test({
     assertEquals((await result.text()).includes("i am banana"), true);
     const decoder = new TextDecoder();
     const encoder = new TextEncoder();
-    const path = "banana/levo.server.ts";
+    const path = "home/banana/levo.server.ts";
     const fileContent = decoder.decode(await Deno.readFile(path));
     await Deno.writeFile(
       path,

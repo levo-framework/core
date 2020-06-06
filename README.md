@@ -49,6 +49,10 @@ All of these makes me wonder why frontend development has evovled into a gorgon 
 ## What is Levo?
 Levo is a frontend framework that supports Server-Side Rendering (SSR) and The Elm Architecture (TEA) out of the box.
 
+## What is Levo not good at?
+* API server, Levo is purely for serving web pages only. 
+* Serving single page application (SPA)
+
 ## Goals of Levo
 * SEO friendly
 * Scales naturally
@@ -58,6 +62,36 @@ Levo is a frontend framework that supports Server-Side Rendering (SSR) and The E
 
 ## Why use Deno instead of Node?
 Because Deno has first-class support for Typescript and it don't require a package manager. You can find out more about it at [10 Things I Regret About Node.js](https://www.youtube.com/watch?v=M3BM9TB-8yA).
+
+## Features that are supported out of the box (a.k.a no setup required)
+* Gzip/brotli compression
+* Javascript minification
+* Directory-based routing
+* Wildcard directory-based routing (for handling path params) 
+* Asset serving with MIME types
+* Typechecking for HTML tags, attributes, events and style
+* Page caching 
+* CLI tool for generating boilerplates
+* Virtual DOM diffing
+* Action logging at browser
+* Robots.txt
+
+## Features that are NOT supported
+* Authentication and authorization
+* Database connection
+* Component with private states
+* Client-side routing
+
+## Guidelines
+It's important to keep the following rules in mind in order to for Levo to performs best.
+* A lot of thin pages is better than a few fat pages
+* Component should never have private state, all state should be stored in one true global source
+* Routing is based on directory, so name them carefully
+* Never rename files or folder that starts with `levo.`, for example `levo.client.ts`
+* Never import server-specific code in `levo.client.ts`
+* Never import browser-specific code in `levo.server.ts`
+* Always create new pages using the CLI tool `levo`
+* Always write CSS in `index.css` instead of `view.ts` whenever possible
 
 ## How to re-bundle Levo runtime?
 ```

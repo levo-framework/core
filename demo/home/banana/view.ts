@@ -1,5 +1,5 @@
 import { Action } from "./action.ts";
-import { createActions, render, Levo } from "../../mod/levo-view.ts";
+import { createActions, render, Levo } from "../../../mod/levo-view.ts";
 import { Model } from "./model.ts";
 
 export const view = (model: Model): Levo.Element<Action> => {
@@ -7,7 +7,7 @@ export const view = (model: Model): Levo.Element<Action> => {
   return render(
     ["html", {}, [
       ["body", {}, [
-        `${model.word}`
+        `${model.word}`,
       ]],
     ]],
   );
