@@ -22,8 +22,9 @@ export const serve = <Model, Action>({
       const response = await getResponse(event.data);
       switch(response[0]) {
         case 'model': {
+          const model = response[1]
           const html = renderToString(view(model));
-          self.postMessage({ $: 'model', model: response[1], html });
+          self.postMessage({ $: 'model', model, html });
           break;
         }
         case 'redirect': {
