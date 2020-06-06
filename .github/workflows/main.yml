@@ -19,7 +19,9 @@ jobs:
       - uses: denolib/setup-deno@master
         with:
           deno-version: v1.0.5
-      - run: deno test --allow-all --unstable
+      - run: |
+          pwd
+          deno test --allow-all --unstable
 
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
