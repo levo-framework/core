@@ -1,8 +1,7 @@
 export {
   assert,
   assertEquals,
-  assertStrContains,
-} from "https://deno.land/std/testing/asserts.ts";
+} from "https://deno.land/std@0.53.0/testing/asserts.ts";
 
 export { exists, existsSync } from "https://deno.land/std@0.53.0/fs/mod.ts";
 
