@@ -5,11 +5,11 @@ import { Model } from "./model.ts";
 
 serve<Model, Action>({
   view,
-  getModel: async (req) => {
-    return {
+  getResponse: async (req) => {
+    return ['model', {
       currentValue: req.url.length + 99,
       intervalId: undefined,
       text: new URLSearchParams(req.search).get("title") ?? "",
-    };
+    }];
   },
 });
