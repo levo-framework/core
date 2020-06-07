@@ -117,7 +117,7 @@ const tests: {
       const result = await fetch("http://localhost:3000/banana?redirect=boom");
       assertEquals(
         await result.text(),
-        `<script>window.location.href=\"boom\"</script>`,
+        `<script>window.location.href="boom"</script>`,
       );
     },
   },
