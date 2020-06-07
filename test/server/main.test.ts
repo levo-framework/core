@@ -122,6 +122,15 @@ const tests: {
     },
   },
   {
+    name: "custom handlers",
+    fn: async () => {
+      const result = await fetch("http://localhost:3000/api/yo?x=5&y=6");
+      assertEquals(await result.json(), { search: "?x=5&y=6" });
+      assertEquals(result.headers.get("custom-lol"), "ha");
+      assertEquals(result.status, 201);
+    },
+  },
+  {
     name:
       "updating levo.server.ts should work when server is running in no-cache mode",
     fn: async () => {

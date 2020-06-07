@@ -5,7 +5,7 @@ import { levoRuntimeCode } from "../levo-runtime-raw.ts";
 import { minify as minify$ } from "./minify.ts";
 import { resolveUrl } from "./resolve-url.ts";
 import { getDirectoryTree } from "./get-directory-tree.ts";
-import { Response } from "../mod/levo-serve.ts";
+import { LevoServeResponse } from "../mod/levo-serve-response.ts";
 
 export const LevoApp = {
   start: async ({
@@ -179,7 +179,7 @@ export const LevoApp = {
         worker.addEventListener(
           "message",
           (async ({ data: response }: {
-            data: Response<any, any> & { error?: Error };
+            data: LevoServeResponse<any> & { error?: Error };
           }) => {
             if (response.error) {
               console.error(response.error);
@@ -192,6 +192,20 @@ export const LevoApp = {
                   body: encoder.encode(`
                     <script>window.location.href="${response.url}"</script>
                   `.trim()),
+                });
+                break;
+              }
+              case "custom": {
+                const headers = new Headers();
+                Object.entries(response.response.headers ?? {}).forEach(
+                  ([key, value]) => {
+                    headers.set(key, value);
+                  },
+                );
+                req.respond({
+                  headers,
+                  status: response.response.status,
+                  body: encoder.encode(response.response.body),
                 });
                 break;
               }
