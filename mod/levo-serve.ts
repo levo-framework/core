@@ -8,31 +8,46 @@ export type LevoRequest = {
   search: string;
 };
 
-type Response<Model> = ['model', Model] | ['redirect', {url: string}]
+export type Response<Model, Action> = {
+  $: "page";
+  model: Model;
+  html: string;
+} | {
+  $: "redirect";
+  url: string;
+} | {
+  $: "custom";
+};
+
+export type Responder<Model, Action> = {
+  page: (
+    {}: { model: Model; view: (model: Model) => VirtualNode<Action> },
+  ) => Response<Model, Action>;
+  redirect: ({}: { url: string }) => Response<Model, Action>;
+  custom: () => Response<Model, Action>;
+};
 
 export const serve = <Model, Action>({
   getResponse,
-  view,
 }: {
-  getResponse: (req: LevoRequest) => Promise<Response<Model>>;
-  view: (model: Model) => VirtualNode<Action>;
+  getResponse: (
+    req: LevoRequest,
+    respond: Responder<Model, Action>,
+  ) => Promise<Response<Model, Action>>;
 }) => {
   self.onmessage = async (event: { data: LevoRequest }) => {
     try {
-      const response = await getResponse(event.data);
-      switch(response[0]) {
-        case 'model': {
-          const model = response[1]
+      const response = await getResponse(event.data, {
+        page: ({ model, view }) => {
           const html = renderToString(view(model));
-          self.postMessage({ $: 'model', model, html });
-          break;
-        }
-        case 'redirect': {
-          self.postMessage({ $: 'redirect', url: response[1]?.url });
-          break;
-        }
-      }
-
+          return { $: "page", model, html };
+        },
+        redirect: ({ url }) => ({ $: "redirect", url }),
+        custom: () => {
+          throw new Error(`not implemented yet`);
+        },
+      });
+      self.postMessage(response);
     } catch (error) {
       self.postMessage({ error }); // TODO: handle gracefully
     }

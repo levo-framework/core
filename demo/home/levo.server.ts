@@ -4,12 +4,14 @@ import { serve } from "./../../mod/levo-serve.ts";
 import { Model } from "./model.ts";
 
 serve<Model, Action>({
-  view,
-  getResponse: async (req) => {
-    return ['model', {
-      currentValue: req.url.length + 99,
-      intervalId: undefined,
-      text: new URLSearchParams(req.search).get("title") ?? "",
-    }];
+  getResponse: async (request, respond) => {
+    return respond.page({
+      view,
+      model: {
+        currentValue: request.url.length + 99,
+        intervalId: undefined,
+        text: new URLSearchParams(request.search).get("title") ?? "",
+      },
+    });
   },
 });

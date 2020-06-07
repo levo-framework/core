@@ -5,6 +5,7 @@ import { levoRuntimeCode } from "../levo-runtime-raw.ts";
 import { minify as minify$ } from "./minify.ts";
 import { resolveUrl } from "./resolve-url.ts";
 import { getDirectoryTree } from "./get-directory-tree.ts";
+import { Response } from "../mod/levo-serve.ts";
 
 export const LevoApp = {
   start: async ({
@@ -159,7 +160,6 @@ export const LevoApp = {
           req.respond({ status: 404 });
           continue;
         }
-        const bundlePromise = bundle(dirname + "levo.client.ts");
         const worker = new Worker(
           // Refer: https://stackoverflow.com/a/41790024/6587634
           handlerPath + (cachePages ? "" : `?${(Math.random() * 1000000)}`),
@@ -178,35 +178,49 @@ export const LevoApp = {
         });
         worker.addEventListener(
           "message",
-          async ({ data: { $, url, model, html, error } }: any) => {
-            if (error) {
-              console.error(error);
+          (async ({ data: response }: {
+            data: Response<any, any> & { error?: Error };
+          }) => {
+            if (response.error) {
+              console.error(response.error);
               req.respond({ status: 500 });
               return;
             }
-            const code = await bundlePromise;
-            const initialHeaders = new Headers();
-            initialHeaders.set("content-type", "text/html");
-            const { body, headers } = compress({
-              acceptEncoding,
-              headers: initialHeaders,
-              body: encoder.encode($ === 'redirect' ? `<script>window.location.href="${url}"</script>` : `
-<!DOCTYPE html>
-${html}
-${
-                minifyJs
-                  ? `<script src="https://unpkg.com/regenerator-runtime@0.13.1/runtime.js"></script>`
-                  : ``
+            switch (response.$) {
+              case "redirect": {
+                req.respond({
+                  body: encoder.encode(`
+                    <script>window.location.href="${response.url}"</script>
+                  `.trim()),
+                });
+                break;
               }
-<script>
-    (()=>{${code}})();
-    (()=>{window.$levoModel=${JSON.stringify(model)}})();
-    (()=>{${minifiedLevoRuntimeCode}})();
-</script>
-              `.trim()),
-            });
-            req.respond({ body, headers });
-          },
+              case "page": {
+                const code = await bundle(dirname + "levo.client.ts");
+                const initialHeaders = new Headers();
+                initialHeaders.set("content-type", "text/html");
+                const { body, headers } = compress({
+                  acceptEncoding,
+                  headers: initialHeaders,
+                  body: encoder.encode(`
+    <!DOCTYPE html>
+    ${response.html}
+    ${
+                    minifyJs
+                      ? `<script src="https://unpkg.com/regenerator-runtime@0.13.1/runtime.js"></script>`
+                      : ``
+                  }
+    <script>
+        (()=>{${code}})();
+        (()=>{window.$levoModel=${JSON.stringify(response.model)}})();
+        (()=>{${minifiedLevoRuntimeCode}})();
+    </script>
+                  `.trim()),
+                });
+                req.respond({ body, headers });
+              }
+            }
+          }) as any,
         );
         worker.addEventListener("error", (error) => {
           req.respond({ status: 500 });
