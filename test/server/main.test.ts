@@ -112,6 +112,16 @@ const tests: {
     },
   },
   {
+    name: "redirection",
+    fn: async () => {
+      const result = await fetch("http://localhost:3000/banana?redirect=boom");
+      assertEquals(
+        await result.text(),
+        `<script>window.location.href="boom"</script>`,
+      );
+    },
+  },
+  {
     name:
       "updating levo.server.ts should work when server is running in no-cache mode",
     fn: async () => {

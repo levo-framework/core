@@ -4,8 +4,7 @@ import { serve } from "./../../../mod/levo-serve.ts";
 import { Model } from "./model.ts";
 
 serve<Model, Action>({
-  view,
-  getModel: async (req) => {
-    return {};
+  getResponse: async (request, response) => {
+    return response.page({ view, model: {} });
   },
 });

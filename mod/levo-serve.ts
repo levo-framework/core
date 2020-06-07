@@ -8,18 +8,46 @@ export type LevoRequest = {
   search: string;
 };
 
+export type Response<Model, Action> = {
+  $: "page";
+  model: Model;
+  html: string;
+} | {
+  $: "redirect";
+  url: string;
+} | {
+  $: "custom";
+};
+
+export type Responder<Model, Action> = {
+  page: (
+    {}: { model: Model; view: (model: Model) => VirtualNode<Action> },
+  ) => Response<Model, Action>;
+  redirect: ({}: { url: string }) => Response<Model, Action>;
+  custom: () => Response<Model, Action>;
+};
+
 export const serve = <Model, Action>({
-  getModel,
-  view,
+  getResponse,
 }: {
-  getModel: (req: LevoRequest) => Promise<Model>;
-  view: (model: Model) => VirtualNode<Action>;
+  getResponse: (
+    req: LevoRequest,
+    respond: Responder<Model, Action>,
+  ) => Promise<Response<Model, Action>>;
 }) => {
   self.onmessage = async (event: { data: LevoRequest }) => {
     try {
-      const model = await getModel(event.data);
-      const html = renderToString(view(model));
-      self.postMessage({ model, html });
+      const response = await getResponse(event.data, {
+        page: ({ model, view }) => {
+          const html = renderToString(view(model));
+          return { $: "page", model, html };
+        },
+        redirect: ({ url }) => ({ $: "redirect", url }),
+        custom: () => {
+          throw new Error(`not implemented yet`);
+        },
+      });
+      self.postMessage(response);
     } catch (error) {
       self.postMessage({ error }); // TODO: handle gracefully
     }

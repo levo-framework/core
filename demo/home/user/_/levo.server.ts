@@ -4,10 +4,12 @@ import { serve } from "./../../../../mod/levo-serve.ts";
 import { Model } from "./model.ts";
 
 serve<Model, Action>({
-  view,
-  getModel: async (req) => {
-    return {
-      name: req.url.split("/").slice(-1)[0],
-    };
+  getResponse: async (request, respond) => {
+    return respond.page({
+      view,
+      model: {
+        name: request.url.split("/").slice(-1)[0],
+      },
+    });
   },
 });
