@@ -1,5 +1,6 @@
 import { renderToString } from "../src/render-to-string.ts";
 import { VirtualNode } from "../src/virtual-node.ts";
+import { CustomResponse, LevoServeResponse } from "./levo-serve-response.ts";
 export type LevoRequest = {
   url: string;
   body: any;
@@ -8,32 +9,21 @@ export type LevoRequest = {
   search: string;
 };
 
-export type Response<Model, Action> = {
-  $: "page";
-  model: Model;
-  html: string;
-} | {
-  $: "redirect";
-  url: string;
-} | {
-  $: "custom";
-};
-
 export type Responder<Model, Action> = {
   page: (
     {}: { model: Model; view: (model: Model) => VirtualNode<Action> },
-  ) => Response<Model, Action>;
-  redirect: ({}: { url: string }) => Response<Model, Action>;
-  custom: () => Response<Model, Action>;
+  ) => LevoServeResponse<Model>;
+  redirect: ({}: { url: string }) => LevoServeResponse<Model>;
+  custom: (response: CustomResponse) => LevoServeResponse<Model>;
 };
 
-export const serve = <Model, Action>({
+export const serve = <Model = {}, Action = {}>({
   getResponse,
 }: {
   getResponse: (
     req: LevoRequest,
     respond: Responder<Model, Action>,
-  ) => Promise<Response<Model, Action>>;
+  ) => Promise<LevoServeResponse<Model>>;
 }) => {
   self.onmessage = async (event: { data: LevoRequest }) => {
     try {
@@ -43,8 +33,8 @@ export const serve = <Model, Action>({
           return { $: "page", model, html };
         },
         redirect: ({ url }) => ({ $: "redirect", url }),
-        custom: () => {
-          throw new Error(`not implemented yet`);
+        custom: (response) => {
+          return { $: "custom", response };
         },
       });
       self.postMessage(response);
