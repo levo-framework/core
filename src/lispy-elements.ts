@@ -487,6 +487,7 @@ export type LispyElements<Action> =
       "content"?: string;
       "http-equiv"?: string;
       "name"?: string;
+      "property"?: string;
     } & CommonAttributes<Action>,
     (LispyElements<Action> | string)[]?,
   ]
