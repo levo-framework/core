@@ -27,6 +27,7 @@ jobs:
           deno fmt --check mod
           deno fmt --check src
           deno fmt --check test
+          deno fmt --check templates
 
   build:
     runs-on: ubuntu-latest
