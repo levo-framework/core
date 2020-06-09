@@ -1,0 +1,9 @@
+body {
+  margin: 0;
+}
+div {
+  background-color: antiquewhite;
+}
+img {
+  transition: transform 0.3s;
+}
