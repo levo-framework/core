@@ -89,6 +89,9 @@ Because Deno has first-class support for Typescript and it don't require a packa
 ## Guidelines
 It's important to keep the following rules in mind in order to for Levo to performs best.
 * A lot of thin pages is better than a few fat pages
+* Avoid storing all dependencies into one file (usually `deps.ts`)  
+    * This is because firstly, Deno do not support tree-shaking yet, so unused dependencies will also be bundled
+    * Secondly, a lot of compile time will be wasted by compiling unused dependencies
 * Component should never have private state, all state should be stored in one true global source
 * Routing is based on directory, so name them carefully
 * Never rename files or folder that starts with `levo.`, for example `levo.client.ts`

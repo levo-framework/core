@@ -57,6 +57,9 @@ jobs:
       - name: Template Test
         run: deno test --allow-all --unstable test/server/project-template.test.ts 
 
+      - name: CLI Test
+        run: deno test --allow-all --unstable test/cli/main.test.ts
+
 
 
 
