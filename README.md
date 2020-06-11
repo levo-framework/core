@@ -57,10 +57,9 @@ Levo is a frontend framework that supports Server-Side Rendering (SSR) and The E
 * Serving single page application (SPA)
 
 ## Goals of Levo
-* SEO friendly
+* SEO friendly (based on [Google's Lighthouse](https://developers.google.com/web/tools/lighthouse) measurement)
 * Scales naturally
 * Promotes standardized coding style
-* Should follow [Google's Lighthouse](https://developers.google.com/web/tools/lighthouse) guideline
 * Backward compatible
 * Type-safe, don't serve pages with bombs
 
