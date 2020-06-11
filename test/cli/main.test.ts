@@ -18,7 +18,6 @@ Deno.test({
       `./${projectName}`,
       { ignoreFiles: [] },
     );
-    // console.log(JSON.stringify(tree, null, 2))
     assertEquals(tree, [
       [".gitignore"],
       [".levo.templates", [
@@ -74,7 +73,28 @@ Deno.test({
       ["tsconfig.json"],
     ]);
 
+    console.log(Deno.cwd())
+
+    // Test if the server created with the templates work
+    Deno.chdir(projectName)
+
+    const server = new Worker(`./${projectName}/app.ts`, {
+      type: "module",
+      //@ts-ignore
+      deno: true,
+    });
+
+    await new Promise(resolve => setTimeout(resolve, 3000))
+
+    const response = await fetch('http://localhost:5000')
+    assertEquals(response.status, 200)
+    assertEquals(response.headers.get('content-type'), 'text/html')
+
+    
+    
     // Teardown
+    server.terminate()
+    Deno.chdir('..')
     await Deno.remove(projectName, { recursive: true });
   },
   sanitizeOps: false,
