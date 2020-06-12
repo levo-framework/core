@@ -1,5 +1,5 @@
 import { getDirectoryTree } from "../../src/get-directory-tree.ts";
-import { assertEquals } from "../../src/deps.ts";
+import { assertEquals, assert } from "../../src/deps.ts";
 
 Deno.test({
   name: "new-project and new-page command",
@@ -30,6 +30,8 @@ Deno.test({
     await runCommand(
       `deno install --allow-all --unstable --force --name levo cli/mod.ts`,
     );
+
+    assert((await runCommand(`which levo`)).endsWith('levo'))
 
     console.log("Creating new project using Levo CLI");
     await runCommand(`levo new-project ${projectName}`);
