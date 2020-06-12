@@ -20,7 +20,6 @@ jobs:
         with:
           # Why don't use latest version? Refer https://github.com/denosaurs/deno_brotli/issues/2
           deno-version: v1.0.2 
-
       - name: Format Check
         run: |
           deno fmt --check demo
@@ -36,32 +35,45 @@ jobs:
       - uses: denolib/setup-deno@master
         with:
          deno-version: v1.0.2 
-
       - name: Bundle levo-runtime.ts
         run: deno bundle --config tsconfig.json src/levo-runtime.ts > /dev/null
 
-  test:
+  unit-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
       - uses: denolib/setup-deno@master
         with:
          deno-version: v1.0.2 
-
       - name: Unit Test
         run: deno test --allow-all --unstable test/unit
 
+  server-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: denolib/setup-deno@master
+        with:
+         deno-version: v1.0.2 
       - name: Server Test
         run: deno test --allow-all --unstable test/server/main.test.ts
 
+  template-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: denolib/setup-deno@master
+        with:
+         deno-version: v1.0.2 
       - name: Template Test
         run: deno test --allow-all --unstable test/server/project-template.test.ts 
 
+  cli-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: denolib/setup-deno@master
+        with:
+         deno-version: v1.0.2 
       - name: CLI Test
         run: deno test --allow-all --unstable test/cli/main.test.ts
-
-
-
-
-
-
