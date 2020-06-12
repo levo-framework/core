@@ -94,7 +94,7 @@ Deno.test({
       ["tsconfig.json"],
     ]);
 
-    console.log('Test if the server created with the templates work')
+    console.log("Test if the server created with the templates work");
     Deno.chdir(projectName);
     const server = new Worker(`./${projectName}/app.ts`, {
       type: "module",
