@@ -1,5 +1,5 @@
 import { getDirectoryTree } from "../../src/get-directory-tree.ts";
-import { assertEquals, assert } from "../../src/deps.ts";
+import { assertEquals, assert, path } from "../../src/deps.ts";
 
 Deno.test({
   name: "new-project and new-page command",
@@ -98,6 +98,35 @@ Deno.test({
       ]],
       ["tsconfig.json"],
     ]);
+
+    console.log("Make sure the template files are using specific imports");
+    const assertUsingSpecificImport = async (
+      dirname: string,
+    ): Promise<void> => {
+      return Promise.all(
+        Array.from(Deno.readDirSync(dirname)).map(async (dir) => {
+          if (dir.isFile) {
+            const filename = dirname + path.SEP + dir.name;
+            const lines = new TextDecoder().decode(
+              await Deno.readFile(filename),
+            )
+              .split("\n")
+              .filter((line) => line.includes("https://deno.land/x/levo"));
+            if (lines.length > 0) {
+              console.log(`Validating file '${filename}'`);
+              lines.forEach((line) => {
+                console.log(`Validating line "${line}"`);
+                assert(/https:\/\/deno.land\/x\/levo@v\d\.\d\.\d/.test(line));
+              });
+            }
+            return Promise.resolve();
+          } else {
+            return assertUsingSpecificImport(dirname + path.SEP + dir.name);
+          }
+        }),
+      ).then(() => {});
+    };
+    await assertUsingSpecificImport(projectName);
 
     console.log("Test if the server created with the templates work");
     Deno.chdir(projectName);
