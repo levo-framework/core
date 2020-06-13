@@ -1,10 +1,9 @@
 import { LispyElements } from "../src/lispy-elements.ts";
-import { VirtualNode } from "../src/virtual-node.ts";
 import { Properties } from "../src/css-types.ts";
 import { VirtualNodeEvents } from "../src/virtual-node-events.ts";
 
 export namespace Levo {
-  export type Element<Action> = VirtualNode<Action>;
+  export type Element<Action> = LispyElements<Action>;
   export type CSSProperties = Properties;
   export type Events<Action> = VirtualNodeEvents<Action>;
 }
