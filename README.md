@@ -103,3 +103,175 @@ It's important to keep the following rules in mind in order to for Levo to perfo
 ```
 deno bundle --config tsconfig.json src/levo-runtime.ts > levo-runtime.bundle.js
 ```
+
+## Installation
+Run the following command to install `levo` CLI to get started.
+```
+deno install --allow-all --unstable --name levo https://raw.githubusercontent.com/levo-framework/core/master/cli/mod.ts
+```
+
+## Getting started
+The first step to get start with Levo is to create a new project using the Levo CLI.
+```
+levo new-project my-levo-app
+```
+Then, to run the server:
+```
+cd my-levo-app
+deno run --allow-all --unstable app.ts
+```
+Finally, visit `http://localhost:5000` to see your first Levo page!
+
+## How to add a new Levo page?
+You can add a new page by using `levo new-page <directory>` command.  
+Note that this command must be ran at the project root. Also make sure you remember to specify the root directory (which is `root` by default).  
+For example:
+```
+levo new-page root/about/terms-and-condition
+```
+
+## What does each Levo page consist of?
+Each Levo page consists of the following files/folder:
+```
+levo.assets    
+levo.server.ts
+levo.client.ts 
+model.ts       
+action.ts      
+update.ts
+view.ts
+init.ts        
+```
+- `levo.assets`
+    - This folder host assets such as CSS stylesheets, images etc, which can be imported by `view.ts`
+
+- `levo.server.ts` 
+    - this file is the script that will be executed by the server when client requested a URL that correlates to the directory name (relative to root folder) of this page.
+    - the purpose of this file is to query initial data that is required to render the page
+    - this file can be also used to return a redirection or a customized response (e.g. json, txt etc)
+- `levo.client.ts`
+    - this file is the entry file that will be executed by the browser
+    - this file shouldn't be modified by user unless necessary
+- `model.ts`
+    - this file is used to specify the `Model` type that will be used to render dynamic content on the page
+- `action.ts`
+    - this file is used to specify the actions that can be executed by client on the page
+    - note that the action type must be a [discriminated union](https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions) where the discriminated/tag must be named as `$`.
+- `update.ts`
+    - this file is used to specify how the model should be updated give an action 
+- `view.ts`
+    - this file is used to specify how the page should be rendered based on the model provided in `model.ts`
+- `init.ts`
+    - this file is used to run initial setup at browser
+    - for example, setting up socket event listener, initializing auth library etc.
+
+
+## Which file/folders should not be renamed?
+You can rename every `.ts` file/folder in a Levo as long as it's not prefixed with `levo.`. 
+For example, you shouldn't rename `levo.server.ts` and `levo.client.ts` etc.
+
+## Do I need to restart the server when I add or modify some pages?
+No, provided that you are running Levo server in development mode (which is the default settings).  This is because every page will be re-compiled on each request. However note that the server will die if there are compile errors.
+
+## Routing
+Routing is purely based on directory structure, in other words you don't have to manually maintain a routing file.  
+There are two types of routing in Levo:
+- exact path routing
+- wildcard path routing
+
+### Exact path routing
+For example, suppose you have the following directory structure where `root` is specified as the site root:
+```
+root/
+    about/
+        policy/
+```
+If client requested a page at `/root/about/policy`, the the `levo.server.ts` under the `policy` directory will be executed.
+
+## Wildcard path routing
+This feature is useful when you want to design dynamic path.  
+For example, if you want to setup a path like this `/[user]/profile`, then you should create a new page under the `_/profile` directory, as follows:
+```
+root/
+    _/
+        profile/
+            levo.server.ts
+```
+When client request for `/john/profile` or `/bob/profile`, the `levo.server.ts` script under `_/profile` will be executed.  
+
+### Exact path VS Wildcard path
+Note that exact path routing has a higher precedence than wildcard path routing.  
+For example, if you have the following directory structure:
+```
+root/
+    admin/
+        profile/
+            levo.server.ts
+    _/
+        profile/
+            levo.server.ts
+```
+If client request for `/admin/profile`, the `levo.server.ts` under `/admin/profile` will be executed.   
+Otherwise if client request for `/X/profile` where `X` is any string other than `admin`, the `levo.server.ts` under `_/profile` will be executed.
+
+### How do I change the site root to other folder?
+You can modified this at `app.ts` by chaging the `rootDir` value from `["root"]` to the value you want.
+
+---
+## How to author a view in Levo?
+Levo uses a self-vendored templating syntax that is similar to [ijk script](https://github.com/lukejacksonn/ijk).  
+Basically, all HTML tags is created using the following syntax:
+```
+[TAGNAME, PROPS, CHILDREN]
+```
+For example:
+```ts
+['div', {id: 'my-div'}, [
+    ['button', {}, ['Click me']]
+]], 
+```
+Is the same as:
+```html
+<div id='my-div'>
+    <button>
+        Click me
+    </button>
+</div>
+```
+### How to setup event handlers?
+All event handlers must return the type of `Action` that is specified at `action.ts`, and should be created with the Levo action creator.
+
+For example, if you open `root/view.ts`, you'll see this line:
+```ts
+ const $ = createActions<Action>();
+```
+And you should use `$` to bind event handler to a HTML element, for example:
+```ts
+['button', { onclick: $.on_click()}, ['click me']]
+```
+Note that the available methods under `$` is based on the Action types you declared.
+
+Suppose you have the following `action.ts`:
+```ts
+type Action =
+| {
+    $: 'click_me'
+}
+| {
+    $: 'delete_item'
+    index: number
+}
+```
+Then, `$` will the following methods:
+```ts
+click_me: () => Action
+delete_item: (args: {index: number}) => Action
+```
+Therefore, if you try to access methods other than these, you will get a compile error.
+
+## How do I run in Levo in production mode?
+Simply use the `--production` flag:
+```
+deno run --allow-all --unstable app.ts --production
+```
+When Levo server is started in production mode, the server will generate every bundle for every Levo pages under the root directory.
