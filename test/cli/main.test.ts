@@ -7,7 +7,7 @@ Deno.test({
     const projectName = "hello";
     const runCommand = (command: string) => {
       const process = Deno.run({
-        cmd: command.split(" "),
+        cmd: command.split(" ").filter(Boolean),
         stdout: "piped",
         stderr: "piped",
       });
@@ -109,14 +109,25 @@ Deno.test({
 
     await new Promise((resolve) => setTimeout(resolve, 5000));
 
-    const response = await fetch("http://localhost:5000");
-    assertEquals(response.status, 200);
-    assertEquals(response.headers.get("content-type"), "text/html");
+    const response1 = await fetch("http://localhost:5000");
+    assertEquals(response1.status, 200);
+    assertEquals(response1.headers.get("content-type"), "text/html");
 
-    // Test new-page command
-    // await runCommand(
-    //   `deno run --allow-all --unstable cli/mod.ts new-project ${projectName}`,
-    // );
+    console.log(`Test new-page command`);
+    await runCommand(
+      `../bin/levo new-page ./root/about`,
+    );
+    const response2 = await fetch("http://localhost:5000/about");
+    assertEquals(response2.status, 200);
+    assertEquals(response2.headers.get("content-type"), "text/html");
+
+    console.log(`Test new-page command with nested wildcard path`);
+    await runCommand(
+      `../bin/levo new-page ./root/_/profile`,
+    );
+    const response3 = await fetch("http://localhost:5000/john/profile");
+    assertEquals(response3.status, 200);
+    assertEquals(response3.headers.get("content-type"), "text/html");
 
     console.log("Tear down");
     console.log("Terminate server");

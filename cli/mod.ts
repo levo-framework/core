@@ -57,15 +57,19 @@ if (result.help) {
     await Deno.remove(tempName, { recursive: true });
   }
 } else if (result._?.[0] === "new-page") {
-  const dirname = result._?.[1];
+  const dirname = result._?.[1]?.toString();
   if (!dirname) {
     console.error(`Missing argument <directory_name>`);
-  } else if (typeof dirname !== "string") {
-    console.error(`Type <directory_name> should be string, not number`);
+  } else if (!await exists(".levo.templates")) {
+    console.error(
+      'Cannot find directory ".levo.templates", make sure you are running this command in the project root.',
+    );
+  } else if ((await exists(dirname))) {
+    console.error(
+      `Cannot create a new page at "${dirname}" as it already exists.`,
+    );
   } else {
-    if (!(await exists(dirname))) {
-      await Deno.mkdir(dirname, { recursive: true });
-    }
+    await copy(".levo.templates/new-project/root", dirname);
   }
 } else {
   console.error(`Unknown command '${Deno.args.join(" ")}'`);
