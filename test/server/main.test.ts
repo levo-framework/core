@@ -8,7 +8,7 @@ const server = new Worker(demoAppPath, {
   deno: true,
 });
 
-await new Promise((resolve) => setTimeout(resolve, 15000));
+await new Promise((resolve) => setTimeout(resolve, 20000));
 
 const tests: {
   name: string;
