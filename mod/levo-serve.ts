@@ -39,6 +39,7 @@ export const serve = <Model = {}, Action = {}>({
       });
       self.postMessage(response);
     } catch (error) {
+      console.error(error);
       self.postMessage({ error }); // TODO: handle gracefully
     }
     self.close();

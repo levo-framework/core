@@ -14,7 +14,9 @@ export const renderToString = <Action>(
       const childrenString = children?.map(renderToString).join("") || "";
       const attributesAndEventString = (() => {
         const s = Object.entries(attributes ?? {}).map(([key, value]) => {
-          if (typeof value === "string") {
+          if (value === undefined) {
+            return "";
+          } else if (typeof value === "string") {
             return `${key}='${value}'`;
           } else {
             const eventName = key;

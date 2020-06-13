@@ -4,12 +4,16 @@ import { render } from "../../mod/levo-view.ts";
 
 Deno.test("render-to-string", () => {
   const virtualNode = render<{ type: "click"; index: number }>(
-    ["div", { style: { display: "grid", alignItems: "center" } }, [
-      ["input", { value: "hello" }],
-      ["button", { onclick: { type: "click", index: 2 } }, [
-        "click me",
-      ]],
-    ]],
+    [
+      "div",
+      { class: undefined, style: { display: "grid", alignItems: "center" } },
+      [
+        ["input", { value: "hello" }],
+        ["button", { onclick: { type: "click", index: 2 } }, [
+          "click me",
+        ]],
+      ],
+    ],
   );
 
   assertEquals(
