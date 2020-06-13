@@ -149,7 +149,8 @@ button {
       const decoder = new TextDecoder();
       const encoder = new TextEncoder();
       const path =
-        new URL("../../demo/home/banana/levo.server.ts", import.meta.url).pathname;
+        new URL("../../demo/home/banana/levo.server.ts", import.meta.url)
+          .pathname;
       const fileContent = decoder.decode(await Deno.readFile(path));
       await Deno.writeFile(
         path,
