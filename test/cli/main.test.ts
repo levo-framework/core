@@ -15,7 +15,9 @@ Deno.test({
       return Promise.all([process.output(), process.stderrOutput()])
         .then(([output, err]) => {
           if (err.length > 0) {
-            return decoder.decode(err);
+            const error = decoder.decode(err);
+            console.error(error);
+            return error;
           } else {
             return decoder.decode(output).trim();
           }
@@ -27,14 +29,15 @@ Deno.test({
     };
 
     console.log("\nInstalling Levo CLI");
-    await runCommand(
-      `deno install --allow-all --unstable --force --name levo cli/mod.ts`,
+    const output = await runCommand(
+      `deno install --allow-all --unstable --force --root . --name levo cli/mod.ts`,
     );
+    console.log("output", output);
 
-    assert((await runCommand(`which levo`)).endsWith('levo'))
+    assert((await runCommand(`which ./bin/levo`)).endsWith("./bin/levo"));
 
     console.log("Creating new project using Levo CLI");
-    await runCommand(`levo new-project ${projectName}`);
+    await runCommand(`./bin/levo new-project ${projectName}`);
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const tree = await getDirectoryTree(
@@ -116,17 +119,16 @@ Deno.test({
     // );
 
     console.log("Tear down");
-    console.log(`Uninstall Levo CLI`);
-    const levoPath = await runCommand(`which levo`);
-    console.log("levoPath", levoPath);
-    await Deno.remove(levoPath);
-
     console.log("Terminate server");
     server.terminate();
 
-    console.log("Delete created project folder");
     Deno.chdir("..");
+
+    console.log("Delete created project folder");
     await Deno.remove(projectName, { recursive: true });
+
+    console.log(`Uninstall Levo CLI`);
+    await Deno.remove("./bin/levo");
   },
   sanitizeOps: false,
   sanitizeResources: false,
