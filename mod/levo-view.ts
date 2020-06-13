@@ -1,6 +1,7 @@
 import { LispyElements } from "../src/lispy-elements.ts";
 import { Properties } from "../src/css-types.ts";
 import { VirtualNodeEvents } from "../src/virtual-node-events.ts";
+import { VirtualNode } from "../src/virtual-node.ts";
 
 export namespace Levo {
   export type Element<Action> = LispyElements<Action>;
@@ -10,7 +11,7 @@ export namespace Levo {
 
 export const render = <Action>(
   node: LispyElements<Action>,
-): Levo.Element<Action> => {
+): VirtualNode<Action> => {
   return {
     $: node[0],
     ...node[1],
