@@ -50,10 +50,14 @@ export const applyPatches = <Action>({
       }
       case "update_attribute": {
         if (typeof patch.value === "string") {
-          (patch.originalNode.ref as HTMLElement).setAttribute?.(
-            patch.attributeName,
-            patch.value,
-          );
+          if (patch.attributeName === "value") {
+            (patch.originalNode.ref as any).value = patch.value;
+          } else {
+            (patch.originalNode.ref as HTMLElement).setAttribute?.(
+              patch.attributeName,
+              patch.value,
+            );
+          }
         } else { // must be event update
           setEventHandler(
             {
