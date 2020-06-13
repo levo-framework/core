@@ -1,12 +1,15 @@
 import { assertEquals } from "../../src/deps.ts";
 
-const server = new Worker(new URL("../../demo/app.ts", import.meta.url).href, {
+const demoAppPath = new URL("../../demo/app.ts", import.meta.url).href
+console.log('import.meta.url', import.meta.url)
+console.log('demoAppPath', demoAppPath)
+const server = new Worker(demoAppPath, {
   type: "module",
   //@ts-ignore
   deno: true,
 });
 
-await new Promise((resolve) => setTimeout(resolve, 8000));
+await new Promise((resolve) => setTimeout(resolve, 15000));
 
 const tests: {
   name: string;
