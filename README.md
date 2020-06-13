@@ -114,6 +114,9 @@ Secondly, make sure you are using Deno `v1.0.2`. To do this, run the following c
 deno upgrade --version=1.0.2
 ```
 
+## IDE
+It's highly recommended that you use VSCode, and install the the official Deno extension at https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno.
+
 
 ## Installation
 Run the following command to install `levo` CLI to get started.
