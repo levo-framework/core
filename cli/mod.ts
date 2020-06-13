@@ -16,12 +16,12 @@ Available commands:
 if (result.help) {
   console.log(help);
 } else if (result._?.[0] === "new-project") {
-  const projectName = result._?.[1];
+  const projectName = result._?.[1]?.toString();
   if (!projectName) {
     console.error(`Missing argument <project_name>`);
   } else {
     const response = await fetch(
-      "https://api.github.com/repos/levo-framework/core/git/refs/tags",
+      `https://api.github.com/repos/levo-framework/core/git/refs/tags`,
     ).then((response) =>
       response.json() as Promise<
         {
@@ -32,6 +32,7 @@ if (result.help) {
         }[]
       >
     );
+
     const [, , latestTag] = response.sort((b, a) =>
       a.ref.localeCompare(b.ref)
     )[0]?.ref.split("/");
@@ -45,7 +46,37 @@ if (result.help) {
       stderr: "piped",
     })
       .output();
+
     console.log(new TextDecoder().decode(output));
+    console.log(`Using Levo ${latestTag}`);
+
+    // specify specific version for each file in the templates that import Levo modules
+    const specifyVersion = async (pathname: string): Promise<void> => {
+      return Promise.all(
+        Array.from(Deno.readDirSync(pathname)).map(async (dir) => {
+          if (dir.isFile) {
+            const filename = pathname + path.SEP + dir.name;
+            const content = new TextDecoder().decode(
+              await Deno.readFile(filename),
+            );
+            const updatedContent = content
+              .replace(
+                /https:\/\/deno\.land\/x\/levo\//g,
+                `https://deno.land/x/levo@${latestTag}/`,
+              );
+            return await Deno.writeFile(
+              filename,
+              new TextEncoder().encode(updatedContent),
+            );
+          } else {
+            return specifyVersion(pathname + path.SEP + dir.name);
+          }
+        }),
+      ).then(() => {});
+    };
+
+    await specifyVersion(tempName + path.SEP + "templates");
+
     await copy(
       tempName + path.SEP + "templates/new-project",
       projectName.toString(),
@@ -55,6 +86,10 @@ if (result.help) {
       projectName + path.SEP + ".levo.templates",
     );
     await Deno.remove(tempName, { recursive: true });
+    console.log(`Levo app successfully created at ${projectName}`);
+    console.log(`Run the following command to get started:\n`);
+    console.log(`  cd ${projectName}`);
+    console.log(`  deno run --allow-all --unstable app.ts`);
   }
 } else if (result._?.[0] === "new-page") {
   const dirname = result._?.[1]?.toString();
