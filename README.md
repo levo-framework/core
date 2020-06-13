@@ -3,6 +3,8 @@
 ![](https://github.com/levo-framework/core/workflows/CI/badge.svg)
 
 ## Background story
+This section is very long, you can skip to tutorial by clicking [here](https://github.com/levo-framework/core/#tutorial)
+
 Why do I want to create another web framework?  
 
 Here's my story.  
@@ -103,6 +105,15 @@ It's important to keep the following rules in mind in order to for Levo to perfo
 ```
 deno bundle --config tsconfig.json src/levo-runtime.ts > levo-runtime.bundle.js
 ```
+
+# Tutorial
+## Setup
+First of all, make you sure you installed Deno by following the [instruction here](https://deno.land/#installation).  
+Secondly, make sure you are using Deno `v1.0.2`. To do this, run the following command:
+```
+deno upgrade --version=1.0.2
+```
+
 
 ## Installation
 Run the following command to install `levo` CLI to get started.
