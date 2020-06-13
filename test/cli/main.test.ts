@@ -39,8 +39,8 @@ Deno.test({
     console.log("Creating new project using Levo CLI");
     await runCommand(`./bin/levo new-project ${projectName}`);
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const tree = await getDirectoryTree(
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const tree = getDirectoryTree(
       `./${projectName}`,
       { ignoreFiles: [] },
     );
@@ -129,20 +129,23 @@ Deno.test({
     await assertUsingSpecificImport(projectName);
 
     console.log("Test if the server created with the templates work");
-    Deno.chdir(projectName);
-    const server = new Worker(`./${projectName}/app.ts`, {
-      type: "module",
-      //@ts-ignore
-      deno: true,
-    });
+    const server = new Worker(
+      new URL(`../.././${projectName}/app.ts`, import.meta.url).href,
+      {
+        type: "module",
+        //@ts-ignore
+        deno: true,
+      },
+    );
 
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await new Promise((resolve) => setTimeout(resolve, 20000));
 
     const response1 = await fetch("http://localhost:5000");
     assertEquals(response1.status, 200);
     assertEquals(response1.headers.get("content-type"), "text/html");
 
     console.log(`Test new-page command`);
+    Deno.chdir(projectName);
     await runCommand(
       `../bin/levo new-page ./root/about`,
     );
@@ -154,6 +157,7 @@ Deno.test({
     await runCommand(
       `../bin/levo new-page ./root/_/profile`,
     );
+    Deno.chdir("..");
     const response3 = await fetch("http://localhost:5000/john/profile");
     assertEquals(response3.status, 200);
     assertEquals(response3.headers.get("content-type"), "text/html");
@@ -161,8 +165,6 @@ Deno.test({
     console.log("Tear down");
     console.log("Terminate server");
     server.terminate();
-
-    Deno.chdir("..");
 
     console.log("Delete created project folder");
     await Deno.remove(projectName, { recursive: true });

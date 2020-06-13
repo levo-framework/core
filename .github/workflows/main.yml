@@ -19,7 +19,7 @@ jobs:
       - uses: denolib/setup-deno@master
         with:
           # Why don't use latest version? Refer https://github.com/denosaurs/deno_brotli/issues/2
-          deno-version: v1.0.2 
+          deno-version: v1.1.0 
       - name: Format Check
         run: |
           deno fmt --check demo
@@ -34,7 +34,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: denolib/setup-deno@master
         with:
-         deno-version: v1.0.2 
+         deno-version: v1.1.0 
       - name: Bundle levo-runtime.ts
         run: deno bundle --config tsconfig.json src/levo-runtime.ts > /dev/null
 
@@ -44,7 +44,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: denolib/setup-deno@master
         with:
-         deno-version: v1.0.2 
+         deno-version: v1.1.0 
       - name: Unit Test
         run: deno test --allow-all --unstable test/unit
 
@@ -54,7 +54,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: denolib/setup-deno@master
         with:
-         deno-version: v1.0.2 
+         deno-version: v1.1.0 
       - name: Server Test
         run: deno test --allow-all --unstable test/server/main.test.ts
 
@@ -64,7 +64,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: denolib/setup-deno@master
         with:
-         deno-version: v1.0.2 
+         deno-version: v1.1.0 
       - name: Template Test
         run: deno test --allow-all --unstable test/server/project-template.test.ts 
 
@@ -74,6 +74,6 @@ jobs:
       - uses: actions/checkout@master
       - uses: denolib/setup-deno@master
         with:
-         deno-version: v1.0.2 
+         deno-version: v1.1.0 
       - name: CLI Test
         run: deno test --allow-all --unstable test/cli/main.test.ts
