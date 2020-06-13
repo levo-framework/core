@@ -1,6 +1,7 @@
 import { assertEquals } from "../../src/deps.ts";
 
 const demoAppPath = new URL("../../demo/app.ts", import.meta.url).href
+console.log('Deno.cwd()', Deno.cwd())
 console.log('import.meta.url', import.meta.url)
 console.log('demoAppPath', demoAppPath)
 const server = new Worker(demoAppPath, {
