@@ -5,7 +5,7 @@ export const minify = (code: string): {
   code: string;
   error?: string;
 } => {
-  const babelled = babelstandalone.default.transform(
+  const babelled = (babelstandalone.default as any).transform(
     code,
     { presets: [["env"]] },
   );

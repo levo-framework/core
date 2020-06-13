@@ -5,5 +5,5 @@ LevoApp.start({
   hostname: "0.0.0.0",
   minifyJs: false,
   cachePages: false,
-  rootDir: ["home"],
+  rootDir: new URL("./home", import.meta.url),
 });

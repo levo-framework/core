@@ -16,13 +16,11 @@ export const LevoApp = {
   }: server.HTTPOptions & {
     /**
      * Root directory for serving web pages.  
-     * For example, if you want to specify `/src/root`, 
-     * the value should be `['src', 'root']`.
+     * For example, if you want to specify `./src/root`, 
+     * the value should be `new URL('./src/root', import.meta.url)`
      * 
-     * Note: the value should not contain any slashes.
-     * For example, the value: `['./']` is wrong.
      */
-    rootDir: string[];
+    rootDir: URL;
 
     /**
      * Minify Javascript code that will be served to client.  
@@ -38,10 +36,6 @@ export const LevoApp = {
      */
     cachePages?: boolean;
   }) => {
-    if (rootDir.some((s) => /(\/|\\)/.test(s))) {
-      throw new Error(`rootDir shouldn't contain any slashes`);
-    }
-
     const s = server.serve(options);
     const decoder = new TextDecoder("utf-8");
     const encoder = new TextEncoder();
@@ -106,11 +100,13 @@ export const LevoApp = {
       `Server listening on ${options.hostname ?? "0.0.0.0"}:${options.port}`,
     );
 
-    const root = rootDir.join(path.SEP);
-    if (!(await exists(root))) {
-      throw new Error(`Root path '${root}' does not exists.`);
+    if (!(await exists(rootDir.pathname))) {
+      throw new Error(`Root path '${rootDir.pathname}' does not exists.`);
     }
-    const cachedDirectoryTree = getDirectoryTree(root, { ignoreFiles: [] });
+    const cachedDirectoryTree = getDirectoryTree(
+      rootDir.pathname,
+      { ignoreFiles: [] },
+    );
     for await (const req of s) {
       try {
         console.log(new Date(), `${req.method} ${req.url}`);
@@ -118,14 +114,14 @@ export const LevoApp = {
         const resolvedUrl = resolveUrl(
           cachePages
             ? cachedDirectoryTree
-            : getDirectoryTree(root, { ignoreFiles: [] }),
+            : getDirectoryTree(rootDir.pathname, { ignoreFiles: [] }),
           url.pathname,
         );
         if (resolvedUrl === undefined) {
           req.respond({ status: 404 });
           continue;
         }
-        const pathname = root + path.SEP + resolvedUrl;
+        const pathname = rootDir + path.SEP + resolvedUrl;
         const acceptEncoding = req.headers.get("accept-encoding");
         if (pathname.includes("levo.assets")) {
           if (!(await exists(pathname))) {
@@ -151,12 +147,9 @@ export const LevoApp = {
         const dirname = pathname.endsWith(path.SEP)
           ? pathname
           : `${pathname}${path.SEP}`;
-        const handlerPath = (dirname.startsWith("./")
-          ? dirname
-          : "./" + dirname) +
-          `levo.server.ts`;
+        const handlerPath = dirname + `levo.server.ts`;
         if (!(await exists(handlerPath))) {
-          console.error(`No levo.server.ts found under ${dirname}`);
+          console.error(`No levo.server.ts found under at ${dirname}`);
           req.respond({ status: 404 });
           continue;
         }
