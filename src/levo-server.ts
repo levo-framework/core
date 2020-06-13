@@ -121,7 +121,10 @@ export const LevoApp = {
           req.respond({ status: 404 });
           continue;
         }
-        const pathname = rootDir + path.SEP + resolvedUrl;
+        const pathname = (rootDir.pathname.endsWith(path.SEP)
+          ? rootDir.pathname
+          : rootDir.pathname + path.SEP) + resolvedUrl;
+
         const acceptEncoding = req.headers.get("accept-encoding");
         if (pathname.includes("levo.assets")) {
           if (!(await exists(pathname))) {
@@ -146,16 +149,25 @@ export const LevoApp = {
 
         const dirname = pathname.endsWith(path.SEP)
           ? pathname
-          : `${pathname}${path.SEP}`;
-        const handlerPath = dirname + `levo.server.ts`;
-        if (!(await exists(handlerPath))) {
-          console.error(`No levo.server.ts found under at ${dirname}`);
+          : pathname + path.SEP;
+
+        const handlerPath = new URL(
+          `levo.server.ts`,
+          `file://` + dirname,
+        );
+        if (!(await exists(handlerPath.pathname))) {
+          console.error(
+            `No levo.server.ts found under at ${handlerPath.pathname}`,
+          );
           req.respond({ status: 404 });
           continue;
         }
         const worker = new Worker(
           // Refer: https://stackoverflow.com/a/41790024/6587634
-          handlerPath + (cachePages ? "" : `?${(Math.random() * 1000000)}`),
+          handlerPath.href +
+            (cachePages
+              ? ""
+              : `?${(Math.random() * 1000000)}`),
           {
             type: "module",
             //@ts-ignore
