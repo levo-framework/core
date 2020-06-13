@@ -1,13 +1,14 @@
 import { assertEquals } from "../../src/deps.ts";
 
-Deno.chdir("./demo");
-const server = new Worker("./demo/app.ts", {
+const demoAppPath = new URL("../../demo/app.ts", import.meta.url).href;
+
+const server = new Worker(demoAppPath, {
   type: "module",
   //@ts-ignore
   deno: true,
 });
 
-await new Promise((resolve) => setTimeout(resolve, 5000));
+await new Promise((resolve) => setTimeout(resolve, 10000));
 
 const tests: {
   name: string;
@@ -147,7 +148,9 @@ button {
       assertEquals((await result.text()).includes("i am banana"), true);
       const decoder = new TextDecoder();
       const encoder = new TextEncoder();
-      const path = "home/banana/levo.server.ts";
+      const path =
+        new URL("../../demo/home/banana/levo.server.ts", import.meta.url)
+          .pathname;
       const fileContent = decoder.decode(await Deno.readFile(path));
       await Deno.writeFile(
         path,

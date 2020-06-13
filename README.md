@@ -109,9 +109,9 @@ deno bundle --config tsconfig.json src/levo-runtime.ts > levo-runtime.bundle.js
 # Tutorial
 ## Setup
 First of all, make you sure you installed Deno by following the [instruction here](https://deno.land/#installation).  
-Secondly, make sure you are using Deno `v1.0.2`. To do this, run the following command:
+Secondly, make sure you are using Deno `v1.1.0`. To do this, run the following command:
 ```
-deno upgrade --version=1.0.2
+deno upgrade --version=1.1.0
 ```
 
 ## IDE
@@ -229,7 +229,7 @@ If client request for `/admin/profile`, the `levo.server.ts` under `/admin/profi
 Otherwise if client request for `/X/profile` where `X` is any string other than `admin`, the `levo.server.ts` under `_/profile` will be executed.
 
 ### How do I change the site root to other folder?
-You can modified this at `app.ts` by chaging the `rootDir` value from `["root"]` to the value you want.
+You can modified this at `app.ts` by chaging the `rootDir` value to the value you want.
 
 ---
 ## How to author a view in Levo?

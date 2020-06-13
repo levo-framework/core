@@ -7,7 +7,7 @@ export {
   exists,
   existsSync,
   copy,
-} from "https://deno.land/std@0.53.0/fs/mod.ts";
+} from "https://deno.land/std@0.57.0/fs/mod.ts";
 
 export * as server from "https://deno.land/std@0.53.0/http/server.ts";
 

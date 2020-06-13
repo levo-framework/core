@@ -5,5 +5,5 @@ LevoApp.start({
   port: 5000,
   minifyJs: production,
   cachePages: production,
-  rootDir: ["root"],
+  rootDir: new URL("./root", import.meta.url),
 });

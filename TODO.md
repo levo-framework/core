@@ -11,11 +11,11 @@
 - [x] Action text mangling
 - [x] minify js
 - [] self-vendor runtime.js (instead of loading from a CDN)
-- [] unify top-components and sub-components interface usage
-- [] write test for implemented features
+- [x] unify top-components and sub-components interface usage
+- [x] write test for implemented features
 - [] option to disable client side logging
 - [x] handle URL with query params
-- [] setup CI/CD
+- [x] setup CI/CD
 - [] commit based on issues
 - [] obfuscate $levoModel
 - [] minify html/css
