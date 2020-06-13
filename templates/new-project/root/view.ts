@@ -3,7 +3,7 @@ import {
   createActions,
   render,
   Levo,
-} from "https://deno.land/x/levo@bbf7a05c9808cbe704c82bd98abc5742cf785cf0/mod/levo-view.ts";
+} from "https://deno.land/x/levo/mod/levo-view.ts";
 import { Model } from "./model.ts";
 
 export const view = (model: Model): Levo.Element<Action> => {
