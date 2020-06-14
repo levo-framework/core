@@ -68,10 +68,9 @@ const tests: {
       assertEquals(
         await result.text(),
         `
-button {
-  background-color: bisque;
-  font-size: 24px;
-}
+button { background-color: bisque; font-size: 24px; }
+.class1 { font-size: large; }
+.class2 { font-size: small; }
       `.trim(),
       );
       assertEquals(result.headers.get("content-type"), "text/css");

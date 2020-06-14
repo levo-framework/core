@@ -133,8 +133,6 @@ System.register("array-diff", [], function (exports_3, context_3) {
     return {
         setters: [],
         execute: function () {
-            /**
-             */
             exports_3("arrayDiff", arrayDiff = (left, right) => {
                 let cache = {};
                 const rightLength = right.length;
@@ -565,7 +563,8 @@ System.register("apply-patches", ["mount", "set-event-handler"], function (expor
                                 patch.originalNode.ref.removeAttribute?.(patch.attributeName);
                             }
                             else if (patch.attributeName === "class") {
-                                patch.originalNode.ref.className = undefined;
+                                // Refer: https://stackoverflow.com/a/30299762/6587634
+                                patch.originalNode.ref.className = "";
                             }
                             else {
                                 patch.originalNode.ref[patch.attributeName] = undefined;

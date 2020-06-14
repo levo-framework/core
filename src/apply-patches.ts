@@ -78,7 +78,9 @@ export const applyPatches = <Action>({
             patch.attributeName,
           );
         } else if (patch.attributeName === "class") {
-          (patch.originalNode.ref as any).className = undefined;
+          // Cannot set className to undefined, as the result will be `class="undefined"`
+          // Refer: https://stackoverflow.com/a/30299762/6587634
+          (patch.originalNode.ref as any).className = "";
         } else {
           (patch.originalNode.ref as any)[patch.attributeName] = undefined;
         }

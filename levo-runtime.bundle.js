@@ -566,7 +566,9 @@ System.register("apply-patches", ["mount", "set-event-handler"], function (expor
                                 patch.originalNode.ref.removeAttribute?.(patch.attributeName);
                             }
                             else if (patch.attributeName === "class") {
-                                patch.originalNode.ref.className = undefined;
+                                // Cannot set className to undefined, as the result will be `class="undefined"`
+                                // Refer: https://stackoverflow.com/a/30299762/6587634
+                                patch.originalNode.ref.className = "";
                             }
                             else {
                                 patch.originalNode.ref[patch.attributeName] = undefined;
