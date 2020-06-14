@@ -1,3 +1,5 @@
+/// <reference lib="dom"/>
+
 import { Action } from "./action.ts";
 import { Model } from "./model.ts";
 import { LevoUpdate } from "https://deno.land/x/levo/mod/levo-update.ts";
