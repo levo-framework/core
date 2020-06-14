@@ -544,6 +544,9 @@ System.register("apply-patches", ["mount", "set-event-handler"], function (expor
                                 if (patch.attributeName.startsWith("data-")) {
                                     patch.originalNode.ref.setAttribute?.(patch.attributeName, patch.value);
                                 }
+                                else if (patch.attributeName === "class") {
+                                    patch.originalNode.ref.className = patch.value;
+                                }
                                 else {
                                     patch.originalNode.ref[patch.attributeName] = patch.value;
                                 }
@@ -561,6 +564,9 @@ System.register("apply-patches", ["mount", "set-event-handler"], function (expor
                         case "remove_attribute": {
                             if (patch.attributeName.startsWith("data-")) {
                                 patch.originalNode.ref.removeAttribute?.(patch.attributeName);
+                            }
+                            else if (patch.attributeName === "class") {
+                                patch.originalNode.ref.className = undefined;
                             }
                             else {
                                 patch.originalNode.ref[patch.attributeName] = undefined;

@@ -15,6 +15,7 @@ export const view = (model: Model): Levo.Element<Action> => {
       [
         "button",
         {
+          class: isEven ? "class1" : "class2",
           onclick: $.add(),
           style: {
             backgroundColor: isEven ? "red" : "green",

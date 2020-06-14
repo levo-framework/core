@@ -55,6 +55,8 @@ export const applyPatches = <Action>({
               patch.attributeName,
               patch.value,
             );
+          } else if (patch.attributeName === "class") {
+            (patch.originalNode.ref as any).className = patch.value;
           } else {
             (patch.originalNode.ref as any)[patch.attributeName] = patch.value;
           }
@@ -75,6 +77,8 @@ export const applyPatches = <Action>({
           (patch.originalNode.ref as HTMLElement).removeAttribute?.(
             patch.attributeName,
           );
+        } else if (patch.attributeName === "class") {
+          (patch.originalNode.ref as any).className = undefined;
         } else {
           (patch.originalNode.ref as any)[patch.attributeName] = undefined;
         }
