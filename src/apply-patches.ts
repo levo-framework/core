@@ -55,6 +55,8 @@ export const applyPatches = <Action>({
               patch.attributeName,
               patch.value,
             );
+          } else if (patch.attributeName === "class") {
+            (patch.originalNode.ref as any).className = patch.value;
           } else {
             (patch.originalNode.ref as any)[patch.attributeName] = patch.value;
           }
@@ -75,6 +77,10 @@ export const applyPatches = <Action>({
           (patch.originalNode.ref as HTMLElement).removeAttribute?.(
             patch.attributeName,
           );
+        } else if (patch.attributeName === "class") {
+          // Cannot set className to undefined, as the result will be `class="undefined"`
+          // Refer: https://stackoverflow.com/a/30299762/6587634
+          (patch.originalNode.ref as any).className = "";
         } else {
           (patch.originalNode.ref as any)[patch.attributeName] = undefined;
         }
