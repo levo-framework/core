@@ -16,9 +16,7 @@ export const view = (model: Model): Levo.Element<Action> => {
         {
           onclick: $.add(),
           style: {
-            backgroundColor: model.currentValue % 2 === 0
-              ? "red"
-              : "green",
+            backgroundColor: model.currentValue % 2 === 0 ? "red" : "green",
           },
         },
         ["add"],
