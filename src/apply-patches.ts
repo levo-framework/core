@@ -50,13 +50,13 @@ export const applyPatches = <Action>({
       }
       case "update_attribute": {
         if (typeof patch.value === "string") {
-          if (patch.attributeName === "value") {
-            (patch.originalNode.ref as any).value = patch.value;
-          } else {
+          if (patch.attributeName.startsWith("data-")) {
             (patch.originalNode.ref as HTMLElement).setAttribute?.(
               patch.attributeName,
               patch.value,
             );
+          } else {
+            (patch.originalNode.ref as any)[patch.attributeName] = patch.value;
           }
         } else { // must be event update
           setEventHandler(
@@ -71,9 +71,13 @@ export const applyPatches = <Action>({
         return updatedMountedVirtualNode;
       }
       case "remove_attribute": {
-        (patch.originalNode.ref as HTMLElement).removeAttribute?.(
-          patch.attributeName,
-        );
+        if (patch.attributeName.startsWith("data-")) {
+          (patch.originalNode.ref as HTMLElement).removeAttribute?.(
+            patch.attributeName,
+          );
+        } else {
+          (patch.originalNode.ref as any)[patch.attributeName] = undefined;
+        }
         delete (patch.originalNode as any)[patch.attributeName];
         return updatedMountedVirtualNode;
       }

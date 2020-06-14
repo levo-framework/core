@@ -133,6 +133,8 @@ System.register("array-diff", [], function (exports_3, context_3) {
     return {
         setters: [],
         execute: function () {
+            /**
+             */
             exports_3("arrayDiff", arrayDiff = (left, right) => {
                 let cache = {};
                 const rightLength = right.length;
@@ -538,11 +540,11 @@ System.register("apply-patches", ["mount", "set-event-handler"], function (expor
                         }
                         case "update_attribute": {
                             if (typeof patch.value === "string") {
-                                if (patch.attributeName === "value") {
-                                    patch.originalNode.ref.value = patch.value;
+                                if (patch.attributeName.startsWith('data-')) {
+                                    patch.originalNode.ref.setAttribute?.(patch.attributeName, patch.value);
                                 }
                                 else {
-                                    patch.originalNode.ref.setAttribute?.(patch.attributeName, patch.value);
+                                    patch.originalNode.ref[patch.attributeName] = patch.value;
                                 }
                             }
                             else { // must be event update
@@ -556,7 +558,12 @@ System.register("apply-patches", ["mount", "set-event-handler"], function (expor
                             return updatedMountedVirtualNode;
                         }
                         case "remove_attribute": {
-                            patch.originalNode.ref.removeAttribute?.(patch.attributeName);
+                            if (patch.attributeName.startsWith('data-')) {
+                                patch.originalNode.ref.removeAttribute?.(patch.attributeName);
+                            }
+                            else {
+                                patch.originalNode.ref[patch.attributeName] = undefined;
+                            }
                             delete patch.originalNode[patch.attributeName];
                             return updatedMountedVirtualNode;
                         }
@@ -695,7 +702,7 @@ System.register("levo-runtime", ["virtual-node-diff", "mount", "apply-patches", 
                 //@ts-ignore
                 initialModel: window.$levoModel,
                 //@ts-ignore
-                view: model => lispy_element_to_virtual_node_ts_1.lispyElementToVirtualNode(window.$levoView(model)),
+                view: (model) => lispy_element_to_virtual_node_ts_1.lispyElementToVirtualNode(window.$levoView(model)),
                 //@ts-ignore
                 update: window.$levoUpdater,
                 //@ts-ignore
