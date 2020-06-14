@@ -8,7 +8,7 @@ import { Model } from "./model.ts";
 
 export const view = (model: Model): Levo.Element<Action> => {
   const $ = createActions<Action>();
-  return render(
+  return render<Action>(
     ["html", { lang: "en" }, [
       ["head", {}, [
         ["meta", { name: "title", content: "My Levo Page" }],
