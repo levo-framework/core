@@ -432,7 +432,7 @@ System.register("set-event-handler", [], function (exports_8, context_8) {
         execute: function () {
             exports_8("setEventHandler", setEventHandler = ({ element, eventName, action, }) => {
                 if (action !== undefined) {
-                    element.setAttribute(eventName, `$$h('${btoa(JSON.stringify(action))}')`);
+                    element[eventName] = () => $$h(action);
                 }
             });
         }
@@ -541,7 +541,7 @@ System.register("apply-patches", ["mount", "set-event-handler"], function (expor
                         }
                         case "update_attribute": {
                             if (typeof patch.value === "string") {
-                                if (patch.attributeName.startsWith('data-')) {
+                                if (patch.attributeName.startsWith("data-")) {
                                     patch.originalNode.ref.setAttribute?.(patch.attributeName, patch.value);
                                 }
                                 else {
@@ -559,7 +559,7 @@ System.register("apply-patches", ["mount", "set-event-handler"], function (expor
                             return updatedMountedVirtualNode;
                         }
                         case "remove_attribute": {
-                            if (patch.attributeName.startsWith('data-')) {
+                            if (patch.attributeName.startsWith("data-")) {
                                 patch.originalNode.ref.removeAttribute?.(patch.attributeName);
                             }
                             else {
@@ -688,7 +688,7 @@ System.register("levo-runtime", ["virtual-node-diff", "mount", "apply-patches", 
                 };
                 onMount(currentModel, handler);
                 //@ts-ignore
-                window.$$h = (action) => handler(JSON.parse(atob(action)));
+                window.$$h = handler;
             };
             //@ts-ignore
             if (!window.$levoView) {

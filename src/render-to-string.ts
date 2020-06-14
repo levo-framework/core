@@ -18,12 +18,8 @@ export const renderToString = <Action>(
             return "";
           } else if (typeof value === "string") {
             return `${key}='${value}'`;
-          } else {
-            const eventName = key;
-            const action = value;
-            return `${eventName}='$$h(${
-              JSON.stringify(action).replace(/"([^"]+)":/g, "$1:")
-            })'`;
+          } else { // is event
+            return "";
           }
         }).join(" ");
         return s ? ` ${s}` : "";

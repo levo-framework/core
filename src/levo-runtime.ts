@@ -59,7 +59,7 @@ const start = <Model, Action>({
   onMount(currentModel, handler);
 
   //@ts-ignore
-  window.$$h = (action: string) => handler(JSON.parse(atob(action)));
+  window.$$h = handler;
 };
 
 //@ts-ignore
