@@ -3,6 +3,7 @@ import { VirtualNode } from "./virtual-node.ts";
 import { diff } from "./virtual-node-diff.ts";
 import { mount } from "./mount.ts";
 import { applyPatches } from "./apply-patches.ts";
+import { lispyElementToVirtualNode } from "./lispy-element-to-virtual-node.ts";
 
 const start = <Model, Action>({
   at,
@@ -82,7 +83,7 @@ start({
   initialModel: window.$levoModel,
 
   //@ts-ignore
-  view: window.$levoView,
+  view: (model) => lispyElementToVirtualNode(window.$levoView(model)),
 
   //@ts-ignore
   update: window.$levoUpdater,

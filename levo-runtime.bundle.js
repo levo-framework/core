@@ -581,10 +581,56 @@ System.register("apply-patches", ["mount", "set-event-handler"], function (expor
         }
     };
 });
-System.register("levo-runtime", ["virtual-node-diff", "mount", "apply-patches"], function (exports_11, context_11) {
+System.register("css-types", [], function (exports_11, context_11) {
     "use strict";
-    var virtual_node_diff_ts_1, mount_ts_2, apply_patches_ts_1, start;
     var __moduleName = context_11 && context_11.id;
+    return {
+        setters: [],
+        execute: function () {
+        }
+    };
+});
+System.register("virtual-node-events", [], function (exports_12, context_12) {
+    "use strict";
+    var __moduleName = context_12 && context_12.id;
+    return {
+        setters: [],
+        execute: function () {
+        }
+    };
+});
+System.register("lispy-elements", [], function (exports_13, context_13) {
+    "use strict";
+    var __moduleName = context_13 && context_13.id;
+    return {
+        setters: [],
+        execute: function () {
+        }
+    };
+});
+System.register("lispy-element-to-virtual-node", [], function (exports_14, context_14) {
+    "use strict";
+    var lispyElementToVirtualNode;
+    var __moduleName = context_14 && context_14.id;
+    return {
+        setters: [],
+        execute: function () {
+            exports_14("lispyElementToVirtualNode", lispyElementToVirtualNode = (node) => {
+                return {
+                    $: node[0],
+                    ...node[1],
+                    children: node[2]?.map((x) => typeof x === "string"
+                        ? { $: "_text", value: x }
+                        : lispyElementToVirtualNode(x)),
+                };
+            });
+        }
+    };
+});
+System.register("levo-runtime", ["virtual-node-diff", "mount", "apply-patches", "lispy-element-to-virtual-node"], function (exports_15, context_15) {
+    "use strict";
+    var virtual_node_diff_ts_1, mount_ts_2, apply_patches_ts_1, lispy_element_to_virtual_node_ts_1, start;
+    var __moduleName = context_15 && context_15.id;
     return {
         setters: [
             function (virtual_node_diff_ts_1_1) {
@@ -595,6 +641,9 @@ System.register("levo-runtime", ["virtual-node-diff", "mount", "apply-patches"],
             },
             function (apply_patches_ts_1_1) {
                 apply_patches_ts_1 = apply_patches_ts_1_1;
+            },
+            function (lispy_element_to_virtual_node_ts_1_1) {
+                lispy_element_to_virtual_node_ts_1 = lispy_element_to_virtual_node_ts_1_1;
             }
         ],
         execute: function () {
@@ -649,7 +698,7 @@ System.register("levo-runtime", ["virtual-node-diff", "mount", "apply-patches"],
                 //@ts-ignore
                 initialModel: window.$levoModel,
                 //@ts-ignore
-                view: window.$levoView,
+                view: model => lispy_element_to_virtual_node_ts_1.lispyElementToVirtualNode(window.$levoView(model)),
                 //@ts-ignore
                 update: window.$levoUpdater,
                 //@ts-ignore
