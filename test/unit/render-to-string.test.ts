@@ -39,7 +39,7 @@ Deno.test("render-to-string", () => {
   assertEquals(
     renderToString(virtualNode),
     `
-  <div style='display:grid;align-items:center'><input value='hello'></input><button onclick='$$h({type:\"click\",index:2})'>click me</button></div>
+  <div style='display:grid;align-items:center'><input value='hello'></input><button>click me</button></div>
   `.trim(),
   );
 });

@@ -1,3 +1,4 @@
+declare const $$h: <Action>(action: Action) => void;
 export const setEventHandler = <Action>({
   element,
   eventName,
@@ -8,9 +9,6 @@ export const setEventHandler = <Action>({
   action: Action;
 }) => {
   if (action !== undefined) {
-    element.setAttribute(
-      eventName,
-      `$$h('${btoa(JSON.stringify(action))}')`,
-    );
+    (element as any)[eventName] = () => $$h(action);
   }
 };
