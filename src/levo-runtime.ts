@@ -83,7 +83,7 @@ start({
   initialModel: window.$levoModel,
 
   //@ts-ignore
-  view: (model) => lispyElementToVirtualNode(window.$levoView(model)),
+  view: (model) => (window.$levoView(model)),
 
   //@ts-ignore
   update: window.$levoUpdater,

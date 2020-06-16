@@ -1,1 +1,1 @@
-export type Action = { $: "say hello" };
+export type Action = { $: "say hello" } | { $: "show"; color: string };

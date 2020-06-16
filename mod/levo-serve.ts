@@ -31,7 +31,7 @@ export const serve = <Model = {}, Action = {}>({
     try {
       const response = await getResponse(event.data, {
         page: ({ model, view }) => {
-          const html = renderToString(lispyElementToVirtualNode(view(model)));
+          const html = renderToString((view(model)));
           return { $: "page", model, html };
         },
         redirect: ({ url }) => ({ $: "redirect", url }),
@@ -41,7 +41,7 @@ export const serve = <Model = {}, Action = {}>({
       });
       self.postMessage(response);
     } catch (error) {
-      console.error(error);
+      console.error("ERROR(levo-serve): ", error);
       self.postMessage({ error }); // TODO: handle gracefully
     }
     self.close();

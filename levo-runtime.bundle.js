@@ -621,10 +621,11 @@ System.register("lispy-element-to-virtual-node", [], function (exports_14, conte
         setters: [],
         execute: function () {
             exports_14("lispyElementToVirtualNode", lispyElementToVirtualNode = (node) => {
+                console.log(node);
                 return {
                     $: node[0],
                     ...node[1],
-                    children: node[2]?.map((x) => typeof x === "string"
+                    children: node[2]?.filter(Boolean).map((x) => typeof x === "string"
                         ? { $: "_text", value: x }
                         : lispyElementToVirtualNode(x)),
                 };
@@ -632,9 +633,9 @@ System.register("lispy-element-to-virtual-node", [], function (exports_14, conte
         }
     };
 });
-System.register("levo-runtime", ["virtual-node-diff", "mount", "apply-patches", "lispy-element-to-virtual-node"], function (exports_15, context_15) {
+System.register("levo-runtime", ["virtual-node-diff", "mount", "apply-patches"], function (exports_15, context_15) {
     "use strict";
-    var virtual_node_diff_ts_1, mount_ts_2, apply_patches_ts_1, lispy_element_to_virtual_node_ts_1, start;
+    var virtual_node_diff_ts_1, mount_ts_2, apply_patches_ts_1, start;
     var __moduleName = context_15 && context_15.id;
     return {
         setters: [
@@ -646,9 +647,6 @@ System.register("levo-runtime", ["virtual-node-diff", "mount", "apply-patches", 
             },
             function (apply_patches_ts_1_1) {
                 apply_patches_ts_1 = apply_patches_ts_1_1;
-            },
-            function (lispy_element_to_virtual_node_ts_1_1) {
-                lispy_element_to_virtual_node_ts_1 = lispy_element_to_virtual_node_ts_1_1;
             }
         ],
         execute: function () {
@@ -703,7 +701,7 @@ System.register("levo-runtime", ["virtual-node-diff", "mount", "apply-patches", 
                 //@ts-ignore
                 initialModel: window.$levoModel,
                 //@ts-ignore
-                view: (model) => lispy_element_to_virtual_node_ts_1.lispyElementToVirtualNode(window.$levoView(model)),
+                view: (model) => (window.$levoView(model)),
                 //@ts-ignore
                 update: window.$levoUpdater,
                 //@ts-ignore
