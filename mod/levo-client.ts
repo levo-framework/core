@@ -15,7 +15,7 @@ export const client = <Model, Action>() => {
         } catch {}
       }
     },
-    registerView: (view: (model: Model) => Levo.Element<Action>) => {
+    registerView: (view: (model: Model) => Levo.Element) => {
       //@ts-ignore
       if (typeof window !== undefined) {
         // This is to prevent Deno from throwing error when some Worker tried to execute

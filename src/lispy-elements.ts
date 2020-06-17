@@ -21,7 +21,6 @@ type CommonAttributes<Action> =
     "tabindex"?: string;
     "title"?: string;
     "translate"?: string;
-    children?: number[];
   }
   & { style?: Properties }
   & VirtualNodeEvents<Action>;
