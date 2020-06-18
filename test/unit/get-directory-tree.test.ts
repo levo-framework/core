@@ -14,7 +14,7 @@ Deno.test("get directory tree", () => {
         ["levo.server.ts"],
         ["model.ts"],
         ["update.ts"],
-        ["view.ts"],
+        ["view.tsx"],
       ]],
       ["xxx", [
         ["action.ts"],
@@ -23,7 +23,7 @@ Deno.test("get directory tree", () => {
         ["levo.server.ts"],
         ["model.ts"],
         ["update.ts"],
-        ["view.ts"],
+        ["view.tsx"],
       ]],
     ],
   );
