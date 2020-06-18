@@ -4,7 +4,7 @@ import { VirtualNodeEvents } from "../src/virtual-node-events.ts";
 import { VirtualNode } from "../src/virtual-node.ts";
 
 export namespace Levo {
-  export type EventHandler = { _: "_" }; // Can be any type that cannot be constructed accidentally
+  export type EventHandler = string & { _: "ev" }; // branded type
   export type Element = VirtualNode<Levo.EventHandler>;
   export type CSSProperties = Properties;
   export type Events<Action> = VirtualNodeEvents<Action>;
