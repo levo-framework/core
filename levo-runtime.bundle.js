@@ -544,6 +544,9 @@ System.register("src/apply-patches", ["src/mount", "src/set-event-handler"], fun
                                 if (patch.attributeName.startsWith("data-")) {
                                     patch.originalNode.ref.setAttribute?.(patch.attributeName, patch.value);
                                 }
+                                else if (patch.attributeName === "class") {
+                                    patch.originalNode.ref.className = patch.value;
+                                }
                                 else {
                                     patch.originalNode.ref[patch.attributeName] = patch.value;
                                 }
@@ -561,6 +564,11 @@ System.register("src/apply-patches", ["src/mount", "src/set-event-handler"], fun
                         case "remove_attribute": {
                             if (patch.attributeName.startsWith("data-")) {
                                 patch.originalNode.ref.removeAttribute?.(patch.attributeName);
+                            }
+                            else if (patch.attributeName === "class") {
+                                // Cannot set className to undefined, as the result will be `class="undefined"`
+                                // Refer: https://stackoverflow.com/a/30299762/6587634
+                                patch.originalNode.ref.className = "";
                             }
                             else {
                                 patch.originalNode.ref[patch.attributeName] = undefined;
