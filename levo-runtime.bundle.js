@@ -657,12 +657,12 @@ System.register("mod/levo-view", [], function (exports_15, context_15) {
                         return {
                             $: tag,
                             ...props,
-                            children: children?.filter(x => x !== undefined && x !== null).map((x) => ["string", "number"].includes(typeof x) ? { $: "_text", value: x } : x).flat(),
+                            children: children?.filter((x) => x !== undefined && x !== null).map((x) => ["string", "number"].includes(typeof x) ? { $: "_text", value: x } : x).flat(),
                         };
                     }
                 };
                 Levo.mapDispatch = (dispatch, wrap) => {
-                    return action => dispatch(wrap(action));
+                    return (action) => dispatch(wrap(action));
                     // return new Proxy({}, {
                     //   get: function (target, key, receiver) {
                     //     return (props: any) => {
@@ -680,7 +680,7 @@ System.register("mod/levo-view", [], function (exports_15, context_15) {
                 return node;
             });
             exports_15("createDispatch", createDispatch = () => {
-                return x => x;
+                return (x) => x;
                 // return new Proxy({}, {
                 //   get: function (target, key, receiver) {
                 //     return (props: any) => {

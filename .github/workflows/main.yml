@@ -36,7 +36,7 @@ jobs:
         with:
          deno-version: v1.1.0 
       - name: Bundle levo-runtime.ts
-        run: deno bundle --config tsconfig.json src/levo-runtime.ts > /dev/null
+        run: deno bundle --config levo-runtime.tsconfig.json src/levo-runtime.ts > /dev/null
 
   unit-test:
     runs-on: ubuntu-latest
