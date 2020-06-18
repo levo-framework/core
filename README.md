@@ -60,10 +60,20 @@ Levo is a frontend framework that supports Server-Side Rendering (SSR) and The E
 
 ## Goals of Levo
 * SEO friendly (based on [Google's Lighthouse](https://developers.google.com/web/tools/lighthouse) measurement)
+    - don't serve pages that are blank initially
 * Scales naturally
+    - compile time don't increase when project size increase
 * Promotes standardized coding style
+    - All Levo projects should look similar
 * Backward compatible
-* Type-safe, don't serve pages with bombs
+    - After releasing v1.0.0, newer versions of Levo shouldn't break previous APIs
+* Strong type-safety
+    - Prefer compile-time error over run-time error
+* Promote usage of browser native APIs
+    - don't include abstractions that can already be achieved easily with native APIs
+    - for example, 
+        - don't create abstraction over network request, just use `fetch`
+        - don't abstract CSS into JS
 
 ## Why use Deno instead of Node?
 Because Deno has first-class support for Typescript and it don't require a package manager. You can find out more about it at [10 Things I Regret About Node.js](https://www.youtube.com/watch?v=M3BM9TB-8yA).
