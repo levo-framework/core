@@ -46,7 +46,7 @@ jobs:
         with:
          deno-version: v1.1.0 
       - name: Unit Test
-        run: deno test --allow-all --unstable --config tsconfig.json ./test/unit
+        run: deno test --allow-all --unstable --reload --config tsconfig.json ./test/unit
 
   server-test:
     runs-on: ubuntu-latest
