@@ -2,7 +2,7 @@ import { LevoUpdate } from "./levo-update.ts";
 import { LevoInit } from "./levo-init.ts";
 import { Levo } from "./levo-view.ts";
 
-export const client = <Model, Action>() => {
+export const client = <Model, Action extends {$: string}>() => {
   return {
     registerUpdate: (
       updater: LevoUpdate<Model, Action>,
@@ -15,7 +15,7 @@ export const client = <Model, Action>() => {
         } catch {}
       }
     },
-    registerView: (view: (model: Model) => Levo.Element) => {
+    registerView: (view: (model: Model, $: Levo.Dispatch<Action>) => Levo.Element) => {
       //@ts-ignore
       if (typeof window !== undefined) {
         // This is to prevent Deno from throwing error when some Worker tried to execute

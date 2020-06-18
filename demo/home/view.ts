@@ -1,9 +1,9 @@
 import { Action } from "./action.ts";
-import { render, createActions, Levo } from "./../../mod/levo-view.ts";
+import { render, createDispatch, Levo } from "./../../mod/levo-view.ts";
 import { Model } from "./model.ts";
 
 export const view = (model: Model): Levo.Element<Action> => {
-  const $ = createActions<Action>();
+  const $ = createDispatch<Action>();
   const items = [{ content: "spongebob" }, { content: "squarepants" }];
   const isEven = model.currentValue % 2 === 0;
   return render<Action>(

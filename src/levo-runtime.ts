@@ -4,6 +4,7 @@ import { diff } from "./virtual-node-diff.ts";
 import { mount } from "./mount.ts";
 import { applyPatches } from "./apply-patches.ts";
 import { lispyElementToVirtualNode } from "./lispy-element-to-virtual-node.ts";
+import { createDispatch } from "../mod/levo-view.ts";
 
 const start = <Model, Action>({
   at,
@@ -83,7 +84,7 @@ start({
   initialModel: window.$levoModel,
 
   //@ts-ignore
-  view: (model) => (window.$levoView(model)),
+  view: (model) => (window.$levoView(model, createDispatch())),
 
   //@ts-ignore
   update: window.$levoUpdater,
