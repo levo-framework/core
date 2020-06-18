@@ -6,12 +6,12 @@ import { Counter } from "./counter.tsx";
 
 serve<Model, Action>({
   getResponse: async (request, response) => {
-    return response.page({ 
-      view, 
+    return response.page({
+      view,
       model: {
-        count: 0,
-        counterState: Counter.initialState()
-      } 
+        randomNumber: Math.random(),
+        counterState: Counter.initialState(),
+      },
     });
   },
 });

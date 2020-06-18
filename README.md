@@ -103,7 +103,7 @@ It's important to keep the following rules in mind in order to for Levo to perfo
 
 ## How to re-bundle Levo runtime?
 ```
-deno bundle --config tsconfig.json src/levo-runtime.ts > levo-runtime.bundle.js
+deno bundle --config levo-runtime.tsconfig.json src/levo-runtime.ts > levo-runtime.bundle.js
 ```
 
 # Tutorial
@@ -132,7 +132,7 @@ levo new-project my-levo-app
 Then, to run the server:
 ```
 cd my-levo-app
-deno run --allow-all --unstable app.ts
+deno run --allow-all --unstable --config tsconfig.json app.ts
 ```
 Finally, visit `http://localhost:5000` to see your first Levo page!
 
@@ -233,55 +233,22 @@ You can modified this at `app.ts` by chaging the `rootDir` value to the value yo
 
 ---
 ## How to author a view in Levo?
-Levo uses a self-vendored templating syntax that is similar to [ijk script](https://github.com/lukejacksonn/ijk).  
-Basically, all HTML tags is created using the following syntax:
-```
-[TAGNAME, PROPS, CHILDREN]
-```
-For example:
-```ts
-['div', {id: 'my-div'}, [
-    ['button', {}, ['Click me']]
-]], 
-```
-Is the same as:
-```html
+Levo uses JSX for templating. Basically, its very similar to React except event handlers must be created using `dispatch`:
+```tsx
 <div id='my-div'>
-    <button>
+    <button onclick={dispatch({$: 'hello'})}>
         Click me
     </button>
 </div>
 ```
-### How to setup event handlers?
-All event handlers must return the type of `Action` that is specified at `action.ts`, and should be created with the Levo action creator.
 
-For example, if you open `root/view.ts`, you'll see this line:
-```ts
- const $ = createActions<Action>();
+## Drawback of JSX
+One of the biggest drawback of using JSX is that the type of children cannot be constrained properly at the time of writing.
+```jsx
+<div>
+  {{x: 2}}
+</div>
 ```
-And you should use `$` to bind event handler to a HTML element, for example:
-```ts
-['button', { onclick: $.on_click()}, ['click me']]
-```
-Note that the available methods under `$` is based on the Action types you declared.
-
-Suppose you have the following `action.ts`:
-```ts
-type Action =
-| {
-    $: 'click_me'
-}
-| {
-    $: 'delete_item'
-    index: number
-}
-```
-Then, `$` will the following methods:
-```ts
-click_me: () => Action
-delete_item: (args: {index: number}) => Action
-```
-Therefore, if you try to access methods other than these, you will get a compile error.
 
 ## How do I run in Levo in production mode?
 Simply use the `--production` flag:
@@ -289,3 +256,20 @@ Simply use the `--production` flag:
 deno run --allow-all --unstable app.ts --production
 ```
 When Levo server is started in production mode, the server will generate every bundle for every Levo pages under the root directory.
+
+---
+
+## Advance topics
+### How to create component with private state?
+It's possible to emulate component with private state despite the fact that Levo only supports one true global state for each page. However, creating an component with private state require some boilerplates. Therefore, before you consider creating a component like this, maybe try to make it a separate page instead.
+
+Basically, to create a private-state component, you have to define it's own:
+- model
+- action
+- update
+- view
+
+Then, to use the private-state component, the top-level model should has a property that hold the model type of the private-state component.  
+Also, to pass `dispatch` to the private-state component from the parent component, you need to use the utility function `Levo.mapDispatch`, basically this function convert the top-level dispatch to the dispatch that is usable by the private-state component.  
+
+To fully understand how to make this work, you can look at `./demo/home/about/view.tsx` and `./demo/home/about/counter.tsx`. In this case, `view.tsx` is the parent component, while `counter.tsx` is the child component with private state.

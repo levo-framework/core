@@ -1,6 +1,6 @@
 import { Model } from "./model.ts";
 import { Action } from "./action.ts";
-import { view } from "./view.ts";
+import { view } from "./view.tsx";
 import { init } from "./init.ts";
 import { update } from "./update.ts";
 import { client } from "../../../mod/levo-client.ts";

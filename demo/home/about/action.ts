@@ -1,7 +1,5 @@
 import { Counter } from "./counter.tsx";
 
-export type Action = 
-| { $: "say hello" } 
-| { $: "show"; color: string }
-| { $: "add" }
-| { $: "counterAction", action: Counter.Action}
+export type Action =
+  | { $: "counter_action"; action: Counter.Action }
+  | { $: "update_random_number" };

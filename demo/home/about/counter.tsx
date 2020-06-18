@@ -1,49 +1,49 @@
-import { Levo, React } from "../../../mod/levo-view.ts"
+import { Levo } from "../../../mod/levo-view.ts";
 
 export namespace Counter {
-  export type State = {
-    count: number
-  }
-  export type Action = { $: 'minus' } | {$: 'add'}
-  
-  export const initialState = (): State => {
+  export type Model = {
+    count: number;
+  };
+
+  export type Action = { $: "minus" } | { $: "add" };
+  export const initialState = (): Model => {
     return {
-      count: 0
-    }
-  }
-  
-  export const update: Levo.Update<State, Action> = (model, action, event) => {
-    switch(action.$) {
-      case 'add': {
+      count: 0,
+    };
+  };
+
+  export const update: Levo.Update<Model, Action> = (model, action, event) => {
+    switch (action.$) {
+      case "add": {
         return {
           newModel: {
             ...model,
-            count: model.count + 1
-          }
-        }
+            count: model.count + 1,
+          },
+        };
       }
-  
-      case 'minus': {
+
+      case "minus": {
         return {
           newModel: {
             ...model,
-            count: model.count -1
-          }
-        }
+            count: model.count - 1,
+          },
+        };
       }
     }
-  }
-  
+  };
+
   export const View = (props: {
-    privateState: State
-    dispatch: Levo.Dispatch<Action>
+    model: Model;
+    dispatch: Levo.Dispatch<Action>;
   }): Levo.Element => {
     return (
-      <div style={{display: 'flex'}}>
-        <button onclick={props.dispatch.minus()}>-</button>
-        <div>{props.privateState.count}</div>
-        <button onclick={props.dispatch.add()}>+</button>
+      <div style={{ display: "flex" }}>
+        <button onclick={props.dispatch({ $: "minus" })}>-</button>
+        <div>{props.model.count}</div>
+        <button onclick={props.dispatch({ $: "add" })}>+</button>
       </div>
-    )
-  }
+    );
+  };
 }

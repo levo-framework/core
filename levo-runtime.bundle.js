@@ -635,7 +635,7 @@ System.register("src/lispy-element-to-virtual-node", [], function (exports_14, c
 });
 System.register("mod/levo-view", [], function (exports_15, context_15) {
     "use strict";
-    var Levo, React, render, createActions;
+    var Levo, render, createDispatch;
     var __moduleName = context_15 && context_15.id;
     return {
         setters: [],
@@ -653,26 +653,36 @@ System.register("mod/levo-view", [], function (exports_15, context_15) {
                         };
                     }
                 };
+                Levo.mapDispatch = (dispatch, wrap) => {
+                    return action => dispatch(wrap(action));
+                    // return new Proxy({}, {
+                    //   get: function (target, key, receiver) {
+                    //     return (props: any) => {
+                    //       return wrap({
+                    //         $: key,
+                    //         ...props,
+                    //       });
+                    //     };
+                    //   },
+                    // }) as any;
+                };
             })(Levo || (Levo = {}));
             exports_15("Levo", Levo);
-            (function (React) {
-                React.createElement = Levo.$;
-            })(React || (React = {}));
-            exports_15("React", React);
             exports_15("render", render = (node) => {
                 return node;
             });
-            exports_15("createActions", createActions = () => {
-                return new Proxy({}, {
-                    get: function (target, key, receiver) {
-                        return (props) => {
-                            return {
-                                $: key,
-                                ...props,
-                            };
-                        };
-                    },
-                });
+            exports_15("createDispatch", createDispatch = () => {
+                return x => x;
+                // return new Proxy({}, {
+                //   get: function (target, key, receiver) {
+                //     return (props: any) => {
+                //       return {
+                //         $: key,
+                //         ...props,
+                //       };
+                //     };
+                //   },
+                // }) as any;
             });
         }
     };
@@ -748,7 +758,7 @@ System.register("src/levo-runtime", ["src/virtual-node-diff", "src/mount", "src/
                 //@ts-ignore
                 initialModel: window.$levoModel,
                 //@ts-ignore
-                view: (model) => (window.$levoView(model, levo_view_ts_1.createActions())),
+                view: (model) => (window.$levoView(model, levo_view_ts_1.createDispatch())),
                 //@ts-ignore
                 update: window.$levoUpdater,
                 //@ts-ignore

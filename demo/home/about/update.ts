@@ -5,34 +5,30 @@ import { Counter } from "./counter.tsx";
 
 export const update: LevoUpdate<Model, Action> = (model, action, event) => {
   switch (action.$) {
-    case "say hello":
-      alert("hello");
-      return { newModel: model };
-
-    case "show":
-      alert(`show ${action.color}`);
-      return { newModel: model };
-
-    case 'add': {
+    case "update_random_number": {
       return {
         newModel: {
           ...model,
-          count: model.count + 1
+          randomNumber: Math.random(),
         },
-      }
+      };
     }
-
-    case 'counterAction': {
-      const {newModel: counterState, then} = Counter.update(model.counterState, action.action, event)
+    case "counter_action": {
+      const { newModel: counterState, then } = Counter.update(
+        model.counterState,
+        action.action,
+        event,
+      );
       return {
         newModel: {
           ...model,
-          counterState
+          counterState,
         },
-        then: then 
-          ? () => then().then(action => ({ $: 'counterAction' as const, action })) 
-          : undefined
-      }
+        then: then
+          ? () =>
+            then().then((action) => ({ $: "counter_action" as const, action }))
+          : undefined,
+      };
     }
   }
 };
