@@ -44,16 +44,6 @@ export namespace Levo {
     wrap: (action: ToAction) => FromAction,
   ): Levo.Dispatch<ToAction> => {
     return (action) => dispatch(wrap(action));
-    // return new Proxy({}, {
-    //   get: function (target, key, receiver) {
-    //     return (props: any) => {
-    //       return wrap({
-    //         $: key,
-    //         ...props,
-    //       });
-    //     };
-    //   },
-    // }) as any;
   };
 }
 
@@ -63,20 +53,8 @@ export const render = (
   return node;
 };
 
-export const createDispatch = <Action>(): Levo.Dispatch<
-  Action
-> => {
+export const createDispatch = <Action>(): Levo.Dispatch<Action> => {
   return (x) => x as any;
-  // return new Proxy({}, {
-  //   get: function (target, key, receiver) {
-  //     return (props: any) => {
-  //       return {
-  //         $: key,
-  //         ...props,
-  //       };
-  //     };
-  //   },
-  // }) as any;
 };
 
 declare global {
