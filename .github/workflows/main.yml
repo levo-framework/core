@@ -46,7 +46,10 @@ jobs:
         with:
          deno-version: v1.1.0 
       - name: Unit Test
-        run: deno test --allow-all --unstable --config tsconfig.json --log-level debug ./test/unit
+        run: |
+          # Remove deno module cache: Refer https://github.com/denoland/deno/issues/6057#issuecomment-637903316
+          rm -rf $(deno info | grep "Remote" |  grep -o '"[^"]\+"') 
+          deno test --allow-all --unstable --config tsconfig.json --log-level debug ./test/unit
 
   server-test:
     runs-on: ubuntu-latest
