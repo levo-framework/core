@@ -1,6 +1,5 @@
-import { Action } from "./action.ts";
 import { Levo } from "./../../mod/levo-view.ts";
-import { Model } from "./model.ts";
+import { Model, Action } from "./types.ts";
 
 export const view = (
   model: Model,
@@ -32,40 +31,4 @@ export const view = (
       {items.map((item) => <div>{item.content}</div>)}
     </html>
   );
-  // return render<Action>(
-  //   ["html", {}, [
-  //     ["head", {}, [
-  //       ["link", { rel: "stylesheet", href: "./levo.assets/index.css" }],
-  //     ]],
-  //     model.currentValue.toString(),
-  //     [
-  //       "button",
-  //       {
-  //         onclick: $.add(),
-  //         style: {
-  //           backgroundColor: isEven ? "red" : "green",
-  //         },
-  //       },
-  //       ["add"],
-  //     ],
-  //     ["button", { onclick: $.minus() }, ["minus"]],
-  //     ["button", { onclick: $.stop_interval() }, ["stop timer"]],
-  //     ["button", { onclick: $.fetch() }, ["fetch"]],
-  //     ["button", { onclick: isEven ? $.add() : $.minus() }, ["click me"]],
-  //     `Text: ${model.text}`,
-  //     [
-  //       "input",
-  //       {
-  //         type: "checkbox",
-  //         checked: isEven ? "true" : undefined,
-  //       },
-  //     ],
-  //     ["input", { value: isEven ? "even" : "odd" }],
-  //     [
-  //       "body",
-  //       {},
-  //       items.map((item) => render<Action>(["div", {}, [item.content]])),
-  //     ],
-  //   ]],
-  // );
 };

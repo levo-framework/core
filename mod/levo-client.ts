@@ -1,11 +1,10 @@
-import { LevoUpdate } from "./levo-update.ts";
 import { LevoInit } from "./levo-init.ts";
 import { Levo } from "./levo-view.ts";
 
 export const client = <Model, Action extends { $: string }>() => {
   return {
     registerUpdate: (
-      updater: LevoUpdate<Model, Action>,
+      updater: Levo.Update<Model, Action>,
     ) => {
       //@ts-ignore
       if (typeof window !== undefined) {

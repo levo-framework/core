@@ -1,6 +1,5 @@
-import { Action } from "./action.ts";
+import { Model, Action } from "./types.ts";
 import { Levo } from "../../../mod/levo-view.ts";
-import { Model } from "./model.ts";
 import { Counter } from "./counter.tsx";
 
 export const view = (

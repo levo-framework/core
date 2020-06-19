@@ -10,6 +10,11 @@ export namespace Levo {
   export type Events<Action> = VirtualNodeEvents<Action>;
   export type Dispatch<Action> = (action: Action) => EventHandler;
 
+  export type Init<Model, Action> = (
+    model: Model,
+    dispatch: (action: Action) => void,
+  ) => void;
+
   export type Update<Model, Action> = (
     model: Model,
     action: Action,
@@ -19,7 +24,7 @@ export namespace Levo {
     then?: () => Promise<Action>;
   };
 
-  export const $ = <Action>(
+  export const $ = (
     tag: string | Function,
     props: object,
     ...children: any[]

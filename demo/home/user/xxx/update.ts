@@ -1,8 +1,7 @@
-import { Action } from "./action.ts";
-import { Model } from "./model.ts";
-import { LevoUpdate } from "../../../../mod/levo-update.ts";
+import { Model, Action } from "./types.ts";
+import { Levo } from "../../../../mod/levo-view.ts";
 
-export const update: LevoUpdate<Model, Action> = (model, action, event) => {
+export const update: Levo.Update<Model, Action> = (model, action, event) => {
   if (action.$ === "say hello") {
     alert("hello");
   }
