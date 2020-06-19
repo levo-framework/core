@@ -1,4 +1,3 @@
-import { LevoInit } from "./levo-init.ts";
 import { Levo } from "./levo-view.ts";
 
 export const client = <Model, Action extends { $: string }>() => {
@@ -27,7 +26,7 @@ export const client = <Model, Action extends { $: string }>() => {
         } catch {}
       }
     },
-    registerInit: (init: LevoInit<Model, Action>) => {
+    registerInit: (init: Levo.Init<Model, Action>) => {
       //@ts-ignore
       if (typeof window !== undefined) {
         try {
