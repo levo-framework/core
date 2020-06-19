@@ -1,5 +1,3 @@
-/// <reference lib="dom"/>
-
 import { Model, Action } from "./types.ts";
 import { Levo } from "../../../mod/levo-view.ts";
 

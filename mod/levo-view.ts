@@ -18,7 +18,7 @@ export namespace Levo {
   export type Update<Model, Action> = (
     model: Model,
     action: Action,
-    event: unknown,
+    event?: unknown,
   ) => {
     newModel: Model;
     then?: () => Promise<Action>;
