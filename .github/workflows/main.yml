@@ -48,8 +48,8 @@ jobs:
       - name: Unit Test
         run: |
           # Remove deno module cache: Refer https://github.com/denoland/deno/issues/6057#issuecomment-637903316
-          rm -rf $(deno info | grep "Remote" |  grep -o '"[^"]\+"') 
-          deno test --allow-all --unstable --config tsconfig.json --log-level debug ./test/unit
+          # rm -rf $(deno info | grep "Remote" |  grep -o '"[^"]\+"') 
+          deno test --allow-all --unstable --config tsconfig.json ./test/unit/array-diff.test.ts
 
   server-test:
     runs-on: ubuntu-latest
