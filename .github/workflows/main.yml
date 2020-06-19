@@ -47,8 +47,8 @@ jobs:
          deno-version: v1.1.0 
       - name: Unit Test
         run: | 
-          deno cache --reload --unstable ./test/unit/array-diff.test.ts
-          deno test --allow-all --unstable --config tsconfig.json ./test/unit/array-diff.test.ts
+          deno cache --reload --unstable ./test/unit/*
+          deno test --allow-all --unstable --config tsconfig.json ./test/unit/*
 
   server-test:
     runs-on: ubuntu-latest
