@@ -39,7 +39,7 @@ jobs:
         run: deno bundle --config levo-runtime.tsconfig.json src/levo-runtime.ts > /dev/null
 
   unit-test:
-    runs-on: ubuntu-latest
+    runs-on: macos-10.15
     steps:
       - uses: actions/checkout@master
       - uses: denolib/setup-deno@master
