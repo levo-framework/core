@@ -1,5 +1,7 @@
 import { brotliCompress } from "./src/deps.ts"
 
-brotliCompress(new TextEncoder().encode('his'))
-
-console.log('helo')
+Deno.test('hello', () => {
+  brotliCompress(new TextEncoder().encode('his'))
+  
+  console.log('helo')
+})
