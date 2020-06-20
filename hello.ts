@@ -2,6 +2,5 @@ import { compress as brotliCompress } from "https://deno.land/x/brotli@v0.1.3/mo
 
 Deno.test('hello', () => {
   brotliCompress(new TextEncoder().encode('his'))
-  
   console.log('helo')
 })
