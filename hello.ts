@@ -1,4 +1,4 @@
-import { compress as brotliCompress } from "https://deno.land/x/brotli@v0.1.3/mod.ts";
+import { brotliCompress } from "./src/deps.ts"
 
 brotliCompress(new TextEncoder().encode('his'))
 
