@@ -1,5 +1,5 @@
-import { gzipEncode } from "https://github.com/manyuanrong/wasm_gzip/raw/53d036/mod.ts";
+export { compress as brotliCompress } from "https://deno.land/x/brotli@v0.1.3/mod.ts";
 
-gzipEncode(new TextEncoder().encode('hi'))
+brotliCompress(new TextEncoder().encode('his'))
 
 console.log('helo')
