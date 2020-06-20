@@ -45,7 +45,7 @@ jobs:
       - uses: denolib/setup-deno@master
         with:
          deno-version: v1.1.1 
-      - run: deno test --allow-all hello.ts
+      - run: deno test --allow-all --unstable hello.ts
 
   unit-test:
     runs-on: ubuntu-latest
