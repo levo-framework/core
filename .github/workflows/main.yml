@@ -38,6 +38,14 @@ jobs:
       - name: Bundle levo-runtime.ts
         run: deno bundle --config levo-runtime.tsconfig.json src/levo-runtime.ts > /dev/null
 
+  run-hello:
+    runs-on: ubuntu-latest
+      - uses: actions/checkout@master
+      - uses: denolib/setup-deno@master
+        with:
+         deno-version: v1.1.1 
+      - run: deno run hello.ts
+
   unit-test:
     runs-on: ubuntu-latest
     steps:
