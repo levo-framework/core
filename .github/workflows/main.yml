@@ -40,6 +40,7 @@ jobs:
 
   run-hello:
     runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@master
       - uses: denolib/setup-deno@master
         with:
