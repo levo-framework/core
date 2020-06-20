@@ -45,7 +45,7 @@ jobs:
       - uses: denolib/setup-deno@master
         with:
          deno-version: v1.1.1 
-      - run: deno test --config tsconfig.json hello.ts
+      - run: deno test --config original.tsconfig.json hello.ts
 
   unit-test:
     runs-on: ubuntu-latest
