@@ -19,7 +19,7 @@ jobs:
       - uses: denolib/setup-deno@master
         with:
           # Why don't use latest version? Refer https://github.com/denosaurs/deno_brotli/issues/2
-          deno-version: v1.1.0 
+          deno-version: v1.1.1 
       - name: Format Check
         run: |
           deno fmt --check demo
@@ -34,7 +34,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: denolib/setup-deno@master
         with:
-         deno-version: v1.1.0 
+         deno-version: v1.1.1 
       - name: Bundle levo-runtime.ts
         run: deno bundle --config levo-runtime.tsconfig.json src/levo-runtime.ts > /dev/null
 
@@ -44,11 +44,9 @@ jobs:
       - uses: actions/checkout@master
       - uses: denolib/setup-deno@master
         with:
-         deno-version: v1.1.0 
+         deno-version: v1.1.1 
       - name: Unit Test
-        run: | 
-          deno cache --reload --unstable --config tsconfig.json ./test/unit/array-diff.test.ts
-          deno test --allow-all --unstable --config tsconfig.json ./test/unit/array-diff.test.ts
+        run: deno test --allow-all --unstable --config tsconfig.json ./test/unit/
 
   server-test:
     runs-on: ubuntu-latest
@@ -56,7 +54,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: denolib/setup-deno@master
         with:
-         deno-version: v1.1.0 
+         deno-version: v1.1.1 
       - name: Server Test
         run: deno test --allow-all --unstable --config tsconfig.json ./test/server/main.test.ts
 
@@ -66,7 +64,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: denolib/setup-deno@master
         with:
-         deno-version: v1.1.0 
+         deno-version: v1.1.1 
       - name: Template Test
         run: deno test --allow-all --unstable --config tsconfig.json ./test/server/project-template.test.ts 
 
@@ -76,6 +74,6 @@ jobs:
       - uses: actions/checkout@master
       - uses: denolib/setup-deno@master
         with:
-         deno-version: v1.1.0 
+         deno-version: v1.1.1 
       - name: CLI Test
         run: deno test --allow-all --unstable --config tsconfig.json ./test/cli/main.test.ts
