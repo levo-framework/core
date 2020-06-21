@@ -1,10 +1,12 @@
 import { LispyElements } from "./lispy-elements.ts";
 import { VirtualNode } from "./virtual-node.ts";
 
+/**
+ * @deprecated Currently not being used anywhere
+ */
 export const lispyElementToVirtualNode = <Action>(
   node: LispyElements<Action>,
 ): VirtualNode<Action> => {
-  console.log(node);
   return {
     $: node[0],
     ...node[1],

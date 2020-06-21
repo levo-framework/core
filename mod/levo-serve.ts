@@ -1,7 +1,6 @@
 import { renderToString } from "../src/render-to-string.ts";
 import { CustomResponse, LevoServeResponse } from "./levo-serve-response.ts";
 import { Levo, createDispatch } from "./levo-view.ts";
-import { lispyElementToVirtualNode } from "../src/lispy-element-to-virtual-node.ts";
 
 export type LevoRequest = {
   url: string;
