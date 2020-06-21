@@ -1,6 +1,7 @@
+/** @jsx h */
+import { h, createDispatch } from "../../mod/levo-view.ts";
 import { renderToString } from "../../src/render-to-string.ts";
 import { assertEquals } from "../../src/deps.ts";
-import { Levo, createDispatch } from "../../mod/levo-view.ts";
 
 Deno.test("render-to-string", () => {
   const dispatch = createDispatch<{ type: "click"; index: number }>();

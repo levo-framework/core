@@ -1,5 +1,6 @@
+/** @jsx h */
+import { Levo, h } from "../../../../mod/levo-view.ts";
 import { Model, Action } from "./types.ts";
-import { Levo } from "../../../../mod/levo-view.ts";
 
 export const view = (
   model: Model,

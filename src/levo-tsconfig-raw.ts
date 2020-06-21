@@ -11,7 +11,7 @@ export const levoTsconfigRaw = `
       "disableSizeLimit": false,
       "generateCpuProfile": "profile.cpuprofile",
       "jsx": "react",
-      "jsxFactory": "Levo.$",
+      "jsxFactory": "h",
       "lib": ["dom", "DOM", "ES2016", "ES2017", "ES2018", "ES2019"],
       "noFallthroughCasesInSwitch": false,
       "noImplicitAny": true,

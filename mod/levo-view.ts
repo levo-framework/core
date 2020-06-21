@@ -24,26 +24,6 @@ export namespace Levo {
     then?: () => Promise<Action>;
   };
 
-  export const $ = (
-    tag: string | Function,
-    props: object,
-    ...children: any[]
-  ): Element => {
-    if (typeof tag === "function") {
-      return tag({ ...props, children: children });
-    } else {
-      return {
-        $: tag,
-        ...props,
-        children: children?.filter((x) => x !== undefined && x !== null).map((
-          x,
-        ) =>
-          ["string", "number"].includes(typeof x) ? { $: "_text", value: x } : x
-        ).flat(),
-      } as any;
-    }
-  };
-
   export const mapDispatch = <FromAction, ToAction>(
     dispatch: Levo.Dispatch<FromAction>,
     wrap: (action: ToAction) => FromAction,
@@ -52,10 +32,24 @@ export namespace Levo {
   };
 }
 
-export const render = (
-  node: Levo.Element,
+export const h = (
+  tag: string | Function,
+  props: object,
+  ...children: any[]
 ): Levo.Element => {
-  return node;
+  if (typeof tag === "function") {
+    return tag({ ...props, children: children });
+  } else {
+    return {
+      $: tag,
+      ...props,
+      children: children?.filter((x) => x !== undefined && x !== null).map((
+        x,
+      ) =>
+        ["string", "number"].includes(typeof x) ? { $: "_text", value: x } : x
+      ).flat(),
+    } as any;
+  }
 };
 
 export const createDispatch = <Action>(): Levo.Dispatch<Action> => {

@@ -6,8 +6,7 @@
 
 // @ts-nocheck
 /* eslint-disable */
-let System, __instantiateAsync, __instantiate;
-
+let System, __instantiate;
 (() => {
   const r = new Map();
 
@@ -16,7 +15,6 @@ let System, __instantiateAsync, __instantiate;
       r.set(id, { d, f, exp: {} });
     },
   };
-
   async function dI(mid, src) {
     let id = mid.replace(/\.\w+$/i, "");
     if (id.includes("./")) {
@@ -93,17 +91,10 @@ let System, __instantiateAsync, __instantiate;
     }
     return m.exp;
   }
-
-  __instantiateAsync = async (m) => {
-    System = __instantiateAsync = __instantiate = undefined;
+  __instantiate = (m, a) => {
+    System = __instantiate = undefined;
     rF(m);
-    return gExpA(m);
-  };
-
-  __instantiate = (m) => {
-    System = __instantiateAsync = __instantiate = undefined;
-    rF(m);
-    return gExp(m);
+    return a ? gExpA(m) : gExp(m);
   };
 })();
 
@@ -643,54 +634,31 @@ System.register("src/lispy-element-to-virtual-node", [], function (exports_14, c
 });
 System.register("mod/levo-view", [], function (exports_15, context_15) {
     "use strict";
-    var Levo, render, createDispatch;
+    var Levo, h, createDispatch;
     var __moduleName = context_15 && context_15.id;
     return {
         setters: [],
         execute: function () {
             (function (Levo) {
-                Levo.$ = (tag, props, ...children) => {
-                    if (typeof tag === "function") {
-                        return tag({ ...props, children: children });
-                    }
-                    else {
-                        return {
-                            $: tag,
-                            ...props,
-                            children: children?.filter((x) => x !== undefined && x !== null).map((x) => ["string", "number"].includes(typeof x) ? { $: "_text", value: x } : x).flat(),
-                        };
-                    }
-                };
                 Levo.mapDispatch = (dispatch, wrap) => {
                     return (action) => dispatch(wrap(action));
-                    // return new Proxy({}, {
-                    //   get: function (target, key, receiver) {
-                    //     return (props: any) => {
-                    //       return wrap({
-                    //         $: key,
-                    //         ...props,
-                    //       });
-                    //     };
-                    //   },
-                    // }) as any;
                 };
             })(Levo || (Levo = {}));
             exports_15("Levo", Levo);
-            exports_15("render", render = (node) => {
-                return node;
+            exports_15("h", h = (tag, props, ...children) => {
+                if (typeof tag === "function") {
+                    return tag({ ...props, children: children });
+                }
+                else {
+                    return {
+                        $: tag,
+                        ...props,
+                        children: children?.filter((x) => x !== undefined && x !== null).map((x) => ["string", "number"].includes(typeof x) ? { $: "_text", value: x } : x).flat(),
+                    };
+                }
             });
             exports_15("createDispatch", createDispatch = () => {
                 return (x) => x;
-                // return new Proxy({}, {
-                //   get: function (target, key, receiver) {
-                //     return (props: any) => {
-                //       return {
-                //         $: key,
-                //         ...props,
-                //       };
-                //     };
-                //   },
-                // }) as any;
             });
         }
     };
@@ -776,5 +744,5 @@ System.register("src/levo-runtime", ["src/virtual-node-diff", "src/mount", "src/
     };
 });
 
-__instantiate("src/levo-runtime");
+__instantiate("src/levo-runtime", false);
 
