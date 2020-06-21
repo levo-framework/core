@@ -1,6 +1,6 @@
 import { Levo } from "./levo-view.ts";
 
-export const client = <Model, Action extends { $: string }>() => {
+export const client = <Model, Action>() => {
   return {
     registerUpdate: (
       updater: Levo.Update<Model, Action>,
