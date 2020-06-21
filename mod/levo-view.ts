@@ -23,15 +23,6 @@ export namespace Levo {
     newModel: Model;
     then?: () => Promise<Action>;
   };
-
-  export const mapDispatch = <FromAction, ToAction>(
-    { dispatch, transform }: {
-      dispatch: Levo.Dispatch<FromAction>;
-      transform: (action: ToAction) => FromAction;
-    },
-  ): Levo.Dispatch<ToAction> => {
-    return (action) => dispatch(transform(action));
-  };
 }
 
 export const h = (
