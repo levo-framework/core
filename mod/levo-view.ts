@@ -15,11 +15,11 @@ export namespace Levo {
     dispatch: (action: Action) => void,
   ) => void;
 
-  export type Update<Model, Action> = (
-    model: Model,
-    action: Action,
-    event?: unknown,
-  ) => {
+  export type Update<Model, Action> = (args: {
+    model: Model;
+    action: Action;
+    event?: unknown;
+  }) => {
     newModel: Model;
     then?: () => Promise<Action>;
   };
