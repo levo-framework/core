@@ -23,6 +23,32 @@ export namespace Levo {
     newModel: Model;
     then?: () => Promise<Action>;
   };
+
+  export const register = <Model, Action>({
+    init,
+    view,
+    update,
+  }: {
+    init: Levo.Init<Model, Action>;
+    view: (
+      args: { model: Model; dispatch: Levo.Dispatch<Action> },
+    ) => Levo.Element;
+    update: Levo.Update<Model, Action>;
+  }) => {
+    //@ts-ignore
+    if (typeof window !== undefined) {
+      // This is to prevent Deno from throwing error when some Worker tried to execute
+      // this code, because `window` object does not exists in Worker scope
+      try {
+        //@ts-ignore
+        window.$levoInit = init;
+        //@ts-ignore
+        window.$levoView = view;
+        //@ts-ignore
+        window.$levoUpdater = update;
+      } catch {}
+    }
+  };
 }
 
 export const h = (
