@@ -612,30 +612,10 @@ System.register("src/lispy-elements", [], function (exports_13, context_13) {
         }
     };
 });
-System.register("src/lispy-element-to-virtual-node", [], function (exports_14, context_14) {
-    "use strict";
-    var lispyElementToVirtualNode;
-    var __moduleName = context_14 && context_14.id;
-    return {
-        setters: [],
-        execute: function () {
-            exports_14("lispyElementToVirtualNode", lispyElementToVirtualNode = (node) => {
-                console.log(node);
-                return {
-                    $: node[0],
-                    ...node[1],
-                    children: node[2]?.filter(Boolean).map((x) => typeof x === "string"
-                        ? { $: "_text", value: x }
-                        : lispyElementToVirtualNode(x)),
-                };
-            });
-        }
-    };
-});
-System.register("mod/levo-view", [], function (exports_15, context_15) {
+System.register("mod/levo-view", [], function (exports_14, context_14) {
     "use strict";
     var Levo, h, createDispatch;
-    var __moduleName = context_15 && context_15.id;
+    var __moduleName = context_14 && context_14.id;
     return {
         setters: [],
         execute: function () {
@@ -644,8 +624,8 @@ System.register("mod/levo-view", [], function (exports_15, context_15) {
                     return (action) => dispatch(wrap(action));
                 };
             })(Levo || (Levo = {}));
-            exports_15("Levo", Levo);
-            exports_15("h", h = (tag, props, ...children) => {
+            exports_14("Levo", Levo);
+            exports_14("h", h = (tag, props, ...children) => {
                 if (typeof tag === "function") {
                     return tag({ ...props, children: children });
                 }
@@ -657,16 +637,16 @@ System.register("mod/levo-view", [], function (exports_15, context_15) {
                     };
                 }
             });
-            exports_15("createDispatch", createDispatch = () => {
+            exports_14("createDispatch", createDispatch = () => {
                 return (x) => x;
             });
         }
     };
 });
-System.register("src/levo-runtime", ["src/virtual-node-diff", "src/mount", "src/apply-patches", "mod/levo-view"], function (exports_16, context_16) {
+System.register("src/levo-runtime", ["src/virtual-node-diff", "src/mount", "src/apply-patches", "mod/levo-view"], function (exports_15, context_15) {
     "use strict";
     var virtual_node_diff_ts_1, mount_ts_2, apply_patches_ts_1, levo_view_ts_1, start;
-    var __moduleName = context_16 && context_16.id;
+    var __moduleName = context_15 && context_15.id;
     return {
         setters: [
             function (virtual_node_diff_ts_1_1) {
@@ -699,7 +679,7 @@ System.register("src/levo-runtime", ["src/virtual-node-diff", "src/mount", "src/
                 const handler = (action) => {
                     const event = window.event;
                     if (action) {
-                        const { newModel, then: promise } = update(currentModel, action, event);
+                        const { newModel, then: promise } = update({ model: currentModel, action, event });
                         const newVirtualNode = view(newModel);
                         console.log("action", action);
                         const patches = virtual_node_diff_ts_1.diff({
