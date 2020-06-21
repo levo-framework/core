@@ -15,7 +15,9 @@ export type Responder<Model, Action extends { $: string }> = {
   page: (
     {}: {
       model: Model;
-      view: (model: Model, $: Levo.Dispatch<Action>) => Levo.Element;
+      view: (
+        props: { model: Model; dispatch: Levo.Dispatch<Action> },
+      ) => Levo.Element;
     },
   ) => LevoServeResponse<Model>;
   redirect: ({}: { url: string }) => LevoServeResponse<Model>;
@@ -34,7 +36,9 @@ export const serve = <Model = {}, Action extends { $: string } = { $: "" }>({
     try {
       const response = await getResponse(event.data, {
         page: ({ model, view }) => {
-          const html = renderToString((view(model, createDispatch())));
+          const html = renderToString(
+            (view({ model, dispatch: createDispatch() })),
+          );
           return { $: "page", model, html };
         },
         redirect: ({ url }) => ({ $: "redirect", url }),

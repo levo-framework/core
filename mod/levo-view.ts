@@ -10,10 +10,10 @@ export namespace Levo {
   export type Events<Action> = VirtualNodeEvents<Action>;
   export type Dispatch<Action> = (action: Action) => EventHandler;
 
-  export type Init<Model, Action> = (
-    model: Model,
-    dispatch: (action: Action) => void,
-  ) => void;
+  export type Init<Model, Action> = (args: {
+    model: Model;
+    dispatch: (action: Action) => void;
+  }) => void;
 
   export type Update<Model, Action> = (args: {
     model: Model;

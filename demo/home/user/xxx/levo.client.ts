@@ -4,7 +4,7 @@ import { update } from "./update.ts";
 import { client } from "../../../../mod/levo-client.ts";
 import { Levo } from "../../../../mod/levo-view.ts";
 
-export const init: Levo.Init<Model, Action> = (model, dispatch) => {
+export const init: Levo.Init<Model, Action> = ({ model, dispatch }) => {
 };
 
 const c = client<Model, Action>();

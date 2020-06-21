@@ -695,7 +695,7 @@ System.register("src/levo-runtime", ["src/virtual-node-diff", "src/mount", "src/
                         promise?.().then(handler);
                     }
                 };
-                onMount(currentModel, handler);
+                onMount({ model: currentModel, dispatch: handler });
                 //@ts-ignore
                 window.$$h = handler;
             };
@@ -712,7 +712,7 @@ System.register("src/levo-runtime", ["src/virtual-node-diff", "src/mount", "src/
                 //@ts-ignore
                 initialModel: window.$levoModel,
                 //@ts-ignore
-                view: (model) => (window.$levoView(model, levo_view_ts_1.createDispatch())),
+                view: (model) => (window.$levoView({ model, dispatch: levo_view_ts_1.createDispatch() })),
                 //@ts-ignore
                 update: window.$levoUpdater,
                 //@ts-ignore

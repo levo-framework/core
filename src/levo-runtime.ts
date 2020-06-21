@@ -20,7 +20,7 @@ const start = <Model, Action>({
     newModel: Model;
     then?: () => Promise<Action>;
   };
-  onMount: (model: Model, dispatch: (action: Action) => void) => void;
+  onMount: (args: { model: Model; dispatch: (action: Action) => void }) => void;
   at: HTMLElement | Document | null;
 }) => {
   if (!at) {
@@ -60,7 +60,7 @@ const start = <Model, Action>({
     }
   };
 
-  onMount(currentModel, handler);
+  onMount({ model: currentModel, dispatch: handler });
 
   //@ts-ignore
   window.$$h = handler;
@@ -87,7 +87,7 @@ start({
   initialModel: window.$levoModel,
 
   //@ts-ignore
-  view: (model) => (window.$levoView(model, createDispatch())),
+  view: (model) => (window.$levoView({ model, dispatch: createDispatch() })),
 
   //@ts-ignore
   update: window.$levoUpdater,

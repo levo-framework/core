@@ -14,7 +14,9 @@ export const client = <Model, Action extends { $: string }>() => {
       }
     },
     registerView: (
-      view: (model: Model, $: Levo.Dispatch<Action>) => Levo.Element,
+      view: (
+        args: { model: Model; dispatch: Levo.Dispatch<Action> },
+      ) => Levo.Element,
     ) => {
       //@ts-ignore
       if (typeof window !== undefined) {

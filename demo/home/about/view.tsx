@@ -4,9 +4,9 @@ import { Model, Action } from "./types.ts";
 import { Counter } from "./counter.tsx";
 
 export const view = (
-  model: Model,
-  dispatch: Levo.Dispatch<Action>,
+  props: { model: Model; dispatch: Levo.Dispatch<Action> },
 ): Levo.Element => {
+  const { model, dispatch } = props;
   return (
     <html>
       <body>
