@@ -17,7 +17,7 @@
     "disableSizeLimit": false,
     "generateCpuProfile": "profile.cpuprofile",
     "jsx": "react",
-    "jsxFactory": "h",
+    "jsxFactory": "React.createElement",
     "noFallthroughCasesInSwitch": false,
     "noImplicitAny": true,
     "noImplicitReturns": true,
