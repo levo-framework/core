@@ -9,7 +9,7 @@ serve<Model, Action>({
       view,
       model: {
         randomNumber: Math.random(),
-        counterState: Counter.initialState(),
+        counterModel: Counter.initialState(),
       },
     });
   },

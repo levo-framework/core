@@ -14,14 +14,14 @@ export const update: Levo.Update<Model, Action> = (model, action, event) => {
     }
     case "counter_action": {
       const { newModel: counterState, then } = Counter.update(
-        model.counterState,
+        model.counterModel,
         action.action,
         event,
       );
       return {
         newModel: {
           ...model,
-          counterState,
+          counterModel: counterState,
         },
         then: then
           ? () =>

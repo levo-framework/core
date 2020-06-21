@@ -2,7 +2,7 @@ import { Counter } from "./counter.tsx";
 
 export type Model = {
   randomNumber: number;
-  counterState: Counter.Model;
+  counterModel: Counter.Model;
 };
 
 export type Action =

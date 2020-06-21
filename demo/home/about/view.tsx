@@ -15,7 +15,7 @@ export const view = (
           Update random number
         </button>
         <Counter.View
-          model={model.counterState}
+          model={model.counterModel}
           dispatch={Levo.mapDispatch(
             dispatch,
             (action) => ({ $: "counter_action" as const, action }),
