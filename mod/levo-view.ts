@@ -25,10 +25,12 @@ export namespace Levo {
   };
 
   export const mapDispatch = <FromAction, ToAction>(
-    dispatch: Levo.Dispatch<FromAction>,
-    wrap: (action: ToAction) => FromAction,
+    { dispatch, transform }: {
+      dispatch: Levo.Dispatch<FromAction>;
+      transform: (action: ToAction) => FromAction;
+    },
   ): Levo.Dispatch<ToAction> => {
-    return (action) => dispatch(wrap(action));
+    return (action) => dispatch(transform(action));
   };
 }
 

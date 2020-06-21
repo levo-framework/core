@@ -17,8 +17,13 @@ export const view = (
         <Counter.View
           model={model.counterModel}
           dispatch={Levo.mapDispatch(
-            dispatch,
-            (action) => ({ $: "counter_action" as const, action }),
+            {
+              dispatch,
+              transform: (action) => ({
+                $: ("counter_action" as const),
+                action,
+              }),
+            },
           )}
         />
       </body>
