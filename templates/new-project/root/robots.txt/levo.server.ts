@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/x/levo/mod/levo-serve.ts";
+import { serve } from "../../../../mod/levo-serve.ts";
 
 serve({
   getResponse: async (request, response) => {

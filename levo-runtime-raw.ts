@@ -7,8 +7,7 @@ export const levoRuntimeCode = `
 
 // @ts-nocheck
 /* eslint-disable */
-let System, __instantiateAsync, __instantiate;
-
+let System, __instantiate;
 (() => {
   const r = new Map();
 
@@ -17,7 +16,6 @@ let System, __instantiateAsync, __instantiate;
       r.set(id, { d, f, exp: {} });
     },
   };
-
   async function dI(mid, src) {
     let id = mid.replace(/\.\w+$/i, "");
     if (id.includes("./")) {
@@ -94,21 +92,14 @@ let System, __instantiateAsync, __instantiate;
     }
     return m.exp;
   }
-
-  __instantiateAsync = async (m) => {
-    System = __instantiateAsync = __instantiate = undefined;
+  __instantiate = (m, a) => {
+    System = __instantiate = undefined;
     rF(m);
-    return gExpA(m);
-  };
-
-  __instantiate = (m) => {
-    System = __instantiateAsync = __instantiate = undefined;
-    rF(m);
-    return gExp(m);
+    return a ? gExpA(m) : gExp(m);
   };
 })();
 
-System.register("virtual-node", [], function (exports_1, context_1) {
+System.register("src/virtual-node", [], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     return {
@@ -117,7 +108,7 @@ System.register("virtual-node", [], function (exports_1, context_1) {
         }
     };
 });
-System.register("patch", [], function (exports_2, context_2) {
+System.register("src/patch", [], function (exports_2, context_2) {
     "use strict";
     var __moduleName = context_2 && context_2.id;
     return {
@@ -126,13 +117,15 @@ System.register("patch", [], function (exports_2, context_2) {
         }
     };
 });
-System.register("array-diff", [], function (exports_3, context_3) {
+System.register("src/array-diff", [], function (exports_3, context_3) {
     "use strict";
     var arrayDiff;
     var __moduleName = context_3 && context_3.id;
     return {
         setters: [],
         execute: function () {
+            /**
+             */
             exports_3("arrayDiff", arrayDiff = (left, right) => {
                 let cache = {};
                 const rightLength = right.length;
@@ -153,7 +146,7 @@ System.register("array-diff", [], function (exports_3, context_3) {
     };
 });
 // Modified from: https://raw.githubusercontent.com/epoberezkin/fast-deep-equal/master/src/index.jst
-System.register("deep-equal", [], function (exports_4, context_4) {
+System.register("src/deep-equal", [], function (exports_4, context_4) {
     "use strict";
     var __moduleName = context_4 && context_4.id;
     //@ts-nocheck
@@ -240,7 +233,7 @@ System.register("deep-equal", [], function (exports_4, context_4) {
         }
     };
 });
-System.register("compute-attributes-updates", ["array-diff", "deep-equal"], function (exports_5, context_5) {
+System.register("src/compute-attributes-updates", ["src/array-diff", "src/deep-equal"], function (exports_5, context_5) {
     "use strict";
     var array_diff_ts_1, deep_equal_ts_1, computeAttributesUpdates;
     var __moduleName = context_5 && context_5.id;
@@ -297,7 +290,7 @@ System.register("compute-attributes-updates", ["array-diff", "deep-equal"], func
         }
     };
 });
-System.register("extract-attributes", [], function (exports_6, context_6) {
+System.register("src/extract-attributes", [], function (exports_6, context_6) {
     "use strict";
     var extractAttributes;
     var __moduleName = context_6 && context_6.id;
@@ -315,7 +308,7 @@ System.register("extract-attributes", [], function (exports_6, context_6) {
         }
     };
 });
-System.register("virtual-node-diff", ["compute-attributes-updates", "extract-attributes"], function (exports_7, context_7) {
+System.register("src/virtual-node-diff", ["src/compute-attributes-updates", "src/extract-attributes"], function (exports_7, context_7) {
     "use strict";
     var compute_attributes_updates_ts_1, extract_attributes_ts_1, diff;
     var __moduleName = context_7 && context_7.id;
@@ -420,7 +413,7 @@ System.register("virtual-node-diff", ["compute-attributes-updates", "extract-att
         }
     };
 });
-System.register("set-event-handler", [], function (exports_8, context_8) {
+System.register("src/set-event-handler", [], function (exports_8, context_8) {
     "use strict";
     var setEventHandler;
     var __moduleName = context_8 && context_8.id;
@@ -435,7 +428,7 @@ System.register("set-event-handler", [], function (exports_8, context_8) {
         }
     };
 });
-System.register("mount", ["extract-attributes", "set-event-handler"], function (exports_9, context_9) {
+System.register("src/mount", ["src/extract-attributes", "src/set-event-handler"], function (exports_9, context_9) {
     "use strict";
     var extract_attributes_ts_2, set_event_handler_ts_1, mount;
     var __moduleName = context_9 && context_9.id;
@@ -485,7 +478,7 @@ System.register("mount", ["extract-attributes", "set-event-handler"], function (
         }
     };
 });
-System.register("apply-patches", ["mount", "set-event-handler"], function (exports_10, context_10) {
+System.register("src/apply-patches", ["src/mount", "src/set-event-handler"], function (exports_10, context_10) {
     "use strict";
     var mount_ts_1, set_event_handler_ts_2, applyPatches;
     var __moduleName = context_10 && context_10.id;
@@ -590,7 +583,7 @@ System.register("apply-patches", ["mount", "set-event-handler"], function (expor
         }
     };
 });
-System.register("css-types", [], function (exports_11, context_11) {
+System.register("src/css-types", [], function (exports_11, context_11) {
     "use strict";
     var __moduleName = context_11 && context_11.id;
     return {
@@ -599,7 +592,7 @@ System.register("css-types", [], function (exports_11, context_11) {
         }
     };
 });
-System.register("virtual-node-events", [], function (exports_12, context_12) {
+System.register("src/virtual-node-events", [], function (exports_12, context_12) {
     "use strict";
     var __moduleName = context_12 && context_12.id;
     return {
@@ -608,7 +601,7 @@ System.register("virtual-node-events", [], function (exports_12, context_12) {
         }
     };
 });
-System.register("lispy-elements", [], function (exports_13, context_13) {
+System.register("src/lispy-elements", [], function (exports_13, context_13) {
     "use strict";
     var __moduleName = context_13 && context_13.id;
     return {
@@ -617,28 +610,40 @@ System.register("lispy-elements", [], function (exports_13, context_13) {
         }
     };
 });
-System.register("lispy-element-to-virtual-node", [], function (exports_14, context_14) {
+System.register("mod/levo-view", [], function (exports_14, context_14) {
     "use strict";
-    var lispyElementToVirtualNode;
+    var Levo, h, createDispatch;
     var __moduleName = context_14 && context_14.id;
     return {
         setters: [],
         execute: function () {
-            exports_14("lispyElementToVirtualNode", lispyElementToVirtualNode = (node) => {
-                return {
-                    $: node[0],
-                    ...node[1],
-                    children: node[2]?.map((x) => typeof x === "string"
-                        ? { $: "_text", value: x }
-                        : lispyElementToVirtualNode(x)),
+            (function (Levo) {
+                Levo.mapDispatch = (dispatch, wrap) => {
+                    return (action) => dispatch(wrap(action));
                 };
+            })(Levo || (Levo = {}));
+            exports_14("Levo", Levo);
+            exports_14("h", h = (tag, props, ...children) => {
+                if (typeof tag === "function") {
+                    return tag({ ...props, children: children });
+                }
+                else {
+                    return {
+                        $: tag,
+                        ...props,
+                        children: children?.filter((x) => x !== undefined && x !== null).map((x) => ["string", "number"].includes(typeof x) ? { $: "_text", value: x } : x).flat(),
+                    };
+                }
+            });
+            exports_14("createDispatch", createDispatch = () => {
+                return (x) => x;
             });
         }
     };
 });
-System.register("levo-runtime", ["virtual-node-diff", "mount", "apply-patches", "lispy-element-to-virtual-node"], function (exports_15, context_15) {
+System.register("src/levo-runtime", ["src/virtual-node-diff", "src/mount", "src/apply-patches", "mod/levo-view"], function (exports_15, context_15) {
     "use strict";
-    var virtual_node_diff_ts_1, mount_ts_2, apply_patches_ts_1, lispy_element_to_virtual_node_ts_1, start;
+    var virtual_node_diff_ts_1, mount_ts_2, apply_patches_ts_1, levo_view_ts_1, start;
     var __moduleName = context_15 && context_15.id;
     return {
         setters: [
@@ -651,8 +656,8 @@ System.register("levo-runtime", ["virtual-node-diff", "mount", "apply-patches", 
             function (apply_patches_ts_1_1) {
                 apply_patches_ts_1 = apply_patches_ts_1_1;
             },
-            function (lispy_element_to_virtual_node_ts_1_1) {
-                lispy_element_to_virtual_node_ts_1 = lispy_element_to_virtual_node_ts_1_1;
+            function (levo_view_ts_1_1) {
+                levo_view_ts_1 = levo_view_ts_1_1;
             }
         ],
         execute: function () {
@@ -672,7 +677,7 @@ System.register("levo-runtime", ["virtual-node-diff", "mount", "apply-patches", 
                 const handler = (action) => {
                     const event = window.event;
                     if (action) {
-                        const { newModel, then: promise } = update(currentModel, action, event);
+                        const { newModel, then: promise } = update({ model: currentModel, action, event });
                         const newVirtualNode = view(newModel);
                         console.log("action", action);
                         const patches = virtual_node_diff_ts_1.diff({
@@ -690,7 +695,7 @@ System.register("levo-runtime", ["virtual-node-diff", "mount", "apply-patches", 
                         promise?.().then(handler);
                     }
                 };
-                onMount(currentModel, handler);
+                onMount({ model: currentModel, dispatch: handler });
                 //@ts-ignore
                 window.$$h = handler;
             };
@@ -707,7 +712,7 @@ System.register("levo-runtime", ["virtual-node-diff", "mount", "apply-patches", 
                 //@ts-ignore
                 initialModel: window.$levoModel,
                 //@ts-ignore
-                view: (model) => lispy_element_to_virtual_node_ts_1.lispyElementToVirtualNode(window.$levoView(model)),
+                view: (model) => (window.$levoView({ model, dispatch: levo_view_ts_1.createDispatch() })),
                 //@ts-ignore
                 update: window.$levoUpdater,
                 //@ts-ignore
@@ -717,7 +722,7 @@ System.register("levo-runtime", ["virtual-node-diff", "mount", "apply-patches", 
     };
 });
 
-__instantiate("levo-runtime");
+__instantiate("src/levo-runtime", false);
 
 
 `

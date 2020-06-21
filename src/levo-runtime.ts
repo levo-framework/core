@@ -3,7 +3,7 @@ import { VirtualNode } from "./virtual-node.ts";
 import { diff } from "./virtual-node-diff.ts";
 import { mount } from "./mount.ts";
 import { applyPatches } from "./apply-patches.ts";
-import { lispyElementToVirtualNode } from "./lispy-element-to-virtual-node.ts";
+import { createDispatch } from "../mod/levo-view.ts";
 
 const start = <Model, Action>({
   at,
@@ -14,11 +14,13 @@ const start = <Model, Action>({
 }: {
   initialModel: Model;
   view: (model: Model) => VirtualNode<Action>;
-  update: (model: Model, action: Action, event: Event | undefined) => {
+  update: (
+    args: { model: Model; action: Action; event: Event | undefined },
+  ) => {
     newModel: Model;
     then?: () => Promise<Action>;
   };
-  onMount: (model: Model, dispatch: (action: Action) => void) => void;
+  onMount: (args: { model: Model; dispatch: (action: Action) => void }) => void;
   at: HTMLElement | Document | null;
 }) => {
   if (!at) {
@@ -37,7 +39,9 @@ const start = <Model, Action>({
   const handler = (action: Action | undefined) => {
     const event = window.event;
     if (action) {
-      const { newModel, then: promise } = update(currentModel, action, event);
+      const { newModel, then: promise } = update(
+        { model: currentModel, action, event },
+      );
       const newVirtualNode = view(newModel);
       console.log("action", action);
       const patches = diff({
@@ -56,7 +60,7 @@ const start = <Model, Action>({
     }
   };
 
-  onMount(currentModel, handler);
+  onMount({ model: currentModel, dispatch: handler });
 
   //@ts-ignore
   window.$$h = handler;
@@ -83,7 +87,7 @@ start({
   initialModel: window.$levoModel,
 
   //@ts-ignore
-  view: (model) => lispyElementToVirtualNode(window.$levoView(model)),
+  view: (model) => (window.$levoView({ model, dispatch: createDispatch() })),
 
   //@ts-ignore
   update: window.$levoUpdater,

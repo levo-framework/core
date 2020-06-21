@@ -1,3 +1,9 @@
+export type Model = {
+  currentValue: number;
+  intervalId: number | undefined;
+  text: string;
+};
+
 export type Action =
   | { $: "add" }
   | { $: "minus" }

@@ -1,10 +1,16 @@
-import { view } from "./view.ts";
-import { Action } from "./action.ts";
+import { view } from "./view.tsx";
+import { Model, Action } from "./types.ts";
 import { serve } from "./../../../mod/levo-serve.ts";
-import { Model } from "./model.ts";
+import { Counter } from "./counter.tsx";
 
 serve<Model, Action>({
   getResponse: async (request, response) => {
-    return response.page({ view, model: {} });
+    return response.page({
+      view,
+      model: {
+        randomNumber: Math.random(),
+        counterModel: Counter.initialModel(),
+      },
+    });
   },
 });

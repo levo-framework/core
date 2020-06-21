@@ -1,7 +1,7 @@
 export {
   assert,
   assertEquals,
-} from "https://deno.land/std@0.53.0/testing/asserts.ts";
+} from "https://deno.land/std@0.57.0/testing/asserts.ts";
 
 export {
   exists,
@@ -9,9 +9,9 @@ export {
   copy,
 } from "https://deno.land/std@0.57.0/fs/mod.ts";
 
-export * as server from "https://deno.land/std@0.53.0/http/server.ts";
+export * as server from "https://deno.land/std@0.57.0/http/server.ts";
 
-export * as path from "https://deno.land/std@0.53.0/path/mod.ts";
+export * as path from "https://deno.land/std@0.57.0/path/mod.ts";
 
 export {
   gzipDecode,

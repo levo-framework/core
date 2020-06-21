@@ -25,97 +25,95 @@ type CommonAttributes<Action> =
   & { style?: Properties }
   & VirtualNodeEvents<Action>;
 
+type Children<Action> = (LispyElements<Action> | string)[];
 export type LispyElements<Action> =
-  | [
-    | "head"
-    | "title"
-    | "address"
-    | "article"
-    | "aside"
-    | "footer"
-    | "header"
-    | "h1"
-    | "h2"
-    | "h3"
-    | "h4"
-    | "h5"
-    | "h6"
-    | "hgroup"
-    | "main"
-    | "nav"
-    | "section"
-    | "cite"
-    | "dd"
-    | "dt"
-    | "dl"
-    | "div"
-    | "figcaption"
-    | "figure"
-    | "p"
-    | "pre"
-    | "ul"
-    | "abbr"
-    | "b"
-    | "bdi"
-    | "bdo"
-    | "br"
-    | "code"
-    | "dfn"
-    | "em"
-    | "i"
-    | "kbd"
-    | "mark"
-    | "rb"
-    | "ruby"
-    | "rp"
-    | "rt"
-    | "rtc"
-    | "s"
-    | "samp"
-    | "small"
-    | "span"
-    | "strong"
-    | "sub"
-    | "sup"
-    | "u"
-    | "var"
-    | "wbr"
-    | "picture"
-    | "noscript"
-    | "datalist"
-    | "legend"
-    | "dialog"
-    | "summary"
-    | "slot"
-    | "template"
-    | "html"
-    | "acronym"
-    | "big"
-    | "blink"
-    | "center"
-    | "content"
-    | "dir"
-    | "element"
-    | "frame"
-    | "frameset"
-    | "image"
-    | "isindex"
-    | "listing"
-    | "menuitem"
-    | "multicol"
-    | "nextid"
-    | "nobr"
-    | "noembed"
-    | "noframes"
-    | "plaintext"
-    | "shadow"
-    | "spacer"
-    | "strike"
-    | "tt"
-    | "xmp",
-    CommonAttributes<Action>,
-    (LispyElements<Action> | string)[]?,
-  ]
+  | ["div", CommonAttributes<Action>, Children<Action>?]
+  | ["head", CommonAttributes<Action>, Children<Action>?]
+  | ["title", CommonAttributes<Action>, Children<Action>?]
+  | ["address", CommonAttributes<Action>, Children<Action>?]
+  | ["article", CommonAttributes<Action>, Children<Action>?]
+  | ["aside", CommonAttributes<Action>, Children<Action>?]
+  | ["footer", CommonAttributes<Action>, Children<Action>?]
+  | ["header", CommonAttributes<Action>, Children<Action>?]
+  | ["h1", CommonAttributes<Action>, Children<Action>?]
+  | ["h2", CommonAttributes<Action>, Children<Action>?]
+  | ["h3", CommonAttributes<Action>, Children<Action>?]
+  | ["h4", CommonAttributes<Action>, Children<Action>?]
+  | ["h5", CommonAttributes<Action>, Children<Action>?]
+  | ["h6", CommonAttributes<Action>, Children<Action>?]
+  | ["hgroup", CommonAttributes<Action>, Children<Action>?]
+  | ["main", CommonAttributes<Action>, Children<Action>?]
+  | ["nav", CommonAttributes<Action>, Children<Action>?]
+  | ["section", CommonAttributes<Action>, Children<Action>?]
+  | ["cite", CommonAttributes<Action>, Children<Action>?]
+  | ["dd", CommonAttributes<Action>, Children<Action>?]
+  | ["dt", CommonAttributes<Action>, Children<Action>?]
+  | ["dl", CommonAttributes<Action>, Children<Action>?]
+  | ["div", CommonAttributes<Action>, Children<Action>?]
+  | ["figcaption", CommonAttributes<Action>, Children<Action>?]
+  | ["figure", CommonAttributes<Action>, Children<Action>?]
+  | ["p", CommonAttributes<Action>, Children<Action>?]
+  | ["pre", CommonAttributes<Action>, Children<Action>?]
+  | ["ul", CommonAttributes<Action>, Children<Action>?]
+  | ["abbr", CommonAttributes<Action>, Children<Action>?]
+  | ["b", CommonAttributes<Action>, Children<Action>?]
+  | ["bdi", CommonAttributes<Action>, Children<Action>?]
+  | ["bdo", CommonAttributes<Action>, Children<Action>?]
+  | ["br", CommonAttributes<Action>, Children<Action>?]
+  | ["code", CommonAttributes<Action>, Children<Action>?]
+  | ["dfn", CommonAttributes<Action>, Children<Action>?]
+  | ["em", CommonAttributes<Action>, Children<Action>?]
+  | ["i", CommonAttributes<Action>, Children<Action>?]
+  | ["kbd", CommonAttributes<Action>, Children<Action>?]
+  | ["mark", CommonAttributes<Action>, Children<Action>?]
+  | ["rb", CommonAttributes<Action>, Children<Action>?]
+  | ["ruby", CommonAttributes<Action>, Children<Action>?]
+  | ["rp", CommonAttributes<Action>, Children<Action>?]
+  | ["rt", CommonAttributes<Action>, Children<Action>?]
+  | ["rtc", CommonAttributes<Action>, Children<Action>?]
+  | ["s", CommonAttributes<Action>, Children<Action>?]
+  | ["samp", CommonAttributes<Action>, Children<Action>?]
+  | ["small", CommonAttributes<Action>, Children<Action>?]
+  | ["span", CommonAttributes<Action>, Children<Action>?]
+  | ["strong", CommonAttributes<Action>, Children<Action>?]
+  | ["sub", CommonAttributes<Action>, Children<Action>?]
+  | ["sup", CommonAttributes<Action>, Children<Action>?]
+  | ["u", CommonAttributes<Action>, Children<Action>?]
+  | ["var", CommonAttributes<Action>, Children<Action>?]
+  | ["wbr", CommonAttributes<Action>, Children<Action>?]
+  | ["picture", CommonAttributes<Action>, Children<Action>?]
+  | ["noscript", CommonAttributes<Action>, Children<Action>?]
+  | ["datalist", CommonAttributes<Action>, Children<Action>?]
+  | ["legend", CommonAttributes<Action>, Children<Action>?]
+  | ["dialog", CommonAttributes<Action>, Children<Action>?]
+  | ["summary", CommonAttributes<Action>, Children<Action>?]
+  | ["slot", CommonAttributes<Action>, Children<Action>?]
+  | ["template", CommonAttributes<Action>, Children<Action>?]
+  | ["html", CommonAttributes<Action>, Children<Action>?]
+  | ["acronym", CommonAttributes<Action>, Children<Action>?]
+  | ["big", CommonAttributes<Action>, Children<Action>?]
+  | ["blink", CommonAttributes<Action>, Children<Action>?]
+  | ["center", CommonAttributes<Action>, Children<Action>?]
+  | ["content", CommonAttributes<Action>, Children<Action>?]
+  | ["dir", CommonAttributes<Action>, Children<Action>?]
+  | ["element", CommonAttributes<Action>, Children<Action>?]
+  | ["frame", CommonAttributes<Action>, Children<Action>?]
+  | ["frameset", CommonAttributes<Action>, Children<Action>?]
+  | ["image", CommonAttributes<Action>, Children<Action>?]
+  | ["isindex", CommonAttributes<Action>, Children<Action>?]
+  | ["listing", CommonAttributes<Action>, Children<Action>?]
+  | ["menuitem", CommonAttributes<Action>, Children<Action>?]
+  | ["multicol", CommonAttributes<Action>, Children<Action>?]
+  | ["nextid", CommonAttributes<Action>, Children<Action>?]
+  | ["nobr", CommonAttributes<Action>, Children<Action>?]
+  | ["noembed", CommonAttributes<Action>, Children<Action>?]
+  | ["noframes", CommonAttributes<Action>, Children<Action>?]
+  | ["plaintext", CommonAttributes<Action>, Children<Action>?]
+  | ["shadow", CommonAttributes<Action>, Children<Action>?]
+  | ["spacer", CommonAttributes<Action>, Children<Action>?]
+  | ["strike", CommonAttributes<Action>, Children<Action>?]
+  | ["tt", CommonAttributes<Action>, Children<Action>?]
+  | ["xmp", CommonAttributes<Action>, Children<Action>?]
   | [
     "form",
     {

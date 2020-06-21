@@ -19,7 +19,6 @@ export type VirtualNode<Action> = (
     style?: Partial<Record<string, string>>;
     children?: VirtualNode<Action>[];
     ref?: undefined;
-    "on*"?: Action;
     "*"?: string;
   })
 );

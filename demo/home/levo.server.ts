@@ -1,7 +1,6 @@
-import { view } from "./view.ts";
-import { Action } from "./action.ts";
+import { view } from "./view.tsx";
 import { serve } from "./../../mod/levo-serve.ts";
-import { Model } from "./model.ts";
+import { Model, Action } from "./types.ts";
 
 serve<Model, Action>({
   getResponse: async (request, respond) => {

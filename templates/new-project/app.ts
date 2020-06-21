@@ -1,4 +1,4 @@
-import { LevoApp } from "https://deno.land/x/levo/mod/levo-app.ts";
+import { LevoApp } from "../../mod/levo-app.ts";
 
 const production = Deno.args.includes("--production");
 LevoApp.start({

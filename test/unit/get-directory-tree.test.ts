@@ -8,22 +8,18 @@ Deno.test("get directory tree", () => {
     }),
     [
       ["_", [
-        ["action.ts"],
-        ["init.ts"],
         ["levo.client.ts"],
         ["levo.server.ts"],
-        ["model.ts"],
+        ["types.ts"],
         ["update.ts"],
-        ["view.ts"],
+        ["view.tsx"],
       ]],
       ["xxx", [
-        ["action.ts"],
-        ["init.ts"],
         ["levo.client.ts"],
         ["levo.server.ts"],
-        ["model.ts"],
+        ["types.ts"],
         ["update.ts"],
-        ["view.ts"],
+        ["view.tsx"],
       ]],
     ],
   );
