@@ -7,7 +7,7 @@ export namespace Counter {
   };
 
   export type Action = { $: "minus" } | { $: "add" };
-  export const initialState = (): Model => {
+  export const initialModel = (): Model => {
     return {
       count: 0,
     };
