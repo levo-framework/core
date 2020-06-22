@@ -6,6 +6,7 @@ import { minify as minify$ } from "./minify.ts";
 import { resolveUrl } from "./resolve-url.ts";
 import { getDirectoryTree } from "./get-directory-tree.ts";
 import { LevoServeResponse } from "../mod/levo-serve-response.ts";
+import { regeneratorRuntimeCode } from "./regenerator-runtime-raw.ts";
 
 export const LevoApp = {
   start: async ({
@@ -43,8 +44,6 @@ export const LevoApp = {
     const minify = minifyJs
       ? minify$
       : (code: string) => ({ code, error: undefined });
-
-    const minifiedLevoRuntimeCode = minify(levoRuntimeCode).code;
 
     await Deno.writeFile("levo.tsconfig.json", encoder.encode(levoTsconfigRaw));
     const bundle = async (filename: string, options?: {
@@ -234,16 +233,16 @@ export const LevoApp = {
                   body: encoder.encode(`
     <!DOCTYPE html>
     ${response.html}
+    <script>
     ${
                     minifyJs
                       ? // This is necessary because we use Babel to transform the bundled code down to ES5
-                        `<script src="https://unpkg.com/regenerator-runtime@0.13.1/runtime.js"></script>`
-                      : ``
+                        `(()=>{${regeneratorRuntimeCode}})();`
+                      : ""
                   }
-    <script>
         (()=>{${code}})();
         (()=>{window.$levoModel=${JSON.stringify(response.model)}})();
-        (()=>{${minifiedLevoRuntimeCode}})();
+        (()=>{${levoRuntimeCode}})();
     </script>
                   `.trim()),
                 });
