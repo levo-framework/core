@@ -39,7 +39,7 @@ jobs:
          deno-version: v1.1.1 
       - name: Bundle levo-runtime
         run: deno run --unstable --allow-run --allow-write tools/bundle-levo-runtime.ts
-      - name: Verify if levo-runtime-raw.ts is updated
+      - name: Verify levo-runtime-raw.ts is up-to-date
         run: sh ./tools/verify-levo-runtime-raw.sh
 
   unit-test:
