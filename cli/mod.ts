@@ -20,25 +20,9 @@ if (result.help) {
   if (!projectName) {
     console.error(`Missing argument <project_name>`);
   } else {
-    const response = await fetch(
-      `https://api.github.com/repos/levo-framework/core/git/refs/tags`,
-    ).then((response) =>
-      response.json() as Promise<
-        {
-          ref: string;
-          object?: {
-            sha: string;
-          };
-        }[]
-      >
-    );
-
-    const [, , latestTag] = response.sort((b, a) =>
-      a.ref.localeCompare(b.ref)
-    )[0]?.ref.split("/");
     const tempName = `tmp_${Date.now()}`;
     const command =
-      `git clone --branch ${latestTag} --depth 1 https://github.com/levo-framework/core ${tempName}`;
+      `git clone --depth 1 https://github.com/levo-framework/core ${tempName}`;
     console.log(command);
     const output = await Deno.run({
       cmd: command.split(" "),
@@ -46,6 +30,25 @@ if (result.help) {
       stderr: "piped",
     })
       .output();
+
+    Deno.chdir(tempName);
+    const latestTag = new TextDecoder().decode(
+      await Deno.run({
+        cmd: "git describe --tags".split(" "),
+        stdout: "piped",
+        stderr: "piped",
+      })
+        .output(),
+    ).trim();
+    console.log(
+      await Deno.run({
+        cmd: `git checkout ${latestTag}`.split(" "),
+        stdout: "piped",
+        stderr: "piped",
+      })
+        .output(),
+    );
+    Deno.chdir("..");
 
     console.log(new TextDecoder().decode(output));
     console.log(`Using Levo ${latestTag}`);
@@ -59,11 +62,10 @@ if (result.help) {
             const content = new TextDecoder().decode(
               await Deno.readFile(filename),
             );
-            const updatedContent = content
-              .replace(
-                /https:\/\/deno\.land\/x\/levo\//g,
-                `https://deno.land/x/levo@${latestTag}/`,
-              );
+            const updatedContent = content.replace(
+              /".*?mod\//g,
+              `"https://deno.land/x/levo@${latestTag}/mod/`,
+            );
             return await Deno.writeFile(
               filename,
               new TextEncoder().encode(updatedContent),
@@ -104,6 +106,7 @@ if (result.help) {
       `Cannot create a new page at "${dirname}" as it already exists.`,
     );
   } else {
+    console.log(`Creating a new page at ${dirname}`);
     await copy(".levo.templates/new-project/root", dirname);
   }
 } else {
