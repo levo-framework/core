@@ -136,7 +136,7 @@ Deno.test({
       },
     );
 
-    await new Promise((resolve) => setTimeout(resolve, 15000));
+    await new Promise((resolve) => setTimeout(resolve, 20000));
 
     const response1 = await fetch("http://localhost:5000");
     assertEquals(response1.status, 200);
