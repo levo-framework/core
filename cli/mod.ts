@@ -28,7 +28,6 @@ const runCommand = async (command: string): Promise<string | undefined> => {
     ],
   );
   if (error) {
-    console.error(`"${command}" failed with the error below:`);
     console.error("[error]", error);
     return undefined;
   } else {
@@ -54,7 +53,7 @@ const main = async () => {
 
       Deno.chdir(tempName);
       const latestTag = await runCommand("git describe --tags --abbrev=0");
-      await runCommand(`git checkout ${latestTag}`);
+      await runCommand(`git checkout ${latestTag} --quiet`);
       Deno.chdir("..");
       if (!latestTag) {
         console.error(`Failed to obtain latest version of Levo.`);
