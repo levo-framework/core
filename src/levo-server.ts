@@ -117,10 +117,16 @@ export const LevoApp = {
             : getDirectoryTree(rootDir.pathname, { ignoreFiles: [] }),
           url.pathname,
         );
+
         if (resolvedUrl === undefined) {
+          console.error(
+            new Date(),
+            `${req.url} does not point to a directory, responding with 404`,
+          );
           req.respond({ status: 404 });
           continue;
         }
+
         const pathname = (rootDir.pathname.endsWith(path.SEP)
           ? rootDir.pathname
           : rootDir.pathname + path.SEP) + resolvedUrl;
@@ -155,6 +161,7 @@ export const LevoApp = {
           `levo.server.ts`,
           `file://` + dirname,
         );
+
         if (!(await exists(handlerPath.pathname))) {
           console.error(
             `No levo.server.ts found under at ${handlerPath.pathname}`,
@@ -162,6 +169,7 @@ export const LevoApp = {
           req.respond({ status: 404 });
           continue;
         }
+
         const worker = new Worker(
           // Refer: https://stackoverflow.com/a/41790024/6587634
           handlerPath.href +
@@ -215,7 +223,9 @@ export const LevoApp = {
                 break;
               }
               case "page": {
-                const code = await bundle(dirname + "levo.client.ts");
+                const filename = dirname + "levo.client.ts";
+                console.log(`Trying to bundle: ${filename}`);
+                const code = await bundle(filename);
                 const initialHeaders = new Headers();
                 initialHeaders.set("content-type", "text/html");
                 const { body, headers } = compress({
@@ -250,7 +260,7 @@ export const LevoApp = {
           console.error(error);
         });
       } catch (error) {
-        console.error(error);
+        console.error("Caught error: ", error);
       }
     }
   },

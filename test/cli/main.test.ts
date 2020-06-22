@@ -147,15 +147,18 @@ Deno.test({
     await runCommand(
       `../bin/levo new-page ./root/about`,
     );
+    Deno.chdir("..");
     const response2 = await fetch("http://localhost:5000/about");
     assertEquals(response2.status, 200);
     assertEquals(response2.headers.get("content-type"), "text/html");
 
     console.log(`Test new-page command with nested wildcard path`);
+    Deno.chdir(projectName);
     await runCommand(
       `../bin/levo new-page ./root/_/profile`,
     );
     Deno.chdir("..");
+
     const response3 = await fetch("http://localhost:5000/john/profile");
     assertEquals(response3.status, 200);
     assertEquals(response3.headers.get("content-type"), "text/html");
