@@ -13,44 +13,50 @@ Available commands:
   new-page <directory_name>
     - Creates a new Levo page under the directory <directory_name>
 `;
+
+const runCommand = async (command: string): Promise<string | undefined> => {
+  console.log(``);
+  const process = Deno.run({
+    cmd: command.split(" "),
+    stdout: "piped",
+    stderr: "piped",
+  });
+  const decoder = new TextDecoder();
+  const [output, error] = await Promise.all(
+    [process.output(), process.stderrOutput()],
+  );
+  if (error) {
+    console.error(`"${command}" failed with the error below:`);
+    console.error(decoder.decode(error));
+    return undefined;
+  } else {
+    const decodedOutput = decoder.decode(output);
+    console.log(decodedOutput);
+    return decodedOutput;
+  }
+};
 if (result.help) {
   console.log(help);
 } else if (result._?.[0] === "new-project") {
   const projectName = result._?.[1]?.toString();
   if (!projectName) {
     console.error(`Missing argument <project_name>`);
+    Deno.exit(1);
   } else {
     const tempName = `tmp_${Date.now()}`;
-    const command =
-      `git clone --depth 1 https://github.com/levo-framework/core ${tempName}`;
-    console.log(command);
-    const output = await Deno.run({
-      cmd: command.split(" "),
-      stdout: "piped",
-      stderr: "piped",
-    })
-      .output();
+    await runCommand(
+      `git clone --depth 1 https://github.com/levo-framework/core ${tempName}`,
+    );
 
     Deno.chdir(tempName);
-    const latestTag = new TextDecoder().decode(
-      await Deno.run({
-        cmd: "git describe --tags".split(" "),
-        stdout: "piped",
-        stderr: "piped",
-      })
-        .output(),
-    ).trim();
-    console.log(
-      await Deno.run({
-        cmd: `git checkout ${latestTag}`.split(" "),
-        stdout: "piped",
-        stderr: "piped",
-      })
-        .output(),
-    );
+    const latestTag = await runCommand("git describe --tags");
+    await runCommand(`git checkout ${latestTag}`);
     Deno.chdir("..");
+    if (!latestTag) {
+      console.error(`Failed to obtain latest version of Levo.`);
+      Deno.exit(1);
+    }
 
-    console.log(new TextDecoder().decode(output));
     console.log(`Using Levo ${latestTag}`);
 
     // specify specific version for each file in the templates that import Levo modules
