@@ -1,4 +1,3 @@
-export const levoRuntimeCode = `
 // Copyright 2018-2020 the Deno authors. All rights reserved. MIT license.
 
 // This is a specialised implementation of a System module loader.
@@ -125,6 +124,7 @@ System.register("src/array-diff", [], function (exports_3, context_3) {
         setters: [],
         execute: function () {
             /**
+             * Return elements that are present in `left` but not in `right`
              */
             exports_3("arrayDiff", arrayDiff = (left, right) => {
                 let cache = {};
@@ -347,6 +347,7 @@ System.register("src/virtual-node-diff", ["src/compute-attributes-updates", "src
                     }));
                     // Compare styles
                     const styleAttributesUpdates = compute_attributes_updates_ts_1.computeAttributesUpdates({
+                        // TODO: No need to cast to `unknown` when negated types is released
                         // Reference: https://github.com/microsoft/TypeScript/pull/29317
                         originalAttrs: original.style ??
                             {},
@@ -556,6 +557,7 @@ System.register("src/apply-patches", ["src/mount", "src/set-event-handler"], fun
                                 patch.originalNode.ref.removeAttribute?.(patch.attributeName);
                             }
                             else if (patch.attributeName === "class") {
+                                // Cannot set className to undefined, as the result will be `class="undefined"`
                                 // Refer: https://stackoverflow.com/a/30299762/6587634
                                 patch.originalNode.ref.className = "";
                             }
@@ -724,5 +726,3 @@ System.register("src/levo-runtime", ["src/virtual-node-diff", "src/mount", "src/
 
 __instantiate("src/levo-runtime", false);
 
-
-`

@@ -1,6 +1,5 @@
 import { parse } from "https://deno.land/std@0.53.0/flags/mod.ts";
 import { exists, copy, path } from "../src/deps.ts";
-import { runCommand } from "../src/run-command.ts";
 
 const help = `
 Levo CLI is a tool for generating boilerplates for Levo projects.
@@ -13,6 +12,29 @@ Available commands:
   new-page <directory_name>
     - Creates a new Levo page under the directory <directory_name>
 `;
+
+const runCommand = async (command: string): Promise<string | undefined> => {
+  console.log(`Executing "${command}"`);
+  const process = Deno.run({
+    cmd: command.split(" "),
+    stdout: "piped",
+    stderr: "piped",
+  });
+  const decoder = new TextDecoder();
+  const [output, error] = await Promise.all(
+    [
+      process.output().then((output) => decoder.decode(output).trim()),
+      process.stderrOutput().then((error) => decoder.decode(error).trim()),
+    ],
+  );
+  if (error) {
+    console.error("[error]", error);
+    return undefined;
+  } else {
+    console.log("[output]", output);
+    return output;
+  }
+};
 
 const main = async () => {
   const result = parse(Deno.args);
@@ -30,9 +52,7 @@ const main = async () => {
       );
 
       Deno.chdir(tempName);
-      const { output: latestTag } = await runCommand(
-        "git describe --tags --abbrev=0",
-      );
+      const latestTag = await runCommand("git describe --tags --abbrev=0");
       await runCommand(`git checkout ${latestTag} --quiet`);
       Deno.chdir("..");
       if (!latestTag) {

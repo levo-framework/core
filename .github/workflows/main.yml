@@ -27,8 +27,6 @@ jobs:
           deno fmt --check src
           deno fmt --check test
           deno fmt --check templates
-          deno fmt --check cli
-          deno fmt --check tools
 
   build:
     runs-on: ubuntu-latest
@@ -37,12 +35,8 @@ jobs:
       - uses: denolib/setup-deno@master
         with:
          deno-version: v1.1.1 
-      - name: Verify levo-runtime-raw.ts is updated
-        run: |
-          deno run --unstable --allow-run --allow-write tools/bundle-levo-runtime.ts
-          git status | grep "levo-runtime-raw.ts" \
-          && echo "levo-runtime-raw.ts is not up to date" 1>&2 \
-          && exit 1
+      - name: Bundle levo-runtime.ts
+        run: deno bundle --config levo-runtime.tsconfig.json src/levo-runtime.ts > /dev/null
 
   unit-test:
     runs-on: ubuntu-latest

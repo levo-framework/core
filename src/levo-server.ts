@@ -236,8 +236,7 @@ export const LevoApp = {
     ${response.html}
     ${
                     minifyJs
-                      ? // This is necessary because we use Babel to transform the bundled code down to ES5
-                        `<script src="https://unpkg.com/regenerator-runtime@0.13.1/runtime.js"></script>`
+                      ? `<script src="https://unpkg.com/regenerator-runtime@0.13.1/runtime.js"></script>`
                       : ``
                   }
     <script>
