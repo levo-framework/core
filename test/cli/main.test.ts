@@ -55,8 +55,6 @@ Deno.test({
             ["lib.deno_runtime.d.ts"],
           ]],
           ["root", [
-            ["action.ts"],
-            ["init.ts"],
             ["levo.assets", [
               ["favicon.ico"],
               ["favicon.svg"],
@@ -64,12 +62,13 @@ Deno.test({
             ]],
             ["levo.client.ts"],
             ["levo.server.ts"],
-            ["model.ts"],
             ["robots.txt", [
               ["levo.server.ts"],
             ]],
+            ["types.ts"],
+            ["update.test.ts"],
             ["update.ts"],
-            ["view.ts"],
+            ["view.tsx"],
           ]],
           ["tsconfig.json"],
         ]],
@@ -80,8 +79,6 @@ Deno.test({
         ["lib.deno_runtime.d.ts"],
       ]],
       ["root", [
-        ["action.ts"],
-        ["init.ts"],
         ["levo.assets", [
           ["favicon.ico"],
           ["favicon.svg"],
@@ -89,12 +86,13 @@ Deno.test({
         ]],
         ["levo.client.ts"],
         ["levo.server.ts"],
-        ["model.ts"],
         ["robots.txt", [
           ["levo.server.ts"],
         ]],
+        ["types.ts"],
+        ["update.test.ts"],
         ["update.ts"],
-        ["view.ts"],
+        ["view.tsx"],
       ]],
       ["tsconfig.json"],
     ]);
@@ -111,7 +109,7 @@ Deno.test({
               await Deno.readFile(filename),
             )
               .split("\n")
-              .filter((line) => line.includes("https://deno.land/x/levo"));
+              .filter((line) => line.includes("/mod/levo-"));
             if (lines.length > 0) {
               console.log(`Validating file '${filename}'`);
               lines.forEach((line) => {
