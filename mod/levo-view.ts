@@ -8,7 +8,9 @@ export namespace Levo {
   export type Element = VirtualNode<Levo.EventHandler>;
   export type CSSProperties = Properties;
   export type Events<Action> = VirtualNodeEvents<Action>;
-  export type Dispatch<Action> = (action: Action) => EventHandler;
+  export type Dispatch<Action extends { $: string }> = (
+    action: Action,
+  ) => EventHandler;
 
   export type Init<Model, Action> = (args: {
     model: Model;
@@ -24,7 +26,7 @@ export namespace Levo {
     then?: () => Promise<Action>;
   };
 
-  export const register = <Model, Action>({
+  export const register = <Model, Action extends { $: string }>({
     init,
     view,
     update,
@@ -41,11 +43,7 @@ export namespace Levo {
       // this code, because `window` object does not exists in Worker scope
       try {
         //@ts-ignore
-        window.$levoInit = init;
-        //@ts-ignore
-        window.$levoView = view;
-        //@ts-ignore
-        window.$levoUpdater = update;
+        window.$levo = { init, view, update };
       } catch {}
     }
   };
@@ -71,7 +69,9 @@ export const h = (
   }
 };
 
-export const createDispatch = <Action>(): Levo.Dispatch<Action> => {
+export const createDispatch = <Action extends { $: string }>(): Levo.Dispatch<
+  Action
+> => {
   return (x) => x as any;
 };
 

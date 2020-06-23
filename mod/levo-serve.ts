@@ -10,7 +10,7 @@ export type LevoRequest = {
   search: string;
 };
 
-export type Responder<Model, Action> = {
+export type Responder<Model, Action extends { $: string }> = {
   page: (
     {}: {
       model: Model;
@@ -23,7 +23,7 @@ export type Responder<Model, Action> = {
   custom: (response: CustomResponse) => LevoServeResponse<Model>;
 };
 
-export const serve = <Model = {}, Action = {}>({
+export const serve = <Model = {}, Action extends { $: string } = { $: "" }>({
   getResponse,
 }: {
   getResponse: (
