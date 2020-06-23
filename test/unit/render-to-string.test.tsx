@@ -4,11 +4,11 @@ import { renderToString } from "../../src/render-to-string.ts";
 import { assertEquals } from "../../src/deps.ts";
 
 Deno.test("render-to-string", () => {
-  const dispatch = createDispatch<{ type: "click"; index: number }>();
+  const dispatch = createDispatch<{ $: "click"; index: number }>();
   const element = (
     <div class={undefined} style={{ display: "grid", alignItems: "center" }}>
       <input value="hello" />
-      <button onclick={dispatch({ type: "click", index: 3 })}>click me</button>
+      <button onclick={dispatch({ $: "click", index: 3 })}>click me</button>
     </div>
   );
 
