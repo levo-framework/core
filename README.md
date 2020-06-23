@@ -88,7 +88,7 @@ Because Deno has first-class support for Typescript and it don't require a packa
 * Page caching 
 * CLI tool for generating boilerplates
 * Virtual DOM diffing
-* Action logging at browser
+* Action logging at browser (inspired by [Redux Logger](https://github.com/LogRocket/redux-logger))
 * Robots.txt
 
 ## Features that are NOT supported
@@ -266,6 +266,9 @@ Simply use the `--production` flag:
 deno run --allow-all --unstable app.ts --production
 ```
 When Levo server is started in production mode, the server will generate every bundle for every Levo pages under the root directory.
+
+## How to log action at browser?
+Run the server without the `--production` flag, or customise the `loggingOptions` object in `app.ts`.
 
 ---
 

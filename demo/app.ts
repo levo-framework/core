@@ -6,4 +6,9 @@ LevoApp.start({
   minifyJs: false,
   cachePages: false,
   rootDir: new URL("./home", import.meta.url),
+  loggingOptions: {
+    action: true,
+    patches: true,
+    model: true,
+  },
 });

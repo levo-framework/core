@@ -13,6 +13,7 @@ export const LevoApp = {
     minifyJs,
     cachePages,
     rootDir,
+    loggingOptions,
     ...options
   }: server.HTTPOptions & {
     /**
@@ -36,6 +37,26 @@ export const LevoApp = {
      * Default value is false.
      */
     cachePages?: boolean;
+
+    /**
+     * Logging option at browser.
+     */
+    loggingOptions?: {
+      /**
+       * Log dispatched action.
+       */
+      action?: boolean;
+
+      /**
+       * Log resulting patches from the action
+       */
+      patches?: boolean;
+
+      /**
+       * Log model that is updated before/after action dispatched
+       */
+      model?: boolean;
+    };
   }) => {
     const s = server.serve(options);
     const decoder = new TextDecoder("utf-8");
@@ -241,7 +262,8 @@ export const LevoApp = {
                       : ""
                   }
         (()=>{${code}})();
-        (()=>{window.$levoModel=${JSON.stringify(response.model)}})();
+        (()=>{window.$levo.model=${JSON.stringify(response.model)}})();
+        (()=>{window.$levo.log=${JSON.stringify(loggingOptions)}})();
         (()=>{${levoRuntimeCode}})();
     </script>
                   `.trim()),
