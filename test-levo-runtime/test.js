@@ -105,7 +105,7 @@ describe("", () => {
     await page.click("#click-me-button");
     const currentValue10 = await getCurrentValue();
     const diff2 = currentValue10 - currentValue9;
-    expect(diff1).not.toEqual(diff2); //TODO: update to .not
+    expect(diff1).toEqual(diff2);
 
     await browser.close();
   }, 30000);
