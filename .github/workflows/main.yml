@@ -85,9 +85,9 @@ jobs:
       - uses: actions/setup-node@v1
         with: 
           node-version: 10.x
-      - name: Change directory
-        run: cd ./test-levo-runtime
       - name: Install npm packages
         run: npm install
+        working-directory: ./test-levo-runtime
       - name: Run test
         run: npm test
+        working-directory: ./test-levo-runtime
