@@ -29,14 +29,15 @@ const waitForSeconds = (seconds) => {
   return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 };
 
+let browser;
 beforeAll(async (done) => {
   await waitForSeconds(20);
+  browser = await puppeteer.launch({ headless: true });
   done();
 }, 30000);
 
 describe("", () => {
   test("case 1", async () => {
-    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     await page.goto("http://localhost:3000");
 
@@ -106,14 +107,13 @@ describe("", () => {
     const currentValue10 = await getCurrentValue();
     const diff2 = currentValue10 - currentValue9;
     expect(diff1).toEqual(diff2);
-
-    await browser.close();
   }, 30000);
 });
 
 afterAll(async (done) => {
   console.log("Tear down . . .");
   server.kill("SIGINT");
+  await browser.close();
   await new Promise((resolve) => setTimeout(resolve, 10000));
   done();
 }, 30000);
