@@ -8,6 +8,7 @@ import { getDirectoryTree } from "./get-directory-tree.ts";
 import { LevoServeResponse } from "../mod/levo-serve-response.ts";
 import { regeneratorRuntimeCode } from "./regenerator-runtime-raw.ts";
 
+const memoryCache: Record<string, string> = {};
 export const LevoApp = {
   start: async ({
     minifyJs,
@@ -71,8 +72,12 @@ export const LevoApp = {
       overrideCache: boolean;
     }) => {
       const cachePath = filename + ".cache";
-      if (cachePages && !options?.overrideCache && await exists(cachePath)) {
-        return decoder.decode(await Deno.readFile(cachePath));
+      if (
+        cachePages && !options?.overrideCache &&
+        (memoryCache[cachePath] || await exists(cachePath))
+      ) {
+        return memoryCache[cachePath] ??
+          decoder.decode(await Deno.readFile(cachePath));
       } else {
         const now = Date.now();
         const bundled = decoder.decode(
@@ -96,6 +101,7 @@ export const LevoApp = {
         }
         const final = error ? bundled : minified;
         if (cachePages) {
+          memoryCache[cachePath] = final;
           await Deno.writeFile(cachePath, encoder.encode(final));
         }
         return final;
@@ -113,7 +119,7 @@ export const LevoApp = {
           }
         });
 
-      scanDir(".");
+      scanDir(rootDir.pathname);
     }
 
     console.log(
@@ -143,7 +149,7 @@ export const LevoApp = {
             new Date(),
             `${req.url} does not point to a directory, responding with 404`,
           );
-          req.respond({ status: 404 });
+          await req.respond({ status: 404 });
           continue;
         }
 
@@ -154,7 +160,7 @@ export const LevoApp = {
         const acceptEncoding = req.headers.get("accept-encoding");
         if (pathname.includes("levo.assets")) {
           if (!(await exists(pathname))) {
-            req.respond({ status: 404 });
+            await req.respond({ status: 404 });
             continue;
           }
           const file = await Deno.readFile(pathname);
@@ -169,7 +175,7 @@ export const LevoApp = {
             headers: initialHeaders,
             body: file,
           });
-          req.respond({ body, headers });
+          await req.respond({ body, headers });
           continue;
         }
 
@@ -186,7 +192,7 @@ export const LevoApp = {
           console.error(
             `No levo.server.ts found under at ${handlerPath.pathname}`,
           );
-          req.respond({ status: 404 });
+          await req.respond({ status: 404 });
           continue;
         }
 
@@ -214,62 +220,68 @@ export const LevoApp = {
           (async ({ data: response }: {
             data: LevoServeResponse<any> & { error?: Error };
           }) => {
-            if (response.error) {
-              console.error(response.error);
-              req.respond({ status: 500 });
-              return;
-            }
-            switch (response.$) {
-              case "redirect": {
-                req.respond({
-                  body: encoder.encode(`
-                    <script>window.location.href="${response.url}"</script>
-                  `.trim()),
-                });
-                break;
+            try {
+              if (response.error) {
+                console.error(response.error);
+                await req.respond({ status: 500 });
+                return;
               }
-              case "custom": {
-                const headers = new Headers();
-                Object.entries(response.response.headers ?? {}).forEach(
-                  ([key, value]) => {
-                    headers.set(key, value);
-                  },
-                );
-                req.respond({
-                  headers,
-                  status: response.response.status,
-                  body: encoder.encode(response.response.body),
-                });
-                break;
+              switch (response.$) {
+                case "redirect": {
+                  await req.respond({
+                    body: encoder.encode(`
+                      <script>window.location.href="${response.url}"</script>
+                    `.trim()),
+                  });
+                  break;
+                }
+                case "custom": {
+                  const headers = new Headers();
+                  Object.entries(response.response.headers ?? {}).forEach(
+                    ([key, value]) => {
+                      headers.set(key, value);
+                    },
+                  );
+                  await req.respond({
+                    headers,
+                    status: response.response.status,
+                    body: encoder.encode(response.response.body),
+                  });
+                  break;
+                }
+                case "page": {
+                  const filename = dirname + "levo.client.ts";
+                  console.log(`Trying to bundle: ${filename}`);
+                  const code = await bundle(filename);
+                  const initialHeaders = new Headers();
+                  initialHeaders.set("content-type", "text/html");
+                  const { body, headers } = compress({
+                    acceptEncoding,
+                    headers: initialHeaders,
+                    body: encoder.encode(`
+      <!DOCTYPE html>
+      ${response.html}
+      <script>
+      ${
+                      minifyJs
+                        ? // This is necessary because we use Babel to transform the bundled code down to ES5
+                          `(()=>{${regeneratorRuntimeCode}})();`
+                        : ""
+                    }
+          (()=>{${code}})();
+          (()=>{window.$levo.model=${JSON.stringify(response.model)}})();
+          (()=>{window.$levo.log=${JSON.stringify(loggingOptions)}})();
+          (()=>{${levoRuntimeCode}})();
+      </script>
+                    `.trim()),
+                  });
+                  await req.respond({ body, headers });
+                }
               }
-              case "page": {
-                const filename = dirname + "levo.client.ts";
-                console.log(`Trying to bundle: ${filename}`);
-                const code = await bundle(filename);
-                const initialHeaders = new Headers();
-                initialHeaders.set("content-type", "text/html");
-                const { body, headers } = compress({
-                  acceptEncoding,
-                  headers: initialHeaders,
-                  body: encoder.encode(`
-    <!DOCTYPE html>
-    ${response.html}
-    <script>
-    ${
-                    minifyJs
-                      ? // This is necessary because we use Babel to transform the bundled code down to ES5
-                        `(()=>{${regeneratorRuntimeCode}})();`
-                      : ""
-                  }
-        (()=>{${code}})();
-        (()=>{window.$levo.model=${JSON.stringify(response.model)}})();
-        (()=>{window.$levo.log=${JSON.stringify(loggingOptions)}})();
-        (()=>{${levoRuntimeCode}})();
-    </script>
-                  `.trim()),
-                });
-                req.respond({ body, headers });
-              }
+            } catch (error) {
+              // TODO: try to respond back to user,
+              //       cannot use req.respond as the pipe is already broken
+              console.log("Caught error in worker", error);
             }
           }) as any,
         );
@@ -282,6 +294,7 @@ export const LevoApp = {
           console.error(error);
         });
       } catch (error) {
+        await req.respond({ status: 500 });
         console.error("Caught error: ", error);
       }
     }

@@ -41,6 +41,10 @@ describe("", () => {
     const page = await browser.newPage();
     await page.goto("http://localhost:3000");
 
+    // Try to crash the server by reloading 10 times
+    // Expect there's error but the server will still run
+    await Promise.all(new Array(10).fill(0).map(() => page.reload()));
+
     // Test timer that constantly dispatch "add" action
     const getCurrentValue = async () => {
       const currentValueDiv = await page.$("#current-value");
@@ -107,7 +111,7 @@ describe("", () => {
     const currentValue10 = await getCurrentValue();
     const diff2 = currentValue10 - currentValue9;
     expect(diff1).not.toEqual(diff2);
-  }, 30000);
+  }, 60000);
 });
 
 afterAll(async (done) => {
