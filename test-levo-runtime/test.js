@@ -111,7 +111,7 @@ describe("", () => {
     const currentValue10 = await getCurrentValue();
     const diff2 = currentValue10 - currentValue9;
     expect(diff1).not.toEqual(diff2);
-  }, 30000);
+  }, 60000);
 });
 
 afterAll(async (done) => {

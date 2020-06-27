@@ -45,7 +45,7 @@ jobs:
       - name: Unit Test
         run: deno test --allow-all --unstable ./test/unit/
 
-  server-test-development-mode:
+  dev-mode-server-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -55,7 +55,7 @@ jobs:
       - name: Server Test
         run: deno test --allow-all --unstable ./test/server/development-mode.test.ts
 
-  server-test-production-mode:
+  prod-mode-server-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master

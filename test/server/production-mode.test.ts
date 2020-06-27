@@ -3,15 +3,12 @@
  */
 
 import { assertEquals } from "../../src/deps.ts";
-import { timeoutPromise } from "./util.ts";
-
-const demoAppPath = new URL("../../demo/app.ts", import.meta.url).href;
 
 const process = Deno.run({
   cmd: "deno run --allow-all --unstable ./demo/app.ts --production".split(" "),
 });
 
-await new Promise((resolve) => setTimeout(resolve, 10000));
+await new Promise((resolve) => setTimeout(resolve, 20000));
 
 const tests: {
   name: string;
