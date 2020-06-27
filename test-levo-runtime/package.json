@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest test.js"
+    "test": "jest test.js --detectOpenHandles"
   },
   "author": "",
   "license": "ISC",

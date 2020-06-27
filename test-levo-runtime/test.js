@@ -30,7 +30,7 @@ const waitForSeconds = (seconds) => {
 };
 
 beforeAll(async (done) => {
-  await waitForSeconds(15);
+  await waitForSeconds(20);
   done();
 }, 30000);
 
@@ -105,7 +105,7 @@ describe("", () => {
     await page.click("#click-me-button");
     const currentValue10 = await getCurrentValue();
     const diff2 = currentValue10 - currentValue9;
-    expect(diff1).toEqual(diff2);
+    expect(diff1).not.toEqual(diff2); //TODO: update to .not
 
     await browser.close();
   }, 30000);
@@ -116,4 +116,4 @@ afterAll(async (done) => {
   server.kill("SIGINT");
   await new Promise((resolve) => setTimeout(resolve, 10000));
   done();
-}, 10000);
+}, 30000);
