@@ -13,22 +13,43 @@ export const view = (
       <head>
         <link rel="stylesheet" href="./levo.assets/index.css" />
       </head>
-      {model.currentValue}
+      <div id="current-value">
+        {model.currentValue}
+      </div>
       <button
+        id="add-button"
         style={{ backgroundColor: isEven ? "red" : "green" }}
         onclick={dispatch({ $: "add" })}
       >
         add
       </button>
-      <button onclick={dispatch({ $: "minus" })}>minus</button>
-      <button onclick={dispatch({ $: "stop_interval" })}>stop timer</button>
-      <button onclick={dispatch({ $: "fetch" })}>fetch</button>
-      <button onclick={dispatch(isEven ? { $: "add" } : { $: "minus" })}>
+      <button id="minus-button" onclick={dispatch({ $: "minus" })}>
+        minus
+      </button>
+      <button id="stop-timer-button" onclick={dispatch({ $: "stop_interval" })}>
+        stop timer
+      </button>
+      <button id="fetch-button" onclick={dispatch({ $: "fetch" })}>
+        fetch
+      </button>
+      <button
+        id="click-me-button"
+        onclick={dispatch(isEven ? { $: "add" } : { $: "minus" })}
+      >
         click me
       </button>
-      Text: {model.text}
-      <input type="checkbox" checked={isEven ? "true" : undefined} />
-      <input value={isEven ? "even" : "odd"} />
+      <span>Fetched text</span>
+      <div id="fetched-text">
+        {model.text}
+      </div>
+      <div>
+        <input
+          id="checkbox"
+          type="checkbox"
+          checked={isEven ? "true" : undefined}
+        />
+        <input id="input" value={isEven ? "even" : "odd"} />
+      </div>
       {items.map((item) => <div>{item.content}</div>)}
     </html>
   );
