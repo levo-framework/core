@@ -79,3 +79,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+      - uses: denolib/setup-deno@master
+        with:
+         deno-version: v1.1.1 
+      - uses: actions/setup-node@v1
+        with: 
+          node-version: 10.x
+      - name: Change directory
+        run: cd ./test-levo-runtime
+      - name: Install npm packages
+        run: npm install
+      - name: Run test
+        run: npm test
