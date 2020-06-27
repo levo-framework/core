@@ -7,14 +7,17 @@ import { resolveUrl } from "./resolve-url.ts";
 import { getDirectoryTree } from "./get-directory-tree.ts";
 import { LevoServeResponse } from "../mod/levo-serve-response.ts";
 import { regeneratorRuntimeCode } from "./regenerator-runtime-raw.ts";
+import { MemoryCache } from "./memory-cache.ts";
 
-const memoryCache: Record<string, string> = {};
 export const LevoApp = {
   start: async ({
     minifyJs,
     cachePages,
     rootDir,
     loggingOptions,
+memoryCache: {
+      maxNumberOfPages = 1024 
+    } = {},
     ...options
   }: server.HTTPOptions & {
     /**
@@ -40,6 +43,17 @@ export const LevoApp = {
     cachePages?: boolean;
 
     /**
+     * Settings for memory cache
+     */
+    memoryCache?: {
+      /**
+       * Max number of pages to be cached in memory. 
+       * Default value is 1024.
+       */
+      maxNumberOfPages?: number;
+    };
+
+    /**
      * Logging option at browser.
      */
     loggingOptions?: {
@@ -63,6 +77,10 @@ export const LevoApp = {
     const decoder = new TextDecoder("utf-8");
     const encoder = new TextEncoder();
 
+    const memoryCache = new MemoryCache<string>(
+      { maxNumberOfKeys: maxNumberOfPages },
+    );
+
     const minify = minifyJs
       ? minify$
       : (code: string) => ({ code, error: undefined });
@@ -74,9 +92,9 @@ export const LevoApp = {
       const cachePath = filename + ".cache";
       if (
         cachePages && !options?.overrideCache &&
-        (memoryCache[cachePath] || await exists(cachePath))
+        (memoryCache.get(cachePath) || await exists(cachePath))
       ) {
-        return memoryCache[cachePath] ??
+        return memoryCache.get(cachePath) ??
           decoder.decode(await Deno.readFile(cachePath));
       } else {
         const now = Date.now();
@@ -101,7 +119,7 @@ export const LevoApp = {
         }
         const final = error ? bundled : minified;
         if (cachePages) {
-          memoryCache[cachePath] = final;
+          memoryCache.set(cachePath, final);
           await Deno.writeFile(cachePath, encoder.encode(final));
         }
         return final;
