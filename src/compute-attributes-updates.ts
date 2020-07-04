@@ -34,7 +34,7 @@ export const computeAttributesUpdates = <RecordReturnType>({
     >((key) => {
       const originalValue = originalAttrs[key];
       const updatedValue = updatedAttrs[key];
-      if (updatedValue === undefined) {
+      if (!updatedValue) {
         return [{
           type: "remove_attribute",
           attributeName: key,
