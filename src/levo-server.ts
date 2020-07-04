@@ -15,8 +15,8 @@ export const LevoApp = {
     cachePages,
     rootDir,
     loggingOptions,
-memoryCache: {
-      maxNumberOfPages = 1024 
+    memoryCache: {
+      maxNumberOfPages = 1024,
     } = {},
     ...options
   }: server.HTTPOptions & {
