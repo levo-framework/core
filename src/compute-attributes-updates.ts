@@ -1,7 +1,9 @@
 import { arrayDiff } from "./array-diff.ts";
 import { deepEqual } from "./deep-equal.ts";
 
-export const computeAttributesUpdates = <RecordReturnType>({
+export const computeAttributesUpdates = <
+  RecordReturnType extends boolean | string | number | object | undefined,
+>({
   originalAttrs,
   updatedAttrs,
 }: {
@@ -34,7 +36,7 @@ export const computeAttributesUpdates = <RecordReturnType>({
     >((key) => {
       const originalValue = originalAttrs[key];
       const updatedValue = updatedAttrs[key];
-      if (!updatedValue) {
+      if (updatedValue === undefined || updatedValue === false) {
         return [{
           type: "remove_attribute",
           attributeName: key,

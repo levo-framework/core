@@ -28,9 +28,7 @@ export const diff = <Action>({
     // Compare attributes
     const originalAttrs = extractAttributes(original);
     const updatedAttrs = extractAttributes(updated);
-    const attributesUpdates = computeAttributesUpdates<
-      string | Action | undefined
-    >({
+    const attributesUpdates = computeAttributesUpdates({
       originalAttrs,
       updatedAttrs,
     })
@@ -40,7 +38,7 @@ export const diff = <Action>({
       }));
 
     // Compare styles
-    const styleAttributesUpdates = computeAttributesUpdates<string | undefined>(
+    const styleAttributesUpdates = computeAttributesUpdates(
       {
         // TODO: No need to cast to `unknown` when negated types is released
         // Reference: https://github.com/microsoft/TypeScript/pull/29317
