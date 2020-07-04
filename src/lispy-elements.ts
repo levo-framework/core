@@ -6,18 +6,18 @@ type CommonAttributes<Action> =
     "accesskey"?: string;
     "autocapitalize"?: string;
     "class"?: string;
-    "contenteditable"?: string;
+    "contenteditable"?: boolean;
     "contextmenu"?: string;
     "data-*"?: string;
     "dir"?: string;
-    "draggable"?: string;
+    "draggable"?: boolean;
     "dropzone"?: string;
-    "hidden"?: string;
+    "hidden"?: boolean;
     "id"?: string;
     "itemprop"?: string;
     "lang"?: string;
     "slot"?: string;
-    "spellcheck"?: string;
+    "spellcheck"?: boolean;
     "tabindex"?: string;
     "title"?: string;
     "translate"?: string;
@@ -124,7 +124,7 @@ export type LispyElements<Action> =
       "enctype"?: string;
       "method"?: string;
       "name"?: string;
-      "novalidate"?: string;
+      "novalidate"?: boolean;
       "target"?: string;
     } & CommonAttributes<Action>,
     (LispyElements<Action> | string)[]?,
@@ -135,16 +135,16 @@ export type LispyElements<Action> =
       "accept"?: string;
       "alt"?: string;
       "autocomplete"?: string;
-      "autofocus"?: string;
-      "capture"?: string;
-      "checked"?: string;
+      "autofocus"?: boolean;
+      "capture"?: boolean;
+      "checked"?: boolean;
       "dirname"?: string;
-      "disabled"?: string;
+      "disabled"?: boolean;
       "form"?: string;
       "formaction"?: string;
       "formenctype"?: string;
       "formmethod"?: string;
-      "formnovalidate"?: string;
+      "formnovalidate"?: boolean;
       "formtarget"?: string;
       "height"?: string;
       "list"?: string;
@@ -152,12 +152,12 @@ export type LispyElements<Action> =
       "maxlength"?: string;
       "minlength"?: string;
       "min"?: string;
-      "multiple"?: string;
+      "multiple"?: boolean;
       "name"?: string;
       "pattern"?: string;
       "placeholder"?: string;
-      "readonly"?: string;
-      "required"?: string;
+      "readonly"?: boolean;
+      "required"?: boolean;
       "size"?: string;
       "src"?: string;
       "step"?: string;
@@ -339,10 +339,10 @@ export type LispyElements<Action> =
   | [
     "script",
     {
-      "async"?: string;
+      "async"?: boolean;
       "charset"?: string;
       "crossorigin"?: string;
-      "defer"?: string;
+      "defer"?: boolean;
       "importance"?: string;
       "integrity"?: string;
       "language"?: string;
@@ -356,12 +356,12 @@ export type LispyElements<Action> =
     "select",
     {
       "autocomplete"?: string;
-      "autofocus"?: string;
-      "disabled"?: string;
+      "autofocus"?: boolean;
+      "disabled"?: boolean;
       "form"?: string;
-      "multiple"?: string;
+      "multiple"?: boolean;
       "name"?: string;
-      "required"?: string;
+      "required"?: boolean;
       "size"?: string;
     } & CommonAttributes<Action>,
     (LispyElements<Action> | string)[]?,
@@ -370,10 +370,10 @@ export type LispyElements<Action> =
     "textarea",
     {
       "autocomplete"?: string;
-      "autofocus"?: string;
+      "autofocus"?: boolean;
       "cols"?: string;
       "dirname"?: string;
-      "disabled"?: string;
+      "disabled"?: boolean;
       "enterkeyhint"?: string;
       "form"?: string;
       "inputmode"?: string;
@@ -381,8 +381,8 @@ export type LispyElements<Action> =
       "minlength"?: string;
       "name"?: string;
       "placeholder"?: string;
-      "readonly"?: string;
-      "required"?: string;
+      "readonly"?: boolean;
+      "required"?: boolean;
       "rows"?: string;
       "wrap"?: string;
     } & CommonAttributes<Action>,
@@ -391,13 +391,13 @@ export type LispyElements<Action> =
   | [
     "button",
     {
-      "autofocus"?: string;
-      "disabled"?: string;
+      "autofocus"?: boolean;
+      "disabled"?: boolean;
       "form"?: string;
       "formaction"?: string;
       "formenctype"?: string;
       "formmethod"?: string;
-      "formnovalidate"?: string;
+      "formnovalidate"?: boolean;
       "formtarget"?: string;
       "name"?: string;
       "type"?: string;
@@ -408,9 +408,9 @@ export type LispyElements<Action> =
   | [
     "keygen",
     {
-      "autofocus"?: string;
+      "autofocus"?: boolean;
       "challenge"?: string;
-      "disabled"?: string;
+      "disabled"?: boolean;
       "form"?: string;
       "keytype"?: string;
       "name"?: string;
@@ -420,12 +420,12 @@ export type LispyElements<Action> =
   | [
     "audio",
     {
-      "autoplay"?: string;
+      "autoplay"?: boolean;
       "buffered"?: string;
-      "controls"?: string;
+      "controls"?: boolean;
       "crossorigin"?: string;
-      "loop"?: string;
-      "muted"?: string;
+      "loop"?: boolean;
+      "muted"?: boolean;
       "preload"?: string;
       "src"?: string;
     } & CommonAttributes<Action>,
@@ -434,13 +434,13 @@ export type LispyElements<Action> =
   | [
     "video",
     {
-      "autoplay"?: string;
+      "autoplay"?: boolean;
       "buffered"?: string;
-      "controls"?: string;
+      "controls"?: boolean;
       "crossorigin"?: string;
       "height"?: string;
-      "loop"?: string;
-      "muted"?: string;
+      "loop"?: boolean;
+      "muted"?: boolean;
       "poster"?: string;
       "preload"?: string;
       "src"?: string;
@@ -460,7 +460,7 @@ export type LispyElements<Action> =
     "marquee",
     {
       "bgcolor"?: string;
-      "loop"?: string;
+      "loop"?: boolean;
     } & CommonAttributes<Action>,
     (LispyElements<Action> | string)[]?,
   ]
@@ -492,8 +492,8 @@ export type LispyElements<Action> =
   | [
     "command",
     {
-      "checked"?: string;
-      "disabled"?: string;
+      "checked"?: boolean;
+      "disabled"?: boolean;
       "icon"?: string;
       "radiogroup"?: string;
       "type"?: string;
@@ -569,7 +569,7 @@ export type LispyElements<Action> =
   | [
     "track",
     {
-      "default"?: string;
+      "default"?: boolean;
       "kind"?: string;
       "label"?: string;
       "src"?: string;
@@ -580,7 +580,7 @@ export type LispyElements<Action> =
   | [
     "fieldset",
     {
-      "disabled"?: string;
+      "disabled"?: boolean;
       "form"?: string;
       "name"?: string;
     } & CommonAttributes<Action>,
@@ -589,7 +589,7 @@ export type LispyElements<Action> =
   | [
     "optgroup",
     {
-      "disabled"?: string;
+      "disabled"?: boolean;
       "label"?: string;
     } & CommonAttributes<Action>,
     (LispyElements<Action> | string)[]?,
@@ -597,9 +597,9 @@ export type LispyElements<Action> =
   | [
     "option",
     {
-      "disabled"?: string;
+      "disabled"?: boolean;
       "label"?: string;
-      "selected"?: string;
+      "selected"?: boolean;
       "value"?: string;
     } & CommonAttributes<Action>,
     (LispyElements<Action> | string)[]?,
@@ -695,7 +695,7 @@ export type LispyElements<Action> =
   | [
     "bgsound",
     {
-      "loop"?: string;
+      "loop"?: boolean;
     } & CommonAttributes<Action>,
     (LispyElements<Action> | string)[]?,
   ]
@@ -721,7 +721,7 @@ export type LispyElements<Action> =
     "style",
     {
       "media"?: string;
-      "scoped"?: string;
+      "scoped"?: boolean;
       "type"?: string;
     } & CommonAttributes<Action>,
     (LispyElements<Action> | string)[]?,
@@ -744,14 +744,14 @@ export type LispyElements<Action> =
   | [
     "details",
     {
-      "open"?: string;
+      "open"?: boolean;
     } & CommonAttributes<Action>,
     (LispyElements<Action> | string)[]?,
   ]
   | [
     "ol",
     {
-      "reversed"?: string;
+      "reversed"?: boolean;
       "start"?: string;
     } & CommonAttributes<Action>,
     (LispyElements<Action> | string)[]?,

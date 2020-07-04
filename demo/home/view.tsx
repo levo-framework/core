@@ -46,7 +46,7 @@ export const view = (
         <input
           id="checkbox"
           type="checkbox"
-          checked={isEven ? "true" : undefined}
+          checked={isEven}
         />
         <input id="input" value={isEven ? "even" : "odd"} />
       </div>
