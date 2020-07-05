@@ -12,30 +12,35 @@ export namespace Levo {
     action: Action,
   ) => EventHandler;
 
-  export type Init<Model, Action> = (args: {
+  export type Init<Model, Action, Environment> = (args: {
     model: Model;
     dispatch: (action: Action) => void;
+    environment: Environment;
   }) => void;
 
-  export type Update<Model, Action> = (args: {
+  export type Update<Model, Action, Environment> = (args: {
     model: Model;
     action: Action;
     event?: unknown;
+    environment: Environment;
   }) => {
     newModel: Model;
     then?: () => Promise<Action>;
   };
 
-  export const register = <Model, Action extends { $: string }>({
+  export const register = <Model, Action extends { $: string }, Environment>({
     init,
     view,
     update,
   }: {
-    init: Levo.Init<Model, Action>;
+    init: Levo.Init<Model, Action, Environment>;
     view: (
-      args: { model: Model; dispatch: Levo.Dispatch<Action> },
+      args: {
+        model: Model;
+        dispatch: Levo.Dispatch<Action>;
+      },
     ) => Levo.Element;
-    update: Levo.Update<Model, Action>;
+    update: Levo.Update<Model, Action, Environment>;
   }) => {
     //@ts-ignore
     if (typeof window !== undefined) {

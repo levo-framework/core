@@ -131,8 +131,9 @@ start({
   //@ts-ignore
   view: (model) => (window.$levo.view({ model, dispatch: createDispatch() })),
 
-  //@ts-ignore
-  update: window.$levo.update,
+  update: (args) =>
+    //@ts-ignore
+    window.$levo.update({ ...args, environment: window.$levo.environment }),
 
   //@ts-ignore
   onMount: window.$levo.init,
