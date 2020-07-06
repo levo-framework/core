@@ -136,7 +136,8 @@ start({
     window.$levo.update({ ...args, environment: window.$levo.environment }),
 
   //@ts-ignore
-  onMount: window.$levo.init,
+  onMount: (args) =>
+    window.$levo.init({ ...args, environment: window.$levo.environment }),
 
   //@ts-ignore
   log: window.$levo.log,

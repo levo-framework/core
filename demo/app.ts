@@ -9,9 +9,7 @@ LevoApp.start<Environment>({
     hostname: "0.0.0.0",
   },
   environment: {
-    AUTH_SERVER_URL: production
-      ? "https://prod.auth.com"
-      : "http://dev.auth.com",
+    VALUE_A: production ? "PROD_ENV" : "DEV_ENV",
   },
   minifyJs: production,
   cachePages: production,

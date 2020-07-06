@@ -112,6 +112,15 @@ describe("", () => {
     const diff2 = currentValue10 - currentValue9;
     expect(diff1).not.toEqual(diff2);
   }, 60000);
+
+  test("environment variables", async () => {
+    const page = await browser.newPage();
+    await page.goto("http://localhost:3000/banana");
+
+    const text = await page.$eval("#content", (el) => el.innerText);
+    expect(text.includes("Word2: DEV_ENV(set from server)")).toEqual(true);
+    expect(text.includes("Word3: DEV_ENV(set from browser)")).toEqual(true);
+  });
 });
 
 afterAll(async (done) => {

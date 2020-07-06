@@ -1,3 +1,3 @@
 export type Environment = {
-  AUTH_SERVER_URL: string;
+  VALUE_A: string;
 };

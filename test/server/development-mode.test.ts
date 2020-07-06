@@ -1,4 +1,4 @@
-import { assertEquals } from "../../src/deps.ts";
+import { assertEquals, assert } from "../../src/deps.ts";
 
 const demoAppPath = new URL("../../demo/app.ts", import.meta.url).href;
 
@@ -137,6 +137,14 @@ button { background-color: bisque; font-size: 24px; }
       assertEquals(await result.json(), { search: "?x=5&y=6" });
       assertEquals(result.headers.get("custom-lol"), "ha");
       assertEquals(result.status, 201);
+    },
+  },
+  {
+    name: "environment variables",
+    fn: async () => {
+      const result = await fetch("http://localhost:3000/banana");
+      const text = await result.text();
+      assert(text.includes("Word2: DEV_ENV(set from server)"));
     },
   },
   {
