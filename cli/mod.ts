@@ -14,7 +14,7 @@ Available commands:
     - Creates a new Levo page under the directory <directory_name>
 `;
 
-const main = async (): Promise<void> => {
+const main = async () => {
   const result = parse(Deno.args);
   if (result.help) {
     console.log(help);
