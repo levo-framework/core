@@ -20,7 +20,6 @@ export const LevoApp = {
     memoryCache: {
       maxNumberOfPages = 1024,
     } = {},
-    importMapPath,
   }: {
     /**
      * Options for configuring server, for example hostname and port number.
@@ -84,14 +83,7 @@ export const LevoApp = {
        */
       model?: boolean;
     };
-
-    importMapPath: URL;
   }) => {
-    const importMap = await Deno.readFile(importMapPath.pathname)
-      .then((result) => new TextDecoder().decode(result))
-      .then(JSON.parse)
-      .then((result) => result.imports);
-    console.log(importMap);
     const s = server.serve(serverOptions);
     const decoder = new TextDecoder("utf-8");
     const encoder = new TextEncoder();
