@@ -15,7 +15,6 @@ serve<Model, Action, Environment>({
       model: {
         word: "i am banana",
         word2: request.environment.VALUE_A + `(set from server)`,
-        word3: "",
       },
     });
   },
