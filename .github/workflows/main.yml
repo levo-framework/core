@@ -35,7 +35,9 @@ jobs:
       - name: Compare temp with ./lib/lib.deno_runtime.d.ts
         run: diff temp ./lib/lib.deno_runtime.d.ts
       - name: Compare temp with ./templates/new-project/lib/lib.deno_runtime.d.ts
-        run: diff temp ./templates/new-project/lib/lib.deno_runtime.d.ts
+        run: |
+          deno fmt temp
+          diff temp ./templates/new-project/lib/lib.deno_runtime.d.ts
 
   build:
     runs-on: ubuntu-latest
