@@ -26,7 +26,6 @@ export const view = (
         <meta property="twitter:description" content="A page" />
         <meta property="twitter:image" content="image.png" />
         <title>My Page</title>
-        <base href="./levo.assets/" />
         <link rel="shortcut icon" href="favicon.ico" />
         <link rel="stylesheet" href="index.css" />
       </head>

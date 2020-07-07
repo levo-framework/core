@@ -284,7 +284,7 @@ LevoApp.start<Environment>({
   // ...other options
 })
 ```
-The environment variables will be injected to `levo.client.ts` and `levo.server.ts` of each routes.
+The environment variables will be injected to `levo.server.ts` of each routes. Environment variables are not injected to client-side code for security reasons, thus to pass the values to browser, you can add a field in the `Model` type that should correspond to a property of the environment variable object.
 
 
 ## How do I run in Levo in production mode?

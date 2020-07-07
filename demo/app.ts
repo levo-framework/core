@@ -19,4 +19,5 @@ LevoApp.start<Environment>({
     patches: true,
     model: true,
   },
+  importMapPath: new URL("./import_map.json", import.meta.url),
 });

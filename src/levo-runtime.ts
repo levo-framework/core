@@ -131,13 +131,11 @@ start({
   //@ts-ignore
   view: (model) => (window.$levo.view({ model, dispatch: createDispatch() })),
 
-  update: (args) =>
-    //@ts-ignore
-    window.$levo.update({ ...args, environment: window.$levo.environment }),
+  //@ts-ignore
+  update: window.$levo.update,
 
   //@ts-ignore
-  onMount: (args) =>
-    window.$levo.init({ ...args, environment: window.$levo.environment }),
+  onMount: window.$levo.init,
 
   //@ts-ignore
   log: window.$levo.log,

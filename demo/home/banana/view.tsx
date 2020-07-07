@@ -15,9 +15,6 @@ export const view = (
         <div>
           Word2: {model.word2}
         </div>
-        <div>
-          Word3: {model.word3}
-        </div>
       </body>
     </html>
   );

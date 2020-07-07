@@ -1,6 +1,5 @@
 /** @jsx h */
 import { Levo, h } from "../../../mod/levo-view.ts";
-import { Environment } from "../../environment.ts";
 
 export namespace Counter {
   export type Model = {
@@ -14,7 +13,7 @@ export namespace Counter {
     };
   };
 
-  export const update: Levo.Update<Model, Action, Environment> = (
+  export const update: Levo.Update<Model, Action> = (
     { model, action, event },
   ) => {
     switch (action.$) {
