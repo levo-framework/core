@@ -142,7 +142,7 @@ export const LevoApp = {
         Array.from(Deno.readDirSync(dirname)).forEach((dir) => {
           if (dir.isDirectory) {
             scanDir(dirname + path.SEP + dir.name);
-          } else if (dir.isFile && dir.name === "levo.client.ts") {
+          } else if (dir.isFile && dir.name === "_client.ts") {
             const filename = dirname + path.SEP + dir.name;
             bundle(filename, { overrideCache: true });
           }
@@ -188,7 +188,7 @@ export const LevoApp = {
           : rootDir.pathname + path.SEP) + resolvedUrl;
 
         const acceptEncoding = req.headers.get("accept-encoding");
-        if (pathname.includes("levo.assets")) {
+        if (pathname.includes("_assets")) {
           if (!(await exists(pathname))) {
             await req.respond({ status: 404 });
             continue;
@@ -214,13 +214,13 @@ export const LevoApp = {
           : pathname + path.SEP;
 
         const handlerPath = new URL(
-          `levo.server.ts`,
+          `_server.ts`,
           `file://` + dirname,
         );
 
         if (!(await exists(handlerPath.pathname))) {
           console.error(
-            `No levo.server.ts found under at ${handlerPath.pathname}`,
+            `_server.ts not found under at ${handlerPath.pathname}`,
           );
           await req.respond({ status: 404 });
           continue;
@@ -281,7 +281,7 @@ export const LevoApp = {
                   break;
                 }
                 case "page": {
-                  const filename = dirname + "levo.client.ts";
+                  const filename = dirname + "_client.ts";
                   console.log(`Trying to bundle: ${filename}`);
                   const code = await bundle(filename);
                   const initialHeaders = new Headers();

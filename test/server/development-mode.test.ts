@@ -15,8 +15,7 @@ const tests: {
   fn: () => Promise<void>;
 }[] = [
   {
-    name:
-      "serve webpage based on directory that has levo.client.ts (top-level)",
+    name: "serve webpage based on directory that has _client.ts (top-level)",
     fn: async () => {
       const result = await fetch("http://localhost:3000");
       assertEquals(result.headers.get("content-type"), "text/html");
@@ -25,7 +24,7 @@ const tests: {
   },
   {
     name:
-      "serve webpage based on directory that has levo.client.ts (nested directory)",
+      "serve webpage based on directory that has _client.ts (nested directory)",
     fn: async () => {
       const result = await fetch("http://localhost:3000/about");
       assertEquals(result.headers.get("content-type"), "text/html");
@@ -60,10 +59,10 @@ const tests: {
     },
   },
   {
-    name: "serve asset under levo.assets",
+    name: "serve asset under _assets",
     fn: async () => {
       const result = await fetch(
-        "http://localhost:3000/levo.assets/index.css",
+        "http://localhost:3000/_assets/index.css",
       );
       assertEquals(
         await result.text(),
@@ -83,7 +82,7 @@ button { background-color: bisque; font-size: 24px; }
       const headers = new Headers();
       headers.set("Accept-Encoding", "br, gzip");
       const result = await fetch(
-        "http://localhost:3000/levo.assets/index.css",
+        "http://localhost:3000/_assets/index.css",
         {
           headers,
         },
@@ -99,7 +98,7 @@ button { background-color: bisque; font-size: 24px; }
       const headers = new Headers();
       headers.set("Accept-Encoding", "gzip");
       const result = await fetch(
-        "http://localhost:3000/levo.assets/index.css",
+        "http://localhost:3000/_assets/index.css",
         {
           headers,
         },
@@ -110,7 +109,7 @@ button { background-color: bisque; font-size: 24px; }
     },
   },
   {
-    name: "return 404 when querying directory without levo.client.ts",
+    name: "return 404 when querying directory without _client.ts",
     fn: async () => {
       const headers = new Headers();
       headers.set("Accept-Encoding", "gzip");
@@ -149,15 +148,14 @@ button { background-color: bisque; font-size: 24px; }
   },
   {
     name:
-      "updating levo.server.ts should work when server is running in no-cache mode",
+      "updating _server.ts should work when server is running in no-cache mode",
     fn: async () => {
       const result = await fetch("http://localhost:3000/banana");
       assertEquals((await result.text()).includes("i am banana"), true);
       const decoder = new TextDecoder();
       const encoder = new TextEncoder();
-      const path =
-        new URL("../../demo/home/banana/levo.server.ts", import.meta.url)
-          .pathname;
+      const path = new URL("../../demo/home/banana/_server.ts", import.meta.url)
+        .pathname;
       const fileContent = decoder.decode(await Deno.readFile(path));
       await Deno.writeFile(
         path,
