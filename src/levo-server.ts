@@ -10,7 +10,9 @@ import { regeneratorRuntimeCode } from "./regenerator-runtime-raw.ts";
 import { MemoryCache } from "./memory-cache.ts";
 
 export const LevoApp = {
-  start: async ({
+  start: async <Environment>({
+    serverOptions,
+    environment,
     minifyJs,
     cachePages,
     rootDir,
@@ -18,8 +20,17 @@ export const LevoApp = {
     memoryCache: {
       maxNumberOfPages = 1024,
     } = {},
-    ...options
-  }: server.HTTPOptions & {
+  }: {
+    /**
+     * Options for configuring server, for example hostname and port number.
+     */
+    serverOptions: server.HTTPOptions;
+
+    /**
+     * Environment variables that will be passed to client and server files.
+     */
+    environment: Environment;
+
     /**
      * Root directory for serving web pages.  
      * For example, if you want to specify `./src/root`, 
@@ -73,7 +84,7 @@ export const LevoApp = {
       model?: boolean;
     };
   }) => {
-    const s = server.serve(options);
+    const s = server.serve(serverOptions);
     const decoder = new TextDecoder("utf-8");
     const encoder = new TextEncoder();
 
@@ -141,7 +152,8 @@ export const LevoApp = {
     }
 
     console.log(
-      `Server listening on ${options.hostname ?? "0.0.0.0"}:${options.port}`,
+      `Server listening on ${serverOptions.hostname ??
+        "0.0.0.0"}:${serverOptions.port}`,
     );
 
     if (!(await exists(rootDir.pathname))) {
@@ -232,6 +244,7 @@ export const LevoApp = {
           method: req.method,
           headers: req.headers,
           search: url.search,
+          environment,
         });
         worker.addEventListener(
           "message",

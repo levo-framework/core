@@ -1,8 +1,9 @@
 import { view } from "./view.tsx";
 import { Model, Action } from "./types.ts";
 import { serve } from "./../../../mod/levo-serve.ts";
+import { Environment } from "../../environment.ts";
 
-serve<Model, Action>({
+serve<Model, Action, Environment>({
   getResponse: async (request, respond) => {
     const params = new URLSearchParams(request.search);
     const redirect = params.get("redirect");
@@ -13,6 +14,7 @@ serve<Model, Action>({
       view,
       model: {
         word: "i am banana",
+        word2: request.environment.VALUE_A + `(set from server)`,
       },
     });
   },

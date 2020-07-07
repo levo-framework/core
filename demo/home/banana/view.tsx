@@ -8,8 +8,13 @@ export const view = (
   const { model, dispatch } = props;
   return (
     <html>
-      <body>
-        {model.word}
+      <body id="content">
+        <div>
+          {model.word}
+        </div>
+        <div>
+          Word2: {model.word2}
+        </div>
       </body>
     </html>
   );

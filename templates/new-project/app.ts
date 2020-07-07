@@ -1,11 +1,23 @@
 import { LevoApp } from "../../mod/levo-app.ts";
+import { Environment } from "./environment.ts";
 
-const production = Deno.args.includes("--production");
-LevoApp.start({
-  hostname: "0.0.0.0",
-  port: 5000,
-  minifyJs: production,
-  cachePages: production,
+const PRODUCTION = Deno.args.includes("--production");
+LevoApp.start<Environment>({
+  serverOptions: {
+    hostname: "0.0.0.0",
+    port: 5000,
+  },
+  environment: PRODUCTION
+    ? {
+      VALUE_A: "xxx",
+      VALUE_B: "yyy",
+    }
+    : {
+      VALUE_A: "aaa",
+      VALUE_B: "bbb",
+    },
+  minifyJs: PRODUCTION,
+  cachePages: PRODUCTION,
   rootDir: new URL("./root", import.meta.url),
-  loggingOptions: production ? undefined : { model: true, action: true },
+  loggingOptions: PRODUCTION ? undefined : { model: true, action: true },
 });

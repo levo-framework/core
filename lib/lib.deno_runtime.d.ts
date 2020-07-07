@@ -3,6 +3,22 @@
 /// <reference no-default-lib="true" />
 /// <reference lib="esnext" />
 
+declare interface ImportMeta {
+  /** A string representation of the fully qualified module URL. */
+  url: string;
+
+  /** A flag that indicates if the current module is the main module that was
+   * called when starting the program under Deno.
+   *
+   * ```ts
+   * if (import.meta.main) {
+   *   // this was loaded as the main module, maybe do some bootstrapping
+   * }
+   * ```
+   */
+  main: boolean;
+}
+
 declare namespace Deno {
   /** A set of error constructors that are raised by Deno APIs. */
   export const errors: {
@@ -1779,9 +1795,15 @@ declare namespace Deno {
   export class Process<T extends RunOptions = RunOptions> {
     readonly rid: number;
     readonly pid: number;
-    readonly stdin: T["stdin"] extends "piped" ? Writer & Closer : null;
-    readonly stdout: T["stdout"] extends "piped" ? Reader & Closer : null;
-    readonly stderr: T["stderr"] extends "piped" ? Reader & Closer : null;
+    readonly stdin: T["stdin"] extends "piped"
+      ? Writer & Closer
+      : (Writer & Closer) | null;
+    readonly stdout: T["stdout"] extends "piped"
+      ? Reader & Closer
+      : (Writer & Closer) | null;
+    readonly stderr: T["stderr"] extends "piped"
+      ? Reader & Closer
+      : (Writer & Closer) | null;
     /** Resolves to the current status of the process. */
     status(): Promise<ProcessStatus>;
     /** Buffer the stdout until EOF and return it as `Uint8Array`.
@@ -2164,6 +2186,10 @@ declare function clearInterval(id?: number): void;
  */
 declare function clearTimeout(id?: number): void;
 
+interface VoidFunction {
+  (): void;
+}
+
 /** A microtask is a short function which is executed after the function or
  * module which created it exits and only if the JavaScript execution stack is
  * empty, but before returning control to the event loop being used to drive the
@@ -2172,7 +2198,7 @@ declare function clearTimeout(id?: number): void;
  *
  *     queueMicrotask(() => { console.log('This event loop stack is complete'); });
  */
-declare function queueMicrotask(func: Function): void;
+declare function queueMicrotask(func: VoidFunction): void;
 
 declare var console: Console;
 declare var crypto: Crypto;
@@ -2210,11 +2236,6 @@ declare function removeEventListener(
   callback: EventListenerOrEventListenerObject | null,
   options?: boolean | EventListenerOptions | undefined
 ): void;
-
-declare interface ImportMeta {
-  url: string;
-  main: boolean;
-}
 
 interface DomIterable<K, V> {
   keys(): IterableIterator<K>;

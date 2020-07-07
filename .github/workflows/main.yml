@@ -23,6 +23,22 @@ jobs:
       - name: Format Check
         run: sh ./tools/format.sh --check
 
+  verify-deno-types:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: denolib/setup-deno@master
+        with:
+          deno-version: v1.1.3 
+      - name: Write type into temp
+        run: deno types > temp
+      - name: Compare temp with ./lib/lib.deno_runtime.d.ts
+        run: diff temp ./lib/lib.deno_runtime.d.ts
+      - name: Compare temp with ./templates/new-project/lib/lib.deno_runtime.d.ts
+        run: |
+          deno fmt temp
+          diff temp ./templates/new-project/lib/lib.deno_runtime.d.ts
+
   build:
     runs-on: ubuntu-latest
     steps:
