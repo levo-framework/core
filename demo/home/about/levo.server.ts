@@ -2,8 +2,9 @@ import { view } from "./view.tsx";
 import { Model, Action } from "./types.ts";
 import { serve } from "./../../../mod/levo-serve.ts";
 import { Counter } from "./counter.tsx";
+import { Environment } from "../../environment.ts";
 
-serve<Model, Action>({
+serve<Model, Action, Environment>({
   getResponse: async (request, response) => {
     return response.page({
       view,
