@@ -33,10 +33,7 @@ export namespace Levo {
   }: {
     init: Levo.Init<Model, Action>;
     view: (
-      args: {
-        model: Model;
-        dispatch: Levo.Dispatch<Action>;
-      },
+      args: { model: Model; dispatch: Levo.Dispatch<Action> },
     ) => Levo.Element;
     update: Levo.Update<Model, Action>;
   }) => {
