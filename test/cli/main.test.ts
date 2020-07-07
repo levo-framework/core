@@ -51,6 +51,7 @@ Deno.test({
           [".gitignore"],
           ["README.md"],
           ["app.ts"],
+          ["environment.ts"],
           ["lib", [
             ["lib.deno_runtime.d.ts"],
           ]],
@@ -72,6 +73,7 @@ Deno.test({
       ]],
       ["README.md"],
       ["app.ts"],
+      ["environment.ts"],
       ["lib", [
         ["lib.deno_runtime.d.ts"],
       ]],
