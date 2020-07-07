@@ -260,6 +260,33 @@ One of the biggest drawback of using JSX is that the type of children cannot be 
 </div>
 ```
 
+## How to set environment variables?
+Unlike webpack etc, Levo don't magically replace specified names with environment variables value, instead, you have to do it explicitly at:
+- `app.ts`
+- `environment.ts`
+
+In `environment.ts`, you need to declare the environment object type, for example:
+```ts
+export type Environment = {
+    AUTH_SERVER_URL: string
+}
+```
+Then, in `app.ts` you have to specify the value depending on the shell arguments:
+```ts
+const production = Deno.args.includes("--production");
+LevoApp.start<Environment>({
+  environment: {
+    AUTH_SERVER_URL: 
+      production 
+        ? "https://wateracid/x/prod" 
+        : "https://wateracid/x/dev",
+  },
+  // ...other options
+})
+```
+The environment variables will be injected to `levo.client.ts` and `levo.server.ts` of each routes.
+
+
 ## How do I run in Levo in production mode?
 Simply use the `--production` flag:
 ```
