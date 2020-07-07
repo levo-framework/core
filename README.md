@@ -105,9 +105,9 @@ It's important to keep the following rules in mind in order to for Levo to perfo
     * Secondly, a lot of compile time will be wasted by compiling unused dependencies
 * Component should never have private state, all state should be stored in one true global source
 * Routing is based on directory, so name them carefully
-* Never rename files or folder that starts with `levo.`, for example `levo.client.ts`
-* Never import server-specific code in `levo.client.ts`
-* Never import browser-specific code in `levo.server.ts`
+* Never rename files or folder that starts with `_`, for example `_client.ts`
+* Never import server-specific code in `_client.ts`
+* Never import browser-specific code in `_server.ts`
 * Always create new pages using the CLI tool `levo`
 * Always write CSS in `index.css` instead of `view.ts` whenever possible
 
@@ -157,29 +157,27 @@ levo new-page root/about/terms-and-condition
 ## What does each Levo page consist of?
 Each Levo page consists of the following files/folder:
 ```
-levo.assets    
-levo.server.ts
-levo.client.ts 
-model.ts       
-action.ts      
+_assets    
+_server.ts
+_client.ts 
+types.ts
 update.ts
 view.ts
 init.ts        
 ```
-- `levo.assets`
+- `_assets`
     - This folder host assets such as CSS stylesheets, images etc, which can be imported by `view.ts`
 
-- `levo.server.ts` 
+- `_server.ts` 
     - this file is the script that will be executed by the server when client requested a URL that correlates to the directory name (relative to root folder) of this page.
     - the purpose of this file is to query initial data that is required to render the page
     - this file can be also used to return a redirection or a customized response (e.g. json, txt etc)
-- `levo.client.ts`
+- `_client.ts`
     - this file is the entry file that will be executed by the browser
     - this file shouldn't be modified by user unless necessary
-- `model.ts`
+- `types.ts`
     - this file is used to specify the `Model` type that will be used to render dynamic content on the page
-- `action.ts`
-    - this file is used to specify the actions that can be executed by client on the page
+    - this file is also used to specify the actions that can be executed by client on the page
     - note that the action type must be a [discriminated union](https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions) where the discriminated/tag must be named as `$`.
 - `update.ts`
     - this file is used to specify how the model should be updated give an action 
@@ -191,8 +189,8 @@ init.ts
 
 
 ## Which file/folders should not be renamed?
-You can rename every `.ts` file/folder in a Levo as long as it's not prefixed with `levo.`. 
-For example, you shouldn't rename `levo.server.ts` and `levo.client.ts` etc.
+You can rename every `.ts` file/folder in a Levo as long as it's not prefixed with `_`. 
+For example, you shouldn't rename `_server.ts` and `_client.ts` etc.
 
 ## Do I need to restart the server when I add or modify some pages?
 No, provided that you are running Levo server in development mode (which is the default settings).  This is because every page will be re-compiled on each request. However note that the server will die if there are compile errors.
@@ -210,7 +208,7 @@ root/
     about/
         policy/
 ```
-If client requested a page at `/root/about/policy`, the the `levo.server.ts` under the `policy` directory will be executed.
+If client requested a page at `/root/about/policy`, the the `_server.ts` under the `policy` directory will be executed.
 
 ## Wildcard path routing
 This feature is useful when you want to design dynamic path.  
@@ -219,9 +217,9 @@ For example, if you want to setup a path like this `/[user]/profile`, then you s
 root/
     _/
         profile/
-            levo.server.ts
+            _server.ts
 ```
-When client request for `/john/profile` or `/bob/profile`, the `levo.server.ts` script under `_/profile` will be executed.  
+When client request for `/john/profile` or `/bob/profile`, the `_server.ts` script under `_/profile` will be executed.  
 
 ### Exact path VS Wildcard path
 Note that exact path routing has a higher precedence than wildcard path routing.  
@@ -230,13 +228,13 @@ For example, if you have the following directory structure:
 root/
     admin/
         profile/
-            levo.server.ts
+            _server.ts
     _/
         profile/
-            levo.server.ts
+            _server.ts
 ```
-If client request for `/admin/profile`, the `levo.server.ts` under `/admin/profile` will be executed.   
-Otherwise if client request for `/X/profile` where `X` is any string other than `admin`, the `levo.server.ts` under `_/profile` will be executed.
+If client request for `/admin/profile`, the `_server.ts` under `/admin/profile` will be executed.   
+Otherwise if client request for `/X/profile` where `X` is any string other than `admin`, the `_server.ts` under `_/profile` will be executed.
 
 ### How do I change the site root to other folder?
 You can modified this at `app.ts` by chaging the `rootDir` value to the value you want.
@@ -284,7 +282,7 @@ LevoApp.start<Environment>({
   // ...other options
 })
 ```
-The environment variables will be injected to `levo.server.ts` of each routes. Environment variables are not injected to client-side code for security reasons, thus to pass the values to browser, you can add a field in the `Model` type that should correspond to a property of the environment variable object.
+The environment variables will be injected to `_server.ts` of each routes. Environment variables are not injected to client-side code for security reasons, thus to pass the values to browser, you can add a field in the `Model` type that should correspond to a property of the environment variable object.
 
 
 ## How do I run in Levo in production mode?

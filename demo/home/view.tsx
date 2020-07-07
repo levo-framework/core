@@ -11,7 +11,7 @@ export const view = (
   return (
     <html>
       <head>
-        <link rel="stylesheet" href="./levo.assets/index.css" />
+        <link rel="stylesheet" href="./_assets/index.css" />
       </head>
       <div id="current-value">
         {model.currentValue}

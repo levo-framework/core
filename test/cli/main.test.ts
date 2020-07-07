@@ -55,13 +55,13 @@ Deno.test({
             ["lib.deno_runtime.d.ts"],
           ]],
           ["root", [
-            ["levo.assets", [
+            ["_assets", [
               ["favicon.ico"],
               ["favicon.svg"],
               ["index.css"],
             ]],
-            ["levo.client.ts"],
-            ["levo.server.ts"],
+            ["_client.ts"],
+            ["_server.ts"],
             ["types.ts"],
             ["update.test.ts"],
             ["update.ts"],
@@ -76,15 +76,15 @@ Deno.test({
         ["lib.deno_runtime.d.ts"],
       ]],
       ["root", [
-        ["levo.assets", [
+        ["_assets", [
           ["favicon.ico"],
           ["favicon.svg"],
           ["index.css"],
         ]],
-        ["levo.client.ts"],
-        ["levo.server.ts"],
+        ["_client.ts"],
+        ["_server.ts"],
         ["robots.txt", [
-          ["levo.server.ts"],
+          ["_server.ts"],
         ]],
         ["types.ts"],
         ["update.test.ts"],
