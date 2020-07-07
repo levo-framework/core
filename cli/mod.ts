@@ -76,6 +76,13 @@ const main = async () => {
         tempName + path.SEP + "templates",
         projectName + path.SEP + ".levo.templates",
       );
+
+      // Remove robots.txt from new-page templates
+      await Deno.remove(
+        projectName + path.SEP + ".levo.templates/new-project/root/robots.txt",
+        { recursive: true },
+      );
+
       await Deno.remove(tempName, { recursive: true });
       console.log(`Levo app successfully created at ${projectName}`);
       console.log(`Run the following command to get started:\n`);

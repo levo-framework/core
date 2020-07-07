@@ -1,5 +1,5 @@
 import { getDirectoryTree } from "../../src/get-directory-tree.ts";
-import { assertEquals, assert, path } from "../../src/deps.ts";
+import { assertEquals, assert, path, exists } from "../../src/deps.ts";
 
 Deno.test({
   name: "new-project and new-page command",
@@ -62,9 +62,6 @@ Deno.test({
             ]],
             ["levo.client.ts"],
             ["levo.server.ts"],
-            ["robots.txt", [
-              ["levo.server.ts"],
-            ]],
             ["types.ts"],
             ["update.test.ts"],
             ["update.ts"],
@@ -147,6 +144,7 @@ Deno.test({
     await runCommand(
       `../bin/levo new-page ./root/about`,
     );
+    assertEquals(await exists("./root/about/robots.txt"), false);
     Deno.chdir("..");
     const response2 = await fetch("http://localhost:5000/about");
     assertEquals(response2.status, 200);
