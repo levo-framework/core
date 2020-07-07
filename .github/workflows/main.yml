@@ -12,6 +12,12 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  lint-shell-script:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - run: shellcheck ./**/*.sh
+
   format-check:
     runs-on: ubuntu-latest
     steps:
