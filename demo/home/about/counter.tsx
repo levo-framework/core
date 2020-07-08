@@ -14,7 +14,7 @@ export namespace Counter {
   };
 
   export const update: Levo.Update<Model, Action> = (
-    { model, action, event },
+    { model, action },
   ) => {
     switch (action.$) {
       case "add": {

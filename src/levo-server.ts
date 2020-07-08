@@ -83,7 +83,7 @@ export const LevoApp = {
        */
       model?: boolean;
     };
-  }) => {
+  }): Promise<void> => {
     const s = server.serve(serverOptions);
     const decoder = new TextDecoder("utf-8");
     const encoder = new TextEncoder();
@@ -234,7 +234,6 @@ export const LevoApp = {
               : `?${(Math.random() * 1000000)}`),
           {
             type: "module",
-            //@ts-ignore
             deno: true,
           },
         );

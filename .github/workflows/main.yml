@@ -12,6 +12,17 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Shellcheck
+        run: shellcheck ./**/*.sh
+      - name: Install node modules
+        run: npm install
+      - name: ES Lint
+        run: npm run eslint
+
   format-check:
     runs-on: ubuntu-latest
     steps:
@@ -47,7 +58,7 @@ jobs:
         with:
          deno-version: v1.1.3 
       - name: Bundle levo-runtime
-        run: deno run --unstable --allow-run --allow-write tools/bundle-levo-runtime.ts
+        run: sh ./tools/bundle-levo-runtime.sh
       - name: Verify levo-runtime-raw.ts is up-to-date
         run: sh ./tools/verify-levo-runtime-raw.sh
 

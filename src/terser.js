@@ -1,4 +1,5 @@
 // deno-fmt-ignore-file
+/* eslint-disable */
 //@ts-nocheck
 /**
  * UglifyJS is released under the BSD license: 

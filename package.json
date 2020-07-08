@@ -1,0 +1,35 @@
+{
+  "name": "levo-framework",
+  "version": "1.0.0",
+  "description": "![](https://github.com/levo-framework/core/workflows/CI/badge.svg)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "test"
+  },
+  "dependencies": {
+    "babel-preset-env": "^1.7.0",
+    "typescript": "^3.9.6",
+    "typescript-deno-plugin": "^1.30.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^3.6.0",
+    "@typescript-eslint/parser": "^3.6.0",
+    "eslint": "^7.4.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "eslint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/levo-framework/core.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/levo-framework/core/issues"
+  },
+  "homepage": "https://github.com/levo-framework/core#readme"
+}

@@ -4,7 +4,6 @@ const demoAppPath = new URL("../../demo/app.ts", import.meta.url).href;
 
 const server = new Worker(demoAppPath, {
   type: "module",
-  //@ts-ignore
   deno: true,
 });
 

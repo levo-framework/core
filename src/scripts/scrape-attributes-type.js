@@ -3,7 +3,6 @@
  * from https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes
  */
 
-//@ts-nocheck
 (() => {
   const data = Array.from(document.getElementsByTagName("tr")).slice(1).map(
     (tr) => {
@@ -33,6 +32,7 @@
         [element]: [...(result[element] ?? []), attributeName],
       };
     }, {});
+  console.log(elements);
   const attrTypeName = (attr) => `Attribute_${attr.replace(/(-|\*)/g, "_")}`;
   const elementTypes = Object.entries(elements)
     .map(([element, attributes]) => {
@@ -47,7 +47,6 @@ ${attributes.map((attr) => `  & ${attrTypeName(attr)}`).join("\n")}
   const attributeTypes = data.map(({
     attributeName,
     link,
-    elements,
     description,
   }) => {
     return `

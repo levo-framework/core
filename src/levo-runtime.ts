@@ -5,6 +5,19 @@ import { mount } from "./mount.ts";
 import { applyPatches } from "./apply-patches.ts";
 import { createDispatch } from "../mod/levo-view.ts";
 
+declare global {
+  interface Window {
+    $$h?: unknown;
+    $levo?: {
+      model?: unknown;
+      view: unknown;
+      update?: unknown;
+      init?: unknown;
+      log?: unknown;
+    };
+  }
+}
+
 const start = <Model, Action extends { $: string }>({
   at,
   view,
@@ -32,9 +45,11 @@ const start = <Model, Action extends { $: string }>({
   if (!at) {
     throw new Error("Root element is undefined");
   }
-  let { node, virtualNode: currentVirtualNode } = mount({
+  const mounted = mount({
     virtualNode: view(initialModel),
   });
+  const node = mounted.node;
+  let currentVirtualNode = mounted.virtualNode;
   let currentModel = initialModel;
 
   // Make root node child-less
@@ -104,19 +119,16 @@ const start = <Model, Action extends { $: string }>({
 
   onMount({ model: currentModel, dispatch: handler });
 
-  //@ts-ignore
-  window.$$h = handler;
+  window.$$h = handler as (action: Record<string, unknown> | undefined) => void;
 };
 
-//@ts-ignore
-if (!window.$levo.view) {
+if (!window.$levo?.view) {
   throw new Error(
     "You might have forgot to call Levo.registerView at levo.view.ts",
   );
 }
 
-//@ts-ignore
-if (!window.$levo.update) {
+if (!window.$levo?.update) {
   throw new Error(
     "You might have forgot to call Levo.registerUpdater at levo.updater.ts",
   );
@@ -124,19 +136,11 @@ if (!window.$levo.update) {
 
 start({
   at: document,
-
-  //@ts-ignore
   initialModel: window.$levo.model,
-
-  //@ts-ignore
-  view: (model) => (window.$levo.view({ model, dispatch: createDispatch() })),
-
-  //@ts-ignore
-  update: window.$levo.update,
-
-  //@ts-ignore
-  onMount: window.$levo.init,
-
-  //@ts-ignore
-  log: window.$levo.log,
+  view: (
+    model,
+  ) => ((window.$levo?.view as any)({ model, dispatch: createDispatch() })),
+  update: window.$levo.update as any,
+  onMount: window.$levo.init as any,
+  log: window.$levo?.log as any,
 });

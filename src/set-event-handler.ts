@@ -7,7 +7,7 @@ export const setEventHandler = <Action>({
   element: HTMLElement;
   eventName: string;
   action: Action;
-}) => {
+}): void => {
   if (action !== undefined) {
     (element as any)[eventName] = () => $$h(action);
   }

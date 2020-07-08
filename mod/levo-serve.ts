@@ -13,14 +13,14 @@ export type LevoRequest<Environment> = {
 
 export type Responder<Model, Action extends { $: string }> = {
   page: (
-    {}: {
+    args: {
       model: Model;
       view: (
         props: { model: Model; dispatch: Levo.Dispatch<Action> },
       ) => Levo.Element;
     },
   ) => LevoServeResponse<Model>;
-  redirect: ({}: { url: string }) => LevoServeResponse<Model>;
+  redirect: (args: { url: string }) => LevoServeResponse<Model>;
   custom: (response: CustomResponse) => LevoServeResponse<Model>;
 };
 
@@ -31,7 +31,7 @@ export const serve = <Model, Action extends { $: string }, Environment>({
     req: LevoRequest<Environment>,
     respond: Responder<Model, Action>,
   ) => Promise<LevoServeResponse<Model>>;
-}) => {
+}): void => {
   self.onmessage = async (event: { data: LevoRequest<Environment> }) => {
     try {
       const response = await getResponse(event.data, {
