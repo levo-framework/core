@@ -1,5 +1,7 @@
 import { LevoApp } from "../mod/levo-app.ts";
 import { Environment } from "./environment.ts";
+import { compression } from "../src/compression.ts";
+import { helmet } from "../src/helmet.ts";
 
 const production = Deno.args.includes("--production");
 
@@ -19,4 +21,8 @@ LevoApp.start<Environment>({
     patches: true,
     model: true,
   },
+  processResponseMiddlewares: [
+    compression,
+    helmet,
+  ],
 });

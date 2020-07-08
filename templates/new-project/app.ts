@@ -1,4 +1,5 @@
 import { LevoApp } from "../../mod/levo-app.ts";
+import { compression, helmet } from "../../mod/levo-middlewares.ts";
 import { Environment } from "./environment.ts";
 
 const PRODUCTION = Deno.args.includes("--production");
@@ -20,4 +21,8 @@ LevoApp.start<Environment>({
   cachePages: PRODUCTION,
   rootDir: new URL("./root", import.meta.url),
   loggingOptions: PRODUCTION ? undefined : { model: true, action: true },
+  processResponseMiddlewares: [
+    compression,
+    helmet,
+  ],
 });
