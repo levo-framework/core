@@ -1,2 +1,2 @@
-export const camelToKebab = (s: string) =>
+export const camelToKebab = (s: string): string =>
   s.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, "$1-$2").toLowerCase();

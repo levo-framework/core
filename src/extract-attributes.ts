@@ -6,7 +6,6 @@ export const extractAttributes = <Action>(
 ): Omit<VirtualNode<Action>, "ref" | "style" | "events" | "$" | "children"> => {
   const { style, $, children, ...attributes } = virtualNode;
   if ("ref" in attributes) {
-    //@ts-ignore
     delete attributes["ref"];
   }
   return attributes;

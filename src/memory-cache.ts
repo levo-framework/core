@@ -10,11 +10,11 @@ export class MemoryCache<T> {
   /**
    * For testing purposes only
    */
-  public _getCache() {
+  public _getCache(): Record<string, T | undefined> {
     return this.cache;
   }
 
-  public _getRetrievalFrequency() {
+  public _getRetrievalFrequency(): Record<string, number> {
     return this.retrievalFrequency;
   }
 
@@ -23,7 +23,7 @@ export class MemoryCache<T> {
     return this.cache[key];
   }
 
-  public set(key: string, value: T) {
+  public set(key: string, value: T): void {
     if (Object.keys(this.cache).length >= this.maxNumberOfKeys) {
       // Replace the key with the least retrieval frequency
       const [leastRetrievedKey] = Object.keys(this.cache).reduce(

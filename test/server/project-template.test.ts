@@ -4,7 +4,6 @@ const server = new Worker(
   new URL("./../../templates/new-project/app.ts", import.meta.url).href,
   {
     type: "module",
-    //@ts-ignore
     deno: true,
   },
 );

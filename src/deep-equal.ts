@@ -1,14 +1,13 @@
 // Modified from: https://raw.githubusercontent.com/epoberezkin/fast-deep-equal/master/src/index.jst
-
-//@ts-nocheck
-
-export function deepEqual<T>(a: T, b: T) {
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+export function deepEqual<T>(a: T, b: T): boolean {
   if (a === b) return true;
 
   if (a && b && typeof a === "object" && typeof b === "object") {
     if (a.constructor !== b.constructor) return false;
 
-    var length, i, keys;
+    let length, i;
     if (Array.isArray(a)) {
       length = a.length;
       if (length != b.length) return false;
@@ -60,7 +59,7 @@ export function deepEqual<T>(a: T, b: T) {
       return a.toString() === b.toString();
     }
 
-    keys = Object.keys(a);
+    const keys = Object.keys(a);
     length = keys.length;
     if (length !== Object.keys(b).length) return false;
 
@@ -69,7 +68,7 @@ export function deepEqual<T>(a: T, b: T) {
     }
 
     for (i = length; i-- !== 0;) {
-      var key = keys[i];
+      const key = keys[i];
       if (!deepEqual(a[key], b[key])) return false;
     }
 

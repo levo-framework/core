@@ -2,7 +2,12 @@ import { arrayDiff } from "./array-diff.ts";
 import { deepEqual } from "./deep-equal.ts";
 
 export const computeAttributesUpdates = <
-  RecordReturnType extends boolean | string | number | object | undefined,
+  RecordReturnType extends
+    | boolean
+    | string
+    | number
+    | Record<string, unknown>
+    | undefined,
 >({
   originalAttrs,
   updatedAttrs,
