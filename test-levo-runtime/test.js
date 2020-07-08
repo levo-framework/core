@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const puppeteer = require("puppeteer");
 const { spawn } = require("child_process");
 

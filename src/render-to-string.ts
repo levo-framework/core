@@ -9,6 +9,7 @@ export const renderToString = <Action>(
       return virtualNode.value;
 
     default: {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { $, ref, children, style, ...attributes } = virtualNode;
       const tag = virtualNode.$;
       const childrenString = children?.map(renderToString).join("") || "";

@@ -1,6 +1,7 @@
 /** @jsx h */
 import { Levo, h } from "../../../mod/levo-view.ts";
 import { Model, Action } from "./types.ts";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Counter } from "./counter.tsx";
 
 export const view = (

@@ -121,7 +121,7 @@ Deno.test({
             return assertUsingSpecificImport(dirname + path.SEP + dir.name);
           }
         }),
-      ).then(() => {});
+      ).then(() => Promise.resolve());
     };
     await assertUsingSpecificImport(projectName);
 
@@ -130,7 +130,6 @@ Deno.test({
       new URL(`../.././${projectName}/app.ts`, import.meta.url).href,
       {
         type: "module",
-        //@ts-ignore
         deno: true,
       },
     );

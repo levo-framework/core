@@ -14,7 +14,7 @@ Available commands:
     - Creates a new Levo page under the directory <directory_name>
 `;
 
-const main = async () => {
+const main = async (): Promise<void> => {
   const result = parse(Deno.args);
   if (result.help) {
     console.log(help);
@@ -63,7 +63,7 @@ const main = async () => {
               return specifyVersion(pathname + path.SEP + dir.name);
             }
           }),
-        ).then(() => {});
+        ).then(() => Promise.resolve());
       };
 
       await specifyVersion(tempName + path.SEP + "templates");

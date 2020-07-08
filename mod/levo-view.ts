@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { LispyElements } from "../src/lispy-elements.ts";
 import { Properties } from "../src/css-types.ts";
 import { VirtualNodeEvents } from "../src/virtual-node-events.ts";
@@ -36,7 +37,7 @@ export namespace Levo {
       args: { model: Model; dispatch: Levo.Dispatch<Action> },
     ) => Levo.Element;
     update: Levo.Update<Model, Action>;
-  }) => {
+  }): void => {
     //@ts-ignore
     if (typeof window !== undefined) {
       // This is to prevent Deno from throwing error when some Worker tried to execute
@@ -44,14 +45,17 @@ export namespace Levo {
       try {
         //@ts-ignore
         window.$levo = { init, view, update };
-      } catch {}
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 }
 
 export const h = (
+  // eslint-disable-next-line @typescript-eslint/ban-types
   tag: string | Function,
-  props: object,
+  props: Record<string, unknown>,
   ...children: any[]
 ): Levo.Element => {
   if (typeof tag === "function") {
