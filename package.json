@@ -16,11 +16,13 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^3.6.0",
     "@typescript-eslint/parser": "^3.6.0",
-    "eslint": "^7.4.0"
+    "eslint": "^7.4.0",
+    "jsonlint": "^1.6.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint src/*"
+    "eslint": "eslint src/*",
+    "jsonlint": "jsonlint --quiet ./**/*.json"
   },
   "repository": {
     "type": "git",
