@@ -37,7 +37,7 @@ jobs:
           # Why don't use latest version? Refer https://github.com/denosaurs/deno_brotli/issues/2
           deno-version: v1.1.3 
       - name: Format Check
-        run: deno run --allow-run ./tools/format.ts --check
+        run: sh ./tools/format.sh --check
 
 
   verify-deno-types:
@@ -64,7 +64,7 @@ jobs:
         with:
          deno-version: v1.1.3 
       - name: Bundle levo-runtime
-        run: deno run --unstable --allow-run --allow-write tools/bundle-levo-runtime.ts
+        run: sh ./tools/bundle-levo-runtime.sh
       - name: Verify levo-runtime-raw.ts is up-to-date
         run: sh ./tools/verify-levo-runtime-raw.sh
 
