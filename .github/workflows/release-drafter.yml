@@ -1,11 +1,11 @@
 ## Refer: https://github.com/release-drafter/release-drafter
 name: Release Drafter
 
-on:
-  push:
-    # branches to consider in the event; optional, defaults to all
-    branches:
-      - master
+# on:
+#   push:
+#     # branches to consider in the event; optional, defaults to all
+#     branches:
+#       - master
 
 jobs:
   update_release_draft:
