@@ -21,6 +21,7 @@ LevoApp.start<Environment>({
   cachePages: PRODUCTION,
   rootDir: new URL("./root", import.meta.url),
   loggingOptions: PRODUCTION ? undefined : { model: true, action: true },
+  processRequestMiddlewares: [],
   processResponseMiddlewares: [
     compression,
     helmet,
