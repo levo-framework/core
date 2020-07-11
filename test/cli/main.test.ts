@@ -49,6 +49,9 @@ Deno.test({
       [".levo.templates", [
         ["new-project", [
           [".gitignore"],
+          [".vscode", [
+            ["settings.json"],
+          ]],
           ["README.md"],
           ["app.ts"],
           ["environment.ts"],
@@ -70,6 +73,9 @@ Deno.test({
           ]],
           ["tsconfig.json"],
         ]],
+      ]],
+      [".vscode", [
+        ["settings.json"],
       ]],
       ["README.md"],
       ["app.ts"],
