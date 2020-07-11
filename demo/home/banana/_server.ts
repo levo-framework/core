@@ -3,7 +3,7 @@ import { Model, Action } from "./types.ts";
 import { serve } from "./../../../mod/levo-serve.ts";
 import { Environment } from "../../environment.ts";
 
-serve<Model, Action, Environment>({
+export default serve<Model, Action, Environment>({
   getResponse: async (request, respond) => {
     const params = new URLSearchParams(request.search);
     const redirect = params.get("redirect");

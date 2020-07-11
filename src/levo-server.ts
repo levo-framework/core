@@ -6,6 +6,7 @@ import { minify as minify$ } from "./minify.ts";
 import { resolveUrl } from "./resolve-url.ts";
 import { getDirectoryTree } from "./get-directory-tree.ts";
 import { LevoServeResponse } from "../mod/levo-serve-response.ts";
+import { LevoServe } from "../mod/levo-serve.ts";
 import { regeneratorRuntimeCode } from "./regenerator-runtime-raw.ts";
 import { MemoryCache } from "./memory-cache.ts";
 import {
@@ -102,13 +103,21 @@ export const LevoApp = {
      */
     processResponseMiddlewares: ProcessResponseMiddleware[];
   }): Promise<void> => {
-    const s = server.serve(serverOptions);
+    const serverInstance = server.serve(serverOptions);
     const decoder = new TextDecoder("utf-8");
     const encoder = new TextEncoder();
 
-    const memoryCache = new MemoryCache<string>(
+    const pageCache = new MemoryCache<string>(
       { maxNumberOfKeys: maxNumberOfPages },
     );
+
+    const serverFunctionCache = new MemoryCache<
+      Promise<{
+        default?: LevoServe<unknown, unknown>;
+      }>
+    >({
+      maxNumberOfKeys: Number.POSITIVE_INFINITY,
+    });
 
     const minify = minifyJs
       ? minify$
@@ -121,9 +130,9 @@ export const LevoApp = {
       const cachePath = filename + ".cache";
       if (
         cachePages && !options?.overrideCache &&
-        (memoryCache.get(cachePath) || await exists(cachePath))
+        (pageCache.get(cachePath) || await exists(cachePath))
       ) {
-        return memoryCache.get(cachePath) ??
+        return pageCache.get(cachePath) ??
           decoder.decode(await Deno.readFile(cachePath));
       } else {
         const now = Date.now();
@@ -148,7 +157,7 @@ export const LevoApp = {
         }
         const final = error ? bundled : minified;
         if (cachePages) {
-          memoryCache.set(cachePath, final);
+          pageCache.set(cachePath, final);
           await Deno.writeFile(cachePath, encoder.encode(final));
         }
         return final;
@@ -163,6 +172,9 @@ export const LevoApp = {
           } else if (dir.isFile && dir.name === "_client.ts") {
             const filename = dirname + path.SEP + dir.name;
             bundle(filename, { overrideCache: true });
+          } else if (dir.isFile && dir.name === "_server.ts") {
+            const key = dirname + path.SEP + dir.name;
+            serverFunctionCache.set(key, import(key));
           }
         });
 
@@ -230,7 +242,8 @@ export const LevoApp = {
           };
         });
     };
-    for await (const req of s) {
+
+    for await (const req of serverInstance) {
       try {
         await processRequest(req);
         const url = new URL("http://x/" + req.url);
@@ -292,106 +305,95 @@ export const LevoApp = {
           continue;
         }
 
-        const worker = new Worker(
-          // Refer: https://stackoverflow.com/a/41790024/6587634
-          handlerPath.href +
-            (cachePages
-              ? ""
-              : `?${(Math.random() * 1000000)}`),
-          {
-            type: "module",
-            deno: true,
-          },
-        );
-        worker.postMessage({
-          url: req.url,
-          body: req.body,
-          method: req.method,
-          headers: req.headers,
-          search: url.search,
-          environment,
-        });
-        worker.addEventListener(
-          "message",
-          (async ({ data: response }: {
-            data: LevoServeResponse<any> & { error?: Error };
-          }) => {
-            try {
-              if (response.error) {
-                console.error(response.error);
-                await req.respond({ status: 500 });
-                return;
-              }
-              switch (response.$) {
-                case "redirect": {
-                  await req.respond({
-                    body: encoder.encode(`
-                      <script>window.location.href="${response.url}"</script>
-                    `.trim()),
-                  });
-                  break;
-                }
-                case "custom": {
-                  const headers = new Headers();
-                  Object.entries(response.response.headers ?? {}).forEach(
-                    ([key, value]) => {
-                      headers.set(key, value);
-                    },
-                  );
-                  await req.respond({
-                    headers,
-                    status: response.response.status,
-                    body: encoder.encode(response.response.body),
-                  });
-                  break;
-                }
-                case "page": {
-                  const filename = dirname + "_client.ts";
-                  console.log(`Trying to bundle: ${filename}`);
-                  const code = await bundle(filename);
-                  await req.respond(
-                    await processResponse(req, {
-                      status: 200,
-                      headers: {
-                        "content-type": "text/html",
-                      },
-                      body: encoder.encode(`
+        const handleRequest: { default?: LevoServe<unknown, unknown> } =
+          await (cachePages
+            ? serverFunctionCache.get(handlerPath.pathname)
+            : (async () => {
+              // When cachePages is false
+              // Force re-compile _server.ts
+              const tempName = handlerPath.pathname + Date.now() + ".ts";
+              await Deno.copyFile(handlerPath.pathname, tempName);
+              return import(tempName)
+                .then((module) => {
+                  Deno.remove(tempName);
+                  return module;
+                })
+                .catch(() =>
+                  Deno.remove(tempName)
+                );
+            })());
+        if (!handleRequest.default) {
+          throw new Error(
+            `No default export found at "${handlerPath.pathname}"`,
+          );
+        }
+        const response: LevoServeResponse<unknown> = await handleRequest
+          ?.default?.({
+            url: req.url,
+            body: req.body,
+            method: req.method,
+            headers: req.headers,
+            search: url.search,
+            environment,
+          });
+
+        switch (response.$) {
+          case "redirect": {
+            await req.respond({
+              body: encoder.encode(
+                `<script>window.location.href="${response.url}"</script>`
+                  .trim(),
+              ),
+            });
+            break;
+          }
+          case "custom": {
+            const headers = new Headers();
+            Object.entries(response.response.headers ?? {}).forEach(
+              ([key, value]) => {
+                headers.set(key, value);
+              },
+            );
+            await req.respond({
+              headers,
+              status: response.response.status,
+              body: encoder.encode(response.response.body),
+            });
+            break;
+          }
+          case "page": {
+            const filename = dirname + "_client.ts";
+            console.log(`Trying to bundle: ${filename}`);
+            const code = await bundle(filename);
+            await req.respond(
+              await processResponse(req, {
+                status: 200,
+                headers: {
+                  "content-type": "text/html",
+                },
+                body: encoder.encode(`
       <!DOCTYPE html>
       ${response.html}
       <script>
       ${
-                        minifyJs
-                          ? // This is necessary because we use Babel to transform the bundled code down to ES5
-                            `(()=>{${regeneratorRuntimeCode}})();`
-                          : ""
-                      }
+                  minifyJs
+                    ? // This is necessary because we use Babel to transform the bundled code down to ES5
+                      `(()=>{${regeneratorRuntimeCode}})();`
+                    : ""
+                }
           (()=>{${code}})();
           (()=>{window.$levo.model=${JSON.stringify(response.model)}})();
           (()=>{window.$levo.log=${JSON.stringify(loggingOptions)}})();
           (()=>{${levoRuntimeCode}})();
       </script>
                     `.trim()),
-                    }),
-                  );
-                }
-              }
-            } catch (error) {
-              // TODO: try to respond back to user,
-              //       cannot use req.respond as the pipe is already broken
-              console.log("Caught error in worker", error);
-            }
-          }) as any,
-        );
-        worker.addEventListener("error", (error) => {
-          req.respond({ status: 500 });
-          console.error(error);
-        });
-        worker.addEventListener("messageerror", (error) => {
-          req.respond({ status: 500 });
-          console.error(error);
-        });
+              }),
+            );
+          }
+        }
       } catch (error) {
-        await req.respond({ status: 500 });
+        // NOTE: Please dont use `req.respond` here
+        // If not the loop will be broken
         console.error("Caught error: ", error);
       }
     }
