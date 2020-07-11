@@ -201,11 +201,10 @@ export const LevoApp = {
     const processRequest = async (
       request: server.ServerRequest,
     ): Promise<void> => {
+      const middlewareRequest = await toMiddlewareRequest(request);
       return processRequestMiddlewares.reduce(
         (promise, middleware) =>
-          promise.then(async () =>
-            middleware(await toMiddlewareRequest(request))
-          ),
+          promise.then(() => middleware(middlewareRequest)),
         Promise.resolve(),
       );
     };
@@ -214,11 +213,10 @@ export const LevoApp = {
       request: server.ServerRequest,
       response: MiddlewareResponse,
     ): Promise<server.Response> => {
+      const middlewareRequest = await toMiddlewareRequest(request);
       return (processResponseMiddlewares ?? []).reduce(
         (promise, middleware) =>
-          promise.then(async (response) =>
-            middleware(await toMiddlewareRequest(request), response)
-          ),
+          promise.then((response) => middleware(middlewareRequest, response)),
         Promise.resolve(response),
       )
         .then((response) => {
