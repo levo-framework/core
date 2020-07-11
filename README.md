@@ -80,6 +80,7 @@ Because Deno has first-class support for Typescript and it don't require a packa
 
 ## Features that are supported out of the box (a.k.a no setup required)
 * Gzip/brotli compression
+* Security headers
 * Javascript minification
 * Directory-based routing
 * Wildcard directory-based routing (for handling path params) 

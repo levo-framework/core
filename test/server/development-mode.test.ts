@@ -108,6 +108,17 @@ button { background-color: bisque; font-size: 24px; }
     },
   },
   {
+    name: "securiy header (helmet middleware)",
+    fn: async () => {
+      const result = await fetch("http://localhost:3000");
+      assertEquals(result.headers.get("X-DNS-Prefetch-Control"), "off");
+      assertEquals(result.headers.get("X-Frame-Options"), "SAMEORIGIN");
+      assertEquals(result.headers.get("X-Download-Options"), "noopen");
+      assertEquals(result.headers.get("X-Content-Type-Options"), "nosniff");
+      assertEquals(result.headers.get("X-XSS-Protection"), "1; mode=block");
+    },
+  },
+  {
     name: "return 404 when querying directory without _client.ts",
     fn: async () => {
       const headers = new Headers();

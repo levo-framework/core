@@ -1,6 +1,6 @@
 import { levoTsconfigRaw } from "./levo-tsconfig-raw.ts";
 import { mimeLookup } from "./mime-lookup.ts";
-import { server, path, gzipEncode, brotliCompress, exists } from "./deps.ts";
+import { server, path, exists } from "./deps.ts";
 import { levoRuntimeCode } from "../levo-runtime-raw.ts";
 import { minify as minify$ } from "./minify.ts";
 import { resolveUrl } from "./resolve-url.ts";
@@ -8,6 +8,12 @@ import { getDirectoryTree } from "./get-directory-tree.ts";
 import { LevoServeResponse } from "../mod/levo-serve-response.ts";
 import { regeneratorRuntimeCode } from "./regenerator-runtime-raw.ts";
 import { MemoryCache } from "./memory-cache.ts";
+import {
+  MiddlewareResponse,
+  MiddlewareRequest,
+  ProcessRequestMiddleware,
+  ProcessResponseMiddleware,
+} from "./middleware.ts";
 
 export const LevoApp = {
   start: async <Environment>({
@@ -20,6 +26,8 @@ export const LevoApp = {
     memoryCache: {
       maxNumberOfPages = 1024,
     } = {},
+    processRequestMiddlewares,
+    processResponseMiddlewares,
   }: {
     /**
      * Options for configuring server, for example hostname and port number.
@@ -83,6 +91,16 @@ export const LevoApp = {
        */
       model?: boolean;
     };
+
+    /**
+     * List of middlewares that will be used to process request. 
+     */
+    processRequestMiddlewares: ProcessRequestMiddleware[];
+
+    /**
+     * List of middlewares that will be used to process response.
+     */
+    processResponseMiddlewares: ProcessResponseMiddleware[];
   }): Promise<void> => {
     const s = server.serve(serverOptions);
     const decoder = new TextDecoder("utf-8");
@@ -163,9 +181,58 @@ export const LevoApp = {
       rootDir.pathname,
       { ignoreFiles: [] },
     );
+
+    const toMiddlewareRequest = async (
+      request: server.ServerRequest,
+    ): Promise<MiddlewareRequest> => ({
+      proto: request.proto,
+      protoMajor: request.protoMajor,
+      protoMinor: request.protoMinor,
+      url: request.url,
+      method: request.method,
+      headers: (() => {
+        const result: Record<string, string> = {};
+        request.headers.forEach((value, key) =>
+          result[key.toLowerCase()] = value
+        );
+        return result;
+      })(),
+      body: await Deno.readAll(request.body),
+    });
+
+    const processRequest = async (
+      request: server.ServerRequest,
+    ): Promise<void> => {
+      const middlewareRequest = await toMiddlewareRequest(request);
+      return processRequestMiddlewares.reduce(
+        (promise, middleware) =>
+          promise.then(() => middleware(middlewareRequest)),
+        Promise.resolve(),
+      );
+    };
+
+    const processResponse = async (
+      request: server.ServerRequest,
+      response: MiddlewareResponse,
+    ): Promise<server.Response> => {
+      const middlewareRequest = await toMiddlewareRequest(request);
+      return processResponseMiddlewares.reduce(
+        (promise, middleware) =>
+          promise.then((response) => middleware(middlewareRequest, response)),
+        Promise.resolve(response),
+      )
+        .then((response) => {
+          return {
+            status: response.status,
+            headers: new Headers(response.headers),
+            body: response.body,
+            trailers: response.trailers,
+          };
+        });
+    };
     for await (const req of s) {
       try {
-        console.log(new Date(), `${req.method} ${req.url}`);
+        await processRequest(req);
         const url = new URL("http://x/" + req.url);
         const resolvedUrl = resolveUrl(
           cachePages
@@ -187,25 +254,24 @@ export const LevoApp = {
           ? rootDir.pathname
           : rootDir.pathname + path.SEP) + resolvedUrl;
 
-        const acceptEncoding = req.headers.get("accept-encoding");
         if (pathname.includes("_assets")) {
           if (!(await exists(pathname))) {
             await req.respond({ status: 404 });
             continue;
           }
           const file = await Deno.readFile(pathname);
-          const initialHeaders = new Headers();
           const contentType = mimeLookup(pathname);
-          if (contentType) {
-            initialHeaders.set("content-type", contentType);
-          }
-
-          const { body, headers } = compress({
-            acceptEncoding,
-            headers: initialHeaders,
-            body: file,
-          });
-          await req.respond({ body, headers });
+          await req.respond(
+            await processResponse(req, {
+              status: 200,
+              headers: contentType
+                ? {
+                  "content-type": contentType,
+                }
+                : {},
+              body: file,
+            }),
+          );
           continue;
         }
 
@@ -283,29 +349,30 @@ export const LevoApp = {
                   const filename = dirname + "_client.ts";
                   console.log(`Trying to bundle: ${filename}`);
                   const code = await bundle(filename);
-                  const initialHeaders = new Headers();
-                  initialHeaders.set("content-type", "text/html");
-                  const { body, headers } = compress({
-                    acceptEncoding,
-                    headers: initialHeaders,
-                    body: encoder.encode(`
+                  await req.respond(
+                    await processResponse(req, {
+                      status: 200,
+                      headers: {
+                        "content-type": "text/html",
+                      },
+                      body: encoder.encode(`
       <!DOCTYPE html>
       ${response.html}
       <script>
       ${
-                      minifyJs
-                        ? // This is necessary because we use Babel to transform the bundled code down to ES5
-                          `(()=>{${regeneratorRuntimeCode}})();`
-                        : ""
-                    }
+                        minifyJs
+                          ? // This is necessary because we use Babel to transform the bundled code down to ES5
+                            `(()=>{${regeneratorRuntimeCode}})();`
+                          : ""
+                      }
           (()=>{${code}})();
           (()=>{window.$levo.model=${JSON.stringify(response.model)}})();
           (()=>{window.$levo.log=${JSON.stringify(loggingOptions)}})();
           (()=>{${levoRuntimeCode}})();
       </script>
                     `.trim()),
-                  });
-                  await req.respond({ body, headers });
+                    }),
+                  );
                 }
               }
             } catch (error) {
@@ -329,33 +396,4 @@ export const LevoApp = {
       }
     }
   },
-};
-
-const compress = ({
-  headers,
-  body,
-  acceptEncoding,
-}: {
-  headers: Headers;
-  body: Uint8Array;
-  acceptEncoding: string | null;
-}): {
-  headers: Headers;
-  body: Uint8Array;
-} => {
-  if (acceptEncoding?.includes("br")) {
-    headers.set("content-encoding", "br");
-    headers.set("levo-content-encoding", "br"); // for testing purpose
-    const compressedBody = brotliCompress(body);
-    headers.set("content-length", compressedBody.length.toString());
-    return { headers, body: compressedBody };
-  } else if (acceptEncoding?.includes("gzip")) {
-    headers.set("content-encoding", "gzip");
-    headers.set("levo-content-encoding", "gzip"); // for testing purpose
-    const compressedBody = gzipEncode(body);
-    headers.set("content-length", compressedBody.length.toString());
-    return { headers, body: compressedBody };
-  } else {
-    return { headers, body };
-  }
 };
