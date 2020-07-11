@@ -128,3 +128,17 @@ jobs:
       - name: Run test
         run: npm test
         working-directory: ./test-levo-runtime
+
+  draft-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: softprops/action-gh-release@v1
+        if: |
+          matrix.config.kind == 'test_release' &&
+          github.repository == 'levo-framework/core' &&
+          startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          draft: true
