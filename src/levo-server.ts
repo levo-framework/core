@@ -103,7 +103,7 @@ export const LevoApp = {
      */
     processResponseMiddlewares: ProcessResponseMiddleware[];
   }): Promise<void> => {
-    const s = server.serve(serverOptions);
+    const serverInstance = server.serve(serverOptions);
     const decoder = new TextDecoder("utf-8");
     const encoder = new TextEncoder();
 
@@ -242,7 +242,8 @@ export const LevoApp = {
           };
         });
     };
-    for await (const req of s) {
+
+    for await (const req of serverInstance) {
       try {
         await processRequest(req);
         const url = new URL("http://x/" + req.url);
@@ -312,9 +313,14 @@ export const LevoApp = {
               // Force re-compile _server.ts
               const tempName = handlerPath.pathname + Date.now() + ".ts";
               await Deno.copyFile(handlerPath.pathname, tempName);
-              const result = await import(tempName);
-              await Deno.remove(tempName);
-              return result;
+              return import(tempName)
+                .then((module) => {
+                  Deno.remove(tempName);
+                  return module;
+                })
+                .catch(() =>
+                  Deno.remove(tempName)
+                );
             })());
         if (!handleRequest.default) {
           throw new Error(
@@ -334,9 +340,10 @@ export const LevoApp = {
         switch (response.$) {
           case "redirect": {
             await req.respond({
-              body: encoder.encode(`
-                      <script>window.location.href="${response.url}"</script>
-                    `.trim()),
+              body: encoder.encode(
+                `<script>window.location.href="${response.url}"</script>`
+                  .trim(),
+              ),
             });
             break;
           }
@@ -385,7 +392,8 @@ export const LevoApp = {
           }
         }
       } catch (error) {
-        await req.respond({ status: 500 });
+        // NOTE: Please dont use `req.respond` here
+        // If not the loop will be broken
         console.error("Caught error: ", error);
       }
     }
