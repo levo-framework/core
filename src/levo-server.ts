@@ -6,6 +6,7 @@ import { minify as minify$ } from "./minify.ts";
 import { resolveUrl } from "./resolve-url.ts";
 import { getDirectoryTree } from "./get-directory-tree.ts";
 import { LevoServeResponse } from "../mod/levo-serve-response.ts";
+import { LevoServe } from "../mod/levo-serve.ts";
 import { regeneratorRuntimeCode } from "./regenerator-runtime-raw.ts";
 import { MemoryCache } from "./memory-cache.ts";
 import {
@@ -106,9 +107,17 @@ export const LevoApp = {
     const decoder = new TextDecoder("utf-8");
     const encoder = new TextEncoder();
 
-    const memoryCache = new MemoryCache<string>(
+    const pageCache = new MemoryCache<string>(
       { maxNumberOfKeys: maxNumberOfPages },
     );
+
+    const serverFunctionCache = new MemoryCache<
+      Promise<{
+        default?: LevoServe<unknown>;
+      }>
+    >({
+      maxNumberOfKeys: Number.POSITIVE_INFINITY,
+    });
 
     const minify = minifyJs
       ? minify$
@@ -121,9 +130,9 @@ export const LevoApp = {
       const cachePath = filename + ".cache";
       if (
         cachePages && !options?.overrideCache &&
-        (memoryCache.get(cachePath) || await exists(cachePath))
+        (pageCache.get(cachePath) || await exists(cachePath))
       ) {
-        return memoryCache.get(cachePath) ??
+        return pageCache.get(cachePath) ??
           decoder.decode(await Deno.readFile(cachePath));
       } else {
         const now = Date.now();
@@ -148,7 +157,7 @@ export const LevoApp = {
         }
         const final = error ? bundled : minified;
         if (cachePages) {
-          memoryCache.set(cachePath, final);
+          pageCache.set(cachePath, final);
           await Deno.writeFile(cachePath, encoder.encode(final));
         }
         return final;
@@ -163,6 +172,9 @@ export const LevoApp = {
           } else if (dir.isFile && dir.name === "_client.ts") {
             const filename = dirname + path.SEP + dir.name;
             bundle(filename, { overrideCache: true });
+          } else if (dir.isFile && dir.name === "_server.ts") {
+            const key = dirname + path.SEP + dir.name;
+            serverFunctionCache.set(key, import(key));
           }
         });
 
@@ -292,7 +304,15 @@ export const LevoApp = {
           continue;
         }
 
-        const handleRequest = await import(handlerPath.pathname);
+        const handleRequest: { default?: LevoServe<unknown> } =
+          await (cachePages
+            ? serverFunctionCache.get(handlerPath.pathname)
+            : import(handlerPath.pathname));
+        if (!handleRequest.default) {
+          throw new Error(
+            `No default export found at "${handlerPath.pathname}"`,
+          );
+        }
         const response: LevoServeResponse<unknown> = await handleRequest
           ?.default?.({
             url: req.url,
