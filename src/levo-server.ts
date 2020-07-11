@@ -292,104 +292,70 @@ export const LevoApp = {
           continue;
         }
 
-        const worker = new Worker(
-          // Refer: https://stackoverflow.com/a/41790024/6587634
-          handlerPath.href +
-            (cachePages
-              ? ""
-              : `?${(Math.random() * 1000000)}`),
-          {
-            type: "module",
-            deno: true,
-          },
-        );
-        worker.postMessage({
-          url: req.url,
-          body: req.body,
-          method: req.method,
-          headers: req.headers,
-          search: url.search,
-          environment,
-        });
-        worker.addEventListener(
-          "message",
-          (async ({ data: response }: {
-            data: LevoServeResponse<any> & { error?: Error };
-          }) => {
-            try {
-              if (response.error) {
-                console.error(response.error);
-                await req.respond({ status: 500 });
-                return;
-              }
-              switch (response.$) {
-                case "redirect": {
-                  await req.respond({
-                    body: encoder.encode(`
+        const handleRequest = await import(handlerPath.pathname);
+        const response: LevoServeResponse<unknown> = await handleRequest
+          ?.default?.({
+            url: req.url,
+            body: req.body,
+            method: req.method,
+            headers: req.headers,
+            search: url.search,
+            environment,
+          });
+
+        switch (response.$) {
+          case "redirect": {
+            await req.respond({
+              body: encoder.encode(`
                       <script>window.location.href="${response.url}"</script>
                     `.trim()),
-                  });
-                  break;
-                }
-                case "custom": {
-                  const headers = new Headers();
-                  Object.entries(response.response.headers ?? {}).forEach(
-                    ([key, value]) => {
-                      headers.set(key, value);
-                    },
-                  );
-                  await req.respond({
-                    headers,
-                    status: response.response.status,
-                    body: encoder.encode(response.response.body),
-                  });
-                  break;
-                }
-                case "page": {
-                  const filename = dirname + "_client.ts";
-                  console.log(`Trying to bundle: ${filename}`);
-                  const code = await bundle(filename);
-                  await req.respond(
-                    await processResponse(req, {
-                      status: 200,
-                      headers: {
-                        "content-type": "text/html",
-                      },
-                      body: encoder.encode(`
+            });
+            break;
+          }
+          case "custom": {
+            const headers = new Headers();
+            Object.entries(response.response.headers ?? {}).forEach(
+              ([key, value]) => {
+                headers.set(key, value);
+              },
+            );
+            await req.respond({
+              headers,
+              status: response.response.status,
+              body: encoder.encode(response.response.body),
+            });
+            break;
+          }
+          case "page": {
+            const filename = dirname + "_client.ts";
+            console.log(`Trying to bundle: ${filename}`);
+            const code = await bundle(filename);
+            await req.respond(
+              await processResponse(req, {
+                status: 200,
+                headers: {
+                  "content-type": "text/html",
+                },
+                body: encoder.encode(`
       <!DOCTYPE html>
       ${response.html}
       <script>
       ${
-                        minifyJs
-                          ? // This is necessary because we use Babel to transform the bundled code down to ES5
-                            `(()=>{${regeneratorRuntimeCode}})();`
-                          : ""
-                      }
+                  minifyJs
+                    ? // This is necessary because we use Babel to transform the bundled code down to ES5
+                      `(()=>{${regeneratorRuntimeCode}})();`
+                    : ""
+                }
           (()=>{${code}})();
           (()=>{window.$levo.model=${JSON.stringify(response.model)}})();
           (()=>{window.$levo.log=${JSON.stringify(loggingOptions)}})();
           (()=>{${levoRuntimeCode}})();
       </script>
                     `.trim()),
-                    }),
-                  );
-                }
-              }
-            } catch (error) {
-              // TODO: try to respond back to user,
-              //       cannot use req.respond as the pipe is already broken
-              console.log("Caught error in worker", error);
-            }
-          }) as any,
-        );
-        worker.addEventListener("error", (error) => {
-          req.respond({ status: 500 });
-          console.error(error);
-        });
-        worker.addEventListener("messageerror", (error) => {
-          req.respond({ status: 500 });
-          console.error(error);
-        });
+              }),
+            );
+          }
+        }
       } catch (error) {
         await req.respond({ status: 500 });
         console.error("Caught error: ", error);

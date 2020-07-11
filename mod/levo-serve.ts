@@ -28,29 +28,25 @@ export const serve = <Model, Action extends { $: string }, Environment>({
   getResponse,
 }: {
   getResponse: (
-    req: LevoRequest<Environment>,
+    request: LevoRequest<Environment>,
     respond: Responder<Model, Action>,
   ) => Promise<LevoServeResponse<Model>>;
-}): void => {
-  self.onmessage = async (event: { data: LevoRequest<Environment> }) => {
-    try {
-      const response = await getResponse(event.data, {
-        page: ({ model, view }) => {
-          const html = renderToString(
-            (view({ model, dispatch: createDispatch() })),
-          );
-          return { $: "page", model, html };
-        },
-        redirect: ({ url }) => ({ $: "redirect", url }),
-        custom: (response) => {
-          return { $: "custom", response };
-        },
-      });
-      self.postMessage(response);
-    } catch (error) {
-      console.error("ERROR(levo-serve): ", error);
-      self.postMessage({ error }); // TODO: handle gracefully
-    }
-    self.close();
+}): (
+  request: LevoRequest<Environment>,
+) => Promise<LevoServeResponse<Model>> => {
+  return async (request) => {
+    const response = await getResponse(request, {
+      page: ({ model, view }) => {
+        const html = renderToString(
+          (view({ model, dispatch: createDispatch() })),
+        );
+        return { $: "page", model, html };
+      },
+      redirect: ({ url }) => ({ $: "redirect", url }),
+      custom: (response) => {
+        return { $: "custom", response };
+      },
+    });
+    return response;
   };
 };
