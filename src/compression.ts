@@ -6,7 +6,7 @@ export const compression: ProcessResponseMiddleware = async (
   request,
   response,
 ) => {
-  const acceptEncoding = request.headers.get("Accept-Encoding");
+  const acceptEncoding = request.headers["Accept-Encoding"];
   if (acceptEncoding?.includes("br")) {
     const compressedBody = brotliCompress(response.body);
     return {

@@ -8,7 +8,12 @@ import { getDirectoryTree } from "./get-directory-tree.ts";
 import { LevoServeResponse } from "../mod/levo-serve-response.ts";
 import { regeneratorRuntimeCode } from "./regenerator-runtime-raw.ts";
 import { MemoryCache } from "./memory-cache.ts";
-import { ProcessResponseMiddleware, MiddlewareResponse } from "./middleware.ts";
+import {
+  MiddlewareResponse,
+  MiddlewareRequest,
+  ProcessRequestMiddleware,
+  ProcessResponseMiddleware,
+} from "./middleware.ts";
 
 export const LevoApp = {
   start: async <Environment>({
@@ -21,6 +26,7 @@ export const LevoApp = {
     memoryCache: {
       maxNumberOfPages = 1024,
     } = {},
+    processRequestMiddlewares,
     processResponseMiddlewares,
   }: {
     /**
@@ -87,7 +93,12 @@ export const LevoApp = {
     };
 
     /**
-     * List of middlewares that is used to process response.
+     * List of middlewares that will be used to process request. 
+     */
+    processRequestMiddlewares: ProcessRequestMiddleware[];
+
+    /**
+     * List of middlewares that will be used to process response.
      */
     processResponseMiddlewares: ProcessResponseMiddleware[];
   }): Promise<void> => {
@@ -171,13 +182,43 @@ export const LevoApp = {
       { ignoreFiles: [] },
     );
 
-    const computeResponse = (
+    const toMiddlewareRequest = async (
+      request: server.ServerRequest,
+    ): Promise<MiddlewareRequest> => ({
+      proto: request.proto,
+      protoMajor: request.protoMajor,
+      protoMinor: request.protoMinor,
+      url: request.url,
+      method: request.method,
+      headers: (() => {
+        const result: Record<string, string> = {};
+        request.headers.forEach((value, key) => result[key] = value);
+        return result;
+      })(),
+      body: await Deno.readAll(request.body),
+    });
+
+    const processRequest = async (
+      request: server.ServerRequest,
+    ): Promise<void> => {
+      return processRequestMiddlewares.reduce(
+        (promise, middleware) =>
+          promise.then(async () =>
+            middleware(await toMiddlewareRequest(request))
+          ),
+        Promise.resolve(),
+      );
+    };
+
+    const processResponse = async (
       request: server.ServerRequest,
       response: MiddlewareResponse,
     ): Promise<server.Response> => {
       return (processResponseMiddlewares ?? []).reduce(
         (promise, middleware) =>
-          promise.then((response) => middleware(request, response)),
+          promise.then(async (response) =>
+            middleware(await toMiddlewareRequest(request), response)
+          ),
         Promise.resolve(response),
       )
         .then((response) => {
@@ -191,7 +232,7 @@ export const LevoApp = {
     };
     for await (const req of s) {
       try {
-        console.log(new Date(), `${req.method} ${req.url}`);
+        await processRequest(req);
         const url = new URL("http://x/" + req.url);
         const resolvedUrl = resolveUrl(
           cachePages
@@ -221,7 +262,7 @@ export const LevoApp = {
           const file = await Deno.readFile(pathname);
           const contentType = mimeLookup(pathname);
           await req.respond(
-            await computeResponse(req, {
+            await processResponse(req, {
               status: 200,
               headers: contentType
                 ? {
@@ -309,7 +350,7 @@ export const LevoApp = {
                   console.log(`Trying to bundle: ${filename}`);
                   const code = await bundle(filename);
                   await req.respond(
-                    await computeResponse(req, {
+                    await processResponse(req, {
                       status: 200,
                       headers: {
                         "content-type": "text/html",

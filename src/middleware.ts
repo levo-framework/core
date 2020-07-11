@@ -1,4 +1,12 @@
-import { server } from "./deps.ts";
+export type MiddlewareRequest = {
+  url: string;
+  method: string;
+  proto: string;
+  protoMinor: number;
+  protoMajor: number;
+  body: Uint8Array;
+  headers: Record<string, string | undefined>;
+};
 
 export type MiddlewareResponse = {
   status: number;
@@ -7,9 +15,10 @@ export type MiddlewareResponse = {
   trailers?: () => Promise<Headers> | Headers;
 };
 export type ProcessRequestMiddleware = (
-  request: server.ServerRequest,
-) => server.ServerRequest;
+  request: MiddlewareRequest,
+) => void;
+
 export type ProcessResponseMiddleware = (
-  request: server.ServerRequest,
+  request: MiddlewareRequest,
   response: MiddlewareResponse,
 ) => Promise<MiddlewareResponse>;
