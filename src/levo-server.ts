@@ -113,7 +113,7 @@ export const LevoApp = {
 
     const serverFunctionCache = new MemoryCache<
       Promise<{
-        default?: LevoServe<unknown>;
+        default?: LevoServe<unknown, unknown>;
       }>
     >({
       maxNumberOfKeys: Number.POSITIVE_INFINITY,
@@ -304,7 +304,7 @@ export const LevoApp = {
           continue;
         }
 
-        const handleRequest: { default?: LevoServe<unknown> } =
+        const handleRequest: { default?: LevoServe<unknown, unknown> } =
           await (cachePages
             ? serverFunctionCache.get(handlerPath.pathname)
             : import(handlerPath.pathname));

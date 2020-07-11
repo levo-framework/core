@@ -2,9 +2,9 @@ import { renderToString } from "../src/render-to-string.ts";
 import { CustomResponse, LevoServeResponse } from "./levo-serve-response.ts";
 import { Levo, createDispatch } from "./levo-view.ts";
 
-export type LevoServe<Environment> = (
+export type LevoServe<Model, Environment> = (
   request: LevoServeRequest<Environment>,
-) => Promise<LevoServeResponse<Environment>>;
+) => Promise<LevoServeResponse<Model>>;
 
 export type LevoServeRequest<Environment> = {
   url: string;
@@ -35,9 +35,7 @@ export const serve = <Model, Action extends { $: string }, Environment>({
     request: LevoServeRequest<Environment>,
     respond: Responder<Model, Action>,
   ) => Promise<LevoServeResponse<Model>>;
-}): (
-  request: LevoServeRequest<Environment>,
-) => Promise<LevoServeResponse<Model>> => {
+}): LevoServe<Model, Environment> => {
   return async (request) => {
     const response = await getResponse(request, {
       page: ({ model, view }) => {
