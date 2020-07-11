@@ -307,7 +307,15 @@ export const LevoApp = {
         const handleRequest: { default?: LevoServe<unknown, unknown> } =
           await (cachePages
             ? serverFunctionCache.get(handlerPath.pathname)
-            : import(handlerPath.pathname));
+            : (async () => {
+              // When cachePages is false
+              // Force re-compile _server.ts
+              const tempName = handlerPath.pathname + Date.now() + ".ts";
+              await Deno.copyFile(handlerPath.pathname, tempName);
+              const result = await import(tempName);
+              await Deno.remove(tempName);
+              return result;
+            })());
         if (!handleRequest.default) {
           throw new Error(
             `No default export found at "${handlerPath.pathname}"`,
