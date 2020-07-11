@@ -1,6 +1,6 @@
 import { serve } from "../../../../mod/levo-serve.ts";
 
-serve({
+export default serve({
   getResponse: async (request, response) => {
     return response.custom({
       body: `

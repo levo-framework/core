@@ -322,7 +322,7 @@ export const LevoApp = {
                   Deno.remove(tempName)
                 );
             })());
-        if (!handleRequest.default) {
+        if (!handleRequest?.default) {
           throw new Error(
             `No default export found at "${handlerPath.pathname}"`,
           );
