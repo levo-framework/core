@@ -192,7 +192,7 @@ export const LevoApp = {
       method: request.method,
       headers: (() => {
         const result: Record<string, string> = {};
-        request.headers.forEach((value, key) => result[key] = value);
+        request.headers.forEach((value, key) => result[key.toLowerCase()] = value);
         return result;
       })(),
       body: await Deno.readAll(request.body),
