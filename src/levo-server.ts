@@ -214,7 +214,7 @@ export const LevoApp = {
       response: MiddlewareResponse,
     ): Promise<server.Response> => {
       const middlewareRequest = await toMiddlewareRequest(request);
-      return (processResponseMiddlewares ?? []).reduce(
+      return processResponseMiddlewares.reduce(
         (promise, middleware) =>
           promise.then((response) => middleware(middlewareRequest, response)),
         Promise.resolve(response),
