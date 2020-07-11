@@ -174,7 +174,7 @@ export const LevoApp = {
             bundle(filename, { overrideCache: true });
           } else if (dir.isFile && dir.name === "_server.ts") {
             const key = dirname + path.SEP + dir.name;
-            serverFunctionCache.set(key, import(key));
+            serverFunctionCache.set(key, import("file://" + key));
           }
         });
 
@@ -313,14 +313,18 @@ export const LevoApp = {
               // Force re-compile _server.ts
               const tempName = handlerPath.pathname + Date.now() + ".ts";
               await Deno.copyFile(handlerPath.pathname, tempName);
-              return import(tempName)
+              return import("file://" + tempName)
                 .then((module) => {
                   Deno.remove(tempName);
                   return module;
                 })
-                .catch(() =>
-                  Deno.remove(tempName)
-                );
+                .catch((error) => {
+                  console.error(error);
+                  console.error(
+                    `The error above is caught when importing "${handlerPath.pathname}"`,
+                  );
+                  Deno.remove(tempName);
+                });
             })());
         if (!handleRequest?.default) {
           throw new Error(
