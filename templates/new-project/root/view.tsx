@@ -26,8 +26,8 @@ export const view = (
         <meta property="twitter:description" content="A page" />
         <meta property="twitter:image" content="image.png" />
         <title>My Page</title>
-        <link rel="shortcut icon" href="favicon.ico" />
-        <link rel="stylesheet" href="index.css" />
+        <link rel="shortcut icon" href="./_assets/favicon.ico" />
+        <link rel="stylesheet" href="./_assets/index.css" />
       </head>
       <body>
         <div
@@ -40,7 +40,7 @@ export const view = (
           }}
         >
           <img
-            src="favicon.svg"
+            src="./_assets/favicon.svg"
             alt="icon"
             style={{
               height: "88px",
