@@ -55,7 +55,7 @@ const main = async (): Promise<void> => {
         "new-project",
         "import_map.json",
       ].join(path.SEP);
-      console.log("importMapPath", importMapPath);
+
       const oldImportMap: {
         "imports": Record<string, string>;
       } = JSON.parse(
