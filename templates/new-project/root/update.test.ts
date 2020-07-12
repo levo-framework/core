@@ -1,6 +1,6 @@
 import { initialModel, Model } from "./types.ts";
 import { update } from "./update.ts";
-import { assertEquals } from "https://deno.land/std@0.60.0/testing/asserts.ts";
+import { assertEquals } from "asserts";
 
 Deno.test("rotate", () => {
   const model = initialModel();

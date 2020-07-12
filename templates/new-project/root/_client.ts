@@ -1,6 +1,6 @@
 /// <reference lib="dom"/>
 
-import { Levo } from "../../../mod/levo-view.ts";
+import { Levo } from "levo/levo-view.ts";
 import { Model, Action } from "./types.ts";
 import { view } from "./view.tsx";
 import { update } from "./update.ts";

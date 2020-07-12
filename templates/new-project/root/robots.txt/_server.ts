@@ -1,4 +1,4 @@
-import { serve } from "../../../../mod/levo-serve.ts";
+import { serve } from "levo/levo-serve.ts";
 
 export default serve({
   getResponse: async (request, response) => {

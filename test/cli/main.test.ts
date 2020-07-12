@@ -1,32 +1,11 @@
 import { getDirectoryTree } from "../../src/get-directory-tree.ts";
 import { assertEquals, assert, path, exists } from "../../src/deps.ts";
+import { runCommand } from "../../src/run-command.ts";
 
 Deno.test({
   name: "new-project and new-page command",
   fn: async () => {
     const projectName = "hello";
-    const runCommand = (command: string) => {
-      const process = Deno.run({
-        cmd: command.split(" ").filter(Boolean),
-        stdout: "piped",
-        stderr: "piped",
-      });
-      const decoder = new TextDecoder();
-      return Promise.all([process.output(), process.stderrOutput()])
-        .then(([output, err]) => {
-          if (err.length > 0) {
-            const error = decoder.decode(err);
-            console.error(error);
-            return error;
-          } else {
-            return decoder.decode(output).trim();
-          }
-        })
-        .then((result) => {
-          console.log(result);
-          return result;
-        });
-    };
 
     console.log("\nInstalling Levo CLI");
     const output = await runCommand(
@@ -34,10 +13,17 @@ Deno.test({
     );
     console.log("output", output);
 
-    assert((await runCommand(`which ./bin/levo`)).endsWith("./bin/levo"));
+    assert(
+      ((await runCommand(`which ./bin/levo`)).output).endsWith("./bin/levo"),
+    );
 
     console.log("Creating new project using Levo CLI");
-    await runCommand(`./bin/levo new-project ${projectName}`);
+    const latestCommitHash = (await runCommand("git rev-parse HEAD")).output;
+    const sourceDir = Deno.cwd();
+    const { output: newProjectOutput } = await runCommand(
+      `./bin/levo new-project ${projectName} --source=${sourceDir} --version=${latestCommitHash}`,
+    );
+    console.log(newProjectOutput);
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const tree = getDirectoryTree(
@@ -55,6 +41,7 @@ Deno.test({
           ["README.md"],
           ["app.ts"],
           ["environment.ts"],
+          ["import_map.json"],
           ["lib", [
             ["lib.deno_runtime.d.ts"],
           ]],
@@ -80,6 +67,7 @@ Deno.test({
       ["README.md"],
       ["app.ts"],
       ["environment.ts"],
+      ["import_map.json"],
       ["lib", [
         ["lib.deno_runtime.d.ts"],
       ]],
@@ -102,43 +90,25 @@ Deno.test({
       ["tsconfig.json"],
     ]);
 
-    console.log("Make sure the template files are using specific imports");
-    const assertUsingSpecificImport = async (
-      dirname: string,
-    ): Promise<void> => {
-      return Promise.all(
-        Array.from(Deno.readDirSync(dirname)).map(async (dir) => {
-          if (dir.isFile) {
-            const filename = dirname + path.SEP + dir.name;
-            const lines = new TextDecoder().decode(
-              await Deno.readFile(filename),
-            )
-              .split("\n")
-              .filter((line) => line.includes("/mod/levo-"));
-            if (lines.length > 0) {
-              console.log(`Validating file '${filename}'`);
-              lines.forEach((line) => {
-                console.log(`Validating line "${line}"`);
-                assert(/https:\/\/deno.land\/x\/levo@v\d\.\d\.\d/.test(line));
-              });
-            }
-            return Promise.resolve();
-          } else {
-            return assertUsingSpecificImport(dirname + path.SEP + dir.name);
-          }
-        }),
-      ).then(() => Promise.resolve());
-    };
-    await assertUsingSpecificImport(projectName);
+    console.log("Verify import map");
+    const importMap = JSON.parse(
+      new TextDecoder().decode(
+        await Deno.readFile([projectName, "import_map.json"].join(path.SEP)),
+      ),
+    );
+    assertEquals(importMap, {
+      "imports": {
+        "levo/": `${sourceDir}/mod/`,
+        "asserts": "https://deno.land/std@0.60.0/testing/asserts.ts",
+      },
+    });
 
     console.log("Test if the server created with the templates work");
-    const server = new Worker(
-      new URL(`../.././${projectName}/app.ts`, import.meta.url).href,
-      {
-        type: "module",
-        deno: true,
-      },
-    );
+    const server = Deno.run({
+      cmd:
+        `deno run --allow-all --unstable --importmap=./${projectName}/import_map.json ./${projectName}/app.ts`
+          .split(" "),
+    });
 
     await new Promise((resolve) => setTimeout(resolve, 20000));
 
@@ -170,7 +140,8 @@ Deno.test({
 
     console.log("Tear down");
     console.log("Terminate server");
-    server.terminate();
+    const SIGTERM = 15;
+    server.kill(SIGTERM);
 
     console.log("Delete created project folder");
     await Deno.remove(projectName, { recursive: true });

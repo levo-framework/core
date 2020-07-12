@@ -7,69 +7,79 @@ Levo CLI is a tool for generating boilerplates for Levo projects.
 
 Available commands:
 
-  new-project <project_name>
-    - Creates a new Levo project under the directory <project_name>
+  new-project <PROJECT_NAME> --source=<SOURCE> --version=<VERSION>
+    - Creates a new Levo project under the directory <PROJECT_NAME>
+    - <VERSION> can be either commit hash or tag
+        default value is the latest tag
+    - <SOURCE> defines where to clone the Levo repository
+        default value is "https://github.com/levo-framework/core"
 
-  new-page <directory_name>
-    - Creates a new Levo page under the directory <directory_name>
+  new-page <DIRNAME>
+    - Creates a new Levo page under the directory <DIRNAME>
 `;
 
 const main = async (): Promise<void> => {
-  const result = parse(Deno.args);
-  if (result.help) {
+  const args = parse(Deno.args);
+  if (Deno.args.length === 0 || args.help) {
     console.log(help);
-  } else if (result._?.[0] === "new-project") {
-    const projectName = result._?.[1]?.toString();
+  } else if (args._?.[0] === "new-project") {
+    const projectName = args._?.[1]?.toString();
     if (!projectName) {
       console.error(`Missing argument <project_name>`);
       return Deno.exit(1);
     } else {
       const tempName = `tmp_${Date.now()}`;
       await runCommand(
-        `git clone https://github.com/levo-framework/core ${tempName}`,
+        `git clone ${args.source ??
+          "https://github.com/levo-framework/core"} ${tempName}`,
       );
 
       Deno.chdir(tempName);
-      const { output: latestTag } = await runCommand(
-        "git describe --tags --abbrev=0",
-      );
-      await runCommand(`git checkout ${latestTag} --quiet`);
+      const { output: tag } = args.version
+        ? { output: args.version as string }
+        : await runCommand(
+          "git describe --tags --abbrev=0",
+        );
+      await runCommand(`git checkout ${tag} --quiet`);
       Deno.chdir("..");
-      if (!latestTag) {
+      if (!tag) {
         console.error(`Failed to obtain latest version of Levo.`);
         return Deno.exit(1);
       }
 
-      console.log(`Using Levo ${latestTag}`);
+      console.log(`Using Levo ${tag}`);
 
-      // specify specific version for each file in the templates that import Levo modules
-      const specifyVersion = async (pathname: string): Promise<void> => {
-        return Promise.all(
-          Array.from(Deno.readDirSync(pathname)).map(async (dir) => {
-            if (dir.isFile) {
-              const filename = pathname + path.SEP + dir.name;
-              const content = new TextDecoder().decode(
-                await Deno.readFile(filename),
-              );
-              const updatedContent = content.replace(
-                /".*?mod\//g,
-                `"https://deno.land/x/levo@${latestTag}/mod/`,
-              );
-              return await Deno.writeFile(
-                filename,
-                new TextEncoder().encode(updatedContent),
-              );
-            } else {
-              return specifyVersion(pathname + path.SEP + dir.name);
-            }
-          }),
-        ).then(() => Promise.resolve());
+      const importMapPath = [
+        tempName,
+        "templates",
+        "new-project",
+        "import_map.json",
+      ].join(path.SEP);
+
+      const oldImportMap: {
+        "imports": Record<string, string>;
+      } = JSON.parse(
+        new TextDecoder().decode(
+          await Deno.readFile(importMapPath),
+        ),
+      );
+
+      const newImportMap = {
+        imports: {
+          ...oldImportMap.imports,
+          "levo/": args.source
+            ? `${args.source}/mod/`
+            : `https://deno.land/x/levo@${tag}/mod/`,
+        },
       };
 
-      await specifyVersion(tempName + path.SEP + "templates");
+      await Deno.writeFile(
+        importMapPath,
+        new TextEncoder().encode(JSON.stringify(newImportMap)),
+      );
 
       await copy(
-        tempName + path.SEP + "templates/new-project",
+        [tempName, "templates", "new-project"].join(path.SEP),
         projectName.toString(),
       );
       await copy(
@@ -87,10 +97,12 @@ const main = async (): Promise<void> => {
       console.log(`Levo app successfully created at ${projectName}`);
       console.log(`Run the following command to get started:\n`);
       console.log(`  cd ${projectName}`);
-      console.log(`  deno run --allow-all --unstable app.ts`);
+      console.log(
+        `  deno run --allow-all --unstable --importmap=import_map.json app.ts`,
+      );
     }
-  } else if (result._?.[0] === "new-page") {
-    const dirname = result._?.[1]?.toString();
+  } else if (args._?.[0] === "new-page") {
+    const dirname = args._?.[1]?.toString();
     if (!dirname) {
       console.error(`Missing argument <directory_name>`);
     } else if (!await exists(".levo.templates")) {
