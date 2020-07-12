@@ -1,14 +1,17 @@
 import { assertEquals } from "../../src/deps.ts";
 
-const server = new Worker(
-  new URL("./../../templates/new-project/app.ts", import.meta.url).href,
-  {
-    type: "module",
-    deno: true,
-  },
-);
+const process = Deno.run({
+  cmd: [
+    "deno",
+    "run",
+    "--allow-all",
+    "--unstable",
+    "--importmap=./templates/new-project/import_map.json",
+    "templates/new-project/app.ts",
+  ],
+});
 
-await new Promise((resolve) => setTimeout(resolve, 20000));
+await new Promise((resolve) => setTimeout(resolve, 3000));
 
 const tests: {
   name: string;
@@ -22,13 +25,25 @@ const tests: {
       assertEquals(result.status, 200);
     },
   },
+  {
+    name: "template should have default robots.txt",
+    fn: async () => {
+      const result = await fetch("http://localhost:5000/robots.txt");
+      assertEquals(
+        (await result.text()).split("\n"),
+        ["User-agent: *", "Allow: /"],
+      );
+      assertEquals(result.status, 200);
+    },
+  },
 ];
 
 let numberOfRanTest = 0;
 const done = () => {
   numberOfRanTest++;
   if (numberOfRanTest === tests.length) {
-    server.terminate();
+    const SIGTERM = 15;
+    process.kill(SIGTERM);
   }
 };
 

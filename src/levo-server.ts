@@ -29,6 +29,7 @@ export const LevoApp = {
     } = {},
     processRequestMiddlewares,
     processResponseMiddlewares,
+    importMapPath,
   }: {
     /**
      * Options for configuring server, for example hostname and port number.
@@ -47,6 +48,11 @@ export const LevoApp = {
      * 
      */
     rootDir: URL;
+
+    /**
+     * Path to import map that should be used when bundling client code.
+     */
+    importMapPath?: URL;
 
     /**
      * Minify Javascript code that will be served to client.  
@@ -138,7 +144,15 @@ export const LevoApp = {
         const now = Date.now();
         const bundled = decoder.decode(
           await Deno.run({
-            cmd: ["deno", "bundle", "--config", "levo.tsconfig.json", filename],
+            cmd: [
+              "deno",
+              "bundle",
+              "--config=levo.tsconfig.json",
+              ...(importMapPath
+                ? ["--unstable", `--importmap=${importMapPath.pathname}`]
+                : []),
+              filename,
+            ],
             stdout: "piped",
           })
             .output(),

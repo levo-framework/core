@@ -1,5 +1,5 @@
-import { LevoApp } from "../../mod/levo-app.ts";
-import { compression, helmet } from "../../mod/levo-middlewares.ts";
+import { LevoApp } from "levo/levo-app.ts";
+import { compression, helmet } from "levo/levo-middlewares.ts";
 import { Environment } from "./environment.ts";
 
 const PRODUCTION = Deno.args.includes("--production");
@@ -20,8 +20,11 @@ LevoApp.start<Environment>({
   minifyJs: PRODUCTION,
   cachePages: PRODUCTION,
   rootDir: new URL("./root", import.meta.url),
+  importMapPath: new URL("./import_map.json", import.meta.url),
   loggingOptions: PRODUCTION ? undefined : { model: true, action: true },
-  processRequestMiddlewares: [],
+  processRequestMiddlewares: [
+    (req) => console.log(new Date(), `${req.method} ${req.url}`),
+  ],
   processResponseMiddlewares: [
     compression,
     helmet,
