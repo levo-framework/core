@@ -143,7 +143,7 @@ levo new-project my-levo-app
 Then, to run the server:
 ```
 cd my-levo-app
-deno run --allow-all --unstable app.ts
+deno run --allow-all --unstable --importmap=import_map.json app.ts
 ```
 Finally, visit `http://localhost:5000` to see your first Levo page!
 
