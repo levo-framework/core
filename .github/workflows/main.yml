@@ -29,7 +29,6 @@ jobs:
       - uses: actions/checkout@master
       - uses: denolib/setup-deno@master
         with:
-          # Why don't use latest version? Refer https://github.com/denosaurs/deno_brotli/issues/2
           deno-version: v1.2.0 
       - name: Format Check
         run: sh ./tools/format.sh --check
