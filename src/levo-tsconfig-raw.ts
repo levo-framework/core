@@ -2,14 +2,11 @@ export const levoTsconfigRaw = `
   {
     "compilerOptions": {
       "allowJs": false,
-      "allowUmdGlobalAccess": false,
       "allowUnreachableCode": false,
       "allowUnusedLabels": false,
       "alwaysStrict": true,
-      "assumeChangesOnlyAffectDirectDependencies": false,
       "checkJs": false,
       "disableSizeLimit": false,
-      "generateCpuProfile": "profile.cpuprofile",
       "jsx": "react",
       "jsxFactory": "React.createElement",
       "lib": ["dom", "DOM", "ES2016", "ES2017", "ES2018", "ES2019"],
