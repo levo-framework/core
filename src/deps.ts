@@ -13,7 +13,7 @@ export * as server from "https://deno.land/std@0.59.0/http/mod.ts";
 
 export * as path from "https://deno.land/std@0.61.0/path/mod.ts";
 
-import _CleanCSS from "https://dev.jspm.io/clean-css@4.2.3";
+import _CleanCSS from "./clean-css.js";
 const CleanCSS: {
   new (): {
     minify(input: string): {
