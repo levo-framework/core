@@ -99,7 +99,7 @@ Deno.test({
     assertEquals(importMap, {
       "imports": {
         "levo/": `${sourceDir}/mod/`,
-        "asserts": "https://deno.land/std@0.60.0/testing/asserts.ts",
+        "asserts": "https://deno.land/std@0.61.0/testing/asserts.ts",
       },
     });
 
