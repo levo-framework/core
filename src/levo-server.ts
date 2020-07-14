@@ -1,6 +1,6 @@
 import { levoTsconfigRaw } from "./levo-tsconfig-raw.ts";
 import { mimeLookup } from "./mime-lookup.ts";
-import { server, path, exists } from "./deps.ts";
+import { server, path, exists, CleanCSS } from "./deps.ts";
 import { levoRuntimeCode } from "../levo-runtime-raw.ts";
 import { minify as minify$ } from "./minify.ts";
 import { resolveUrl } from "./resolve-url.ts";
@@ -21,6 +21,7 @@ export const LevoApp = {
     serverOptions,
     environment,
     minifyJs,
+    minifyCss,
     cachePages,
     rootDir,
     loggingOptions,
@@ -60,6 +61,13 @@ export const LevoApp = {
      * Default value is false.
      */
     minifyJs?: boolean;
+
+    /**
+     * Minify CSS files that will be served to client. 
+     * Should be set to true in production environment, while false in development.
+     * Default value is false.
+     */
+    minifyCss?: boolean;
 
     /**
      * Generate cached pages on startup and serve only cached pages.  
@@ -288,15 +296,35 @@ export const LevoApp = {
           }
           const file = await Deno.readFile(pathname);
           const contentType = mimeLookup(pathname);
+          const body = (() => {
+            if (minifyCss && contentType === "text/css") {
+              const result = new CleanCSS().minify(
+                new TextDecoder().decode(file),
+              );
+              if (result.warnings.length > 0) {
+                result.warnings.forEach((warning): void =>
+                  console.warn(warning)
+                );
+              }
+              if (result.errors.length > 0) {
+                result.errors.forEach((error): void =>
+                  console.error(error)
+                );
+              }
+              return new TextEncoder().encode(result.styles);
+            } else {
+              return file;
+            }
+          })();
           await req.respond(
             await processResponse(req, {
               status: 200,
+              body,
               headers: contentType
                 ? {
                   "content-type": contentType,
                 }
                 : {},
-              body: file,
             }),
           );
           continue;

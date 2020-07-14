@@ -1,11 +1,11 @@
 import Terser from "./terser.js";
-import { babelstandalone } from "./deps.ts";
+import Babel from "./babelstandalone.js";
 
 export const minify = (code: string): {
   code: string;
   error?: string;
 } => {
-  const babelled = (babelstandalone.default as any).transform(
+  const babelled = Babel.transform(
     code,
     { presets: [["env"]] },
   );

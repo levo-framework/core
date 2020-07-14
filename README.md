@@ -82,11 +82,12 @@ Because Deno has first-class support for Typescript and it don't require a packa
 * Gzip/brotli compression
 * Security headers
 * Javascript minification
+* CSS minification
 * Directory-based routing
 * Wildcard directory-based routing (for handling path params) 
-* Asset serving with MIME types
+* Asset serving (with MIME types)
 * Typechecking for HTML tags, attributes, events and style
-* Page caching 
+* Page memory caching 
 * CLI tool for generating boilerplates
 * Virtual DOM diffing
 * Action logging at browser (inspired by [Redux Logger](https://github.com/LogRocket/redux-logger))
