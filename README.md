@@ -120,9 +120,9 @@ deno bundle --config levo-runtime.tsconfig.json src/levo-runtime.ts > levo-runti
 # Tutorial
 ## Setup
 First of all, make you sure you installed Deno by following the [instruction here](https://deno.land/#installation).  
-Secondly, make sure you are using Deno `v1.1.3`. To do this, run the following command:
+Secondly, make sure you are using Deno `v1.2.0`. To do this, run the following command:
 ```
-deno upgrade --version=1.1.3
+deno upgrade --version=1.2.0
 ```
 
 ## IDE
