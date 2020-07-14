@@ -18,6 +18,7 @@ LevoApp.start<Environment>({
       VALUE_B: "bbb",
     },
   minifyJs: PRODUCTION,
+  minifyCss: PRODUCTION,
   cachePages: PRODUCTION,
   rootDir: new URL("./root", import.meta.url),
   importMapPath: new URL("./import_map.json", import.meta.url),
