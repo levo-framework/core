@@ -9,7 +9,7 @@ export {
   copy,
 } from "https://deno.land/std@0.61.0/fs/mod.ts";
 
-export * as server from "https://deno.land/std@0.59.0/http/mod.ts";
+export * as server from "https://deno.land/std@0.61.0/http/mod.ts";
 
 export * as path from "https://deno.land/std@0.61.0/path/mod.ts";
 

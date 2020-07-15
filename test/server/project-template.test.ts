@@ -11,7 +11,7 @@ const process = Deno.run({
   ],
 });
 
-await new Promise((resolve) => setTimeout(resolve, 20000));
+await new Promise((resolve) => setTimeout(resolve, 25000));
 
 const tests: {
   name: string;

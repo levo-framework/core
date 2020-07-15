@@ -1,6 +1,6 @@
 import { LevoApp } from "levo/levo-app.ts";
 import { compression, helmet } from "levo/levo-middlewares.ts";
-import { Environment } from "./environment.ts";
+import { Environment } from "environment";
 
 const PRODUCTION = Deno.args.includes("--production");
 LevoApp.start<Environment>({

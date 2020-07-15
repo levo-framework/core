@@ -8,8 +8,12 @@ export type LevoServe<Model, Environment> = (
 
 export type LevoServeRequest<Environment> = {
   url: string;
-  body: any;
+  body: Uint8Array;
+  contentLength: number | null;
   method: string;
+  proto: string;
+  protoMajor: number;
+  protoMinor: number;
   headers: Headers;
   search: string;
   environment: Environment;

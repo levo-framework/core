@@ -8,7 +8,7 @@ const process = Deno.run({
   cmd: "deno run --allow-all --unstable ./demo/app.ts --production".split(" "),
 });
 
-await new Promise((resolve) => setTimeout(resolve, 20000));
+await new Promise((resolve) => setTimeout(resolve, 25000));
 
 const tests: {
   name: string;

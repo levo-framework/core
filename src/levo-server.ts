@@ -376,10 +376,14 @@ export const LevoApp = {
         const response: LevoServeResponse<unknown> = await handleRequest
           ?.default?.({
             url: req.url,
-            body: req.body,
+            body: await Deno.readAll(req.body),
             method: req.method,
+            contentLength: req.contentLength,
             headers: req.headers,
             search: url.search,
+            proto: req.proto,
+            protoMajor: req.protoMajor,
+            protoMinor: req.protoMinor,
             environment,
           });
 
