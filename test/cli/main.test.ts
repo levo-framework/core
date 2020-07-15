@@ -100,6 +100,7 @@ Deno.test({
       "imports": {
         "levo/": `${sourceDir}/mod/`,
         "asserts": "https://deno.land/std@0.61.0/testing/asserts.ts",
+        "environment": "./environment.ts",
       },
     });
 
