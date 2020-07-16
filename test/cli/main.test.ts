@@ -58,6 +58,10 @@ Deno.test({
             ["update.ts"],
             ["view.tsx"],
           ]],
+          ["tools", [
+            ["start-development.sh"],
+            ["start-production.sh"],
+          ]],
           ["tsconfig.json"],
         ]],
       ]],
@@ -86,6 +90,10 @@ Deno.test({
         ["update.test.ts"],
         ["update.ts"],
         ["view.tsx"],
+      ]],
+      ["tools", [
+        ["start-development.sh"],
+        ["start-production.sh"],
       ]],
       ["tsconfig.json"],
     ]);
