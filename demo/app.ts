@@ -14,7 +14,8 @@ LevoApp.start<Environment>({
   },
   minifyJs: production,
   minifyCss: production,
-  cachePages: production,
+  cacheDirectoryTree: production,
+  watchFileChanges: !production,
   rootDir: new URL("./home", import.meta.url),
   loggingOptions: production ? undefined : {
     action: true,

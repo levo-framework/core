@@ -2,7 +2,7 @@ import { levoTsconfigRaw } from "./levo-tsconfig-raw.ts";
 import { mimeLookup } from "./mime-lookup.ts";
 import { server, path, exists, CleanCSS } from "./deps.ts";
 import { levoRuntimeCode } from "../levo-runtime-raw.ts";
-import { minify as minify$ } from "./minify.ts";
+import { minifyJavascript as minifyJavascript } from "./minify-js.ts";
 import { resolveUrl } from "./resolve-url.ts";
 import { getDirectoryTree } from "./get-directory-tree.ts";
 import { LevoServeResponse } from "../mod/levo-serve-response.ts";
@@ -15,6 +15,8 @@ import {
   ProcessRequestMiddleware,
   ProcessResponseMiddleware,
 } from "./middleware.ts";
+import { getLocalDependencies } from "./get-local-dependencies.ts";
+import { watchFile } from "./watch-file.ts";
 
 export const LevoApp = {
   start: async <Environment>({
@@ -22,12 +24,13 @@ export const LevoApp = {
     environment,
     minifyJs,
     minifyCss,
-    cachePages,
+    cacheDirectoryTree,
     rootDir,
     loggingOptions,
     memoryCache: {
       maxNumberOfPages = 1024,
     } = {},
+    watchFileChanges,
     processRequestMiddlewares,
     processResponseMiddlewares,
     importMapPath,
@@ -70,11 +73,11 @@ export const LevoApp = {
     minifyCss?: boolean;
 
     /**
-     * Generate cached pages on startup and serve only cached pages.  
+     * Cache the directory tree to improve route searching performance.
      * Should be set to true in production environment, while false in development.
      * Default value is false.
      */
-    cachePages?: boolean;
+    cacheDirectoryTree?: boolean;
 
     /**
      * Settings for memory cache
@@ -108,6 +111,12 @@ export const LevoApp = {
     };
 
     /**
+     * Watch for file changes. Default value is false.
+     * Should be set to true during development, but false in production.
+     */
+    watchFileChanges?: boolean;
+
+    /**
      * List of middlewares that will be used to process request. 
      */
     processRequestMiddlewares: ProcessRequestMiddleware[];
@@ -133,75 +142,123 @@ export const LevoApp = {
       maxNumberOfKeys: Number.POSITIVE_INFINITY,
     });
 
-    const minify = minifyJs
-      ? minify$
-      : (code: string) => ({ code, error: undefined });
-
     await Deno.writeFile("levo.tsconfig.json", encoder.encode(levoTsconfigRaw));
-    const bundle = async (filename: string, options?: {
-      overrideCache: boolean;
-    }) => {
-      const cachePath = filename + ".cache";
-      if (
-        cachePages && !options?.overrideCache &&
-        (pageCache.get(cachePath) || await exists(cachePath))
-      ) {
-        return pageCache.get(cachePath) ??
-          decoder.decode(await Deno.readFile(cachePath));
-      } else {
-        const now = Date.now();
-        const bundled = decoder.decode(
-          await Deno.run({
-            cmd: [
-              "deno",
-              "bundle",
-              "--config=levo.tsconfig.json",
-              ...(importMapPath
-                ? ["--unstable", `--importmap=${importMapPath.pathname}`]
-                : []),
-              filename,
-            ],
-            stdout: "piped",
-          })
-            .output(),
-        );
-        console.log(
-          `Finish bundle (${
-            ((Date.now() - now) / 1000).toFixed(2)
-          }s): ${cachePath}`,
-        );
 
-        const { code: minified, error } = minify(
+    const bundle = async ({
+      filename,
+      includeLevoTsconfig,
+      minifyBundle,
+    }: {
+      filename: string;
+      includeLevoTsconfig: boolean;
+      minifyBundle: boolean;
+    }) => {
+      const now = Date.now();
+      const bundled = decoder.decode(
+        await Deno.run({
+          cmd: [
+            "deno",
+            "bundle",
+            ...(includeLevoTsconfig
+              ? [
+                "--config=levo.tsconfig.json",
+              ]
+              : []),
+            ...(importMapPath
+              ? ["--unstable", `--importmap=${importMapPath.pathname}`]
+              : []),
+            filename,
+          ],
+          stdout: "piped",
+        })
+          .output(),
+      );
+      console.log(
+        `Finish bundle (${
+          ((Date.now() - now) / 1000).toFixed(2)
+        }s): ${filename}`,
+      );
+
+      if (!minifyBundle) {
+        return bundled;
+      } else {
+        const { code: minified, error } = minifyJavascript(
           bundled.replace(/export const/gi, "const"),
         );
         if (error) {
           console.error(`Failed to minify, using unminified code`, error);
         }
-        const final = error ? bundled : minified;
-        if (cachePages) {
-          pageCache.set(cachePath, final);
-          await Deno.writeFile(cachePath, encoder.encode(final));
-        }
+        return error ? bundled : minified;
+      }
+    };
+
+    const bundleClientCode = async (filename: string, options: {
+      overrideCache: boolean;
+    }) => {
+      const cachePath = filename + ".cache";
+      if (
+        !options.overrideCache &&
+        (pageCache.get(cachePath) || await exists(cachePath))
+      ) {
+        return pageCache.get(cachePath) ??
+          decoder.decode(await Deno.readFile(cachePath));
+      } else {
+        const final = await bundle(
+          {
+            filename,
+            includeLevoTsconfig: true,
+            minifyBundle: Boolean(minifyJs),
+          },
+        );
+        pageCache.set(cachePath, final);
+        await Deno.writeFile(cachePath, encoder.encode(final));
         return final;
       }
     };
 
-    if (cachePages) {
-      const scanDir = (dirname: string) =>
-        Array.from(Deno.readDirSync(dirname)).forEach((dir) => {
-          if (dir.isDirectory) {
-            scanDir(dirname + path.SEP + dir.name);
-          } else if (dir.isFile && dir.name === "_client.ts") {
-            const filename = dirname + path.SEP + dir.name;
-            bundle(filename, { overrideCache: true });
-          } else if (dir.isFile && dir.name === "_server.ts") {
-            const key = dirname + path.SEP + dir.name;
-            serverFunctionCache.set(key, import("file://" + key));
+    const scanDir = (dirname: string) =>
+      Array.from(Deno.readDirSync(dirname)).forEach((dir) => {
+        if (dir.isDirectory) {
+          scanDir(dirname + path.SEP + dir.name);
+        } else if (dir.isFile && dir.name === "_client.ts") {
+          const filename = dirname + path.SEP + dir.name;
+          const execute = () =>
+            bundleClientCode(filename, { overrideCache: true });
+          execute();
+          if (watchFileChanges) {
+            getLocalDependencies(filename)
+              .then((dependencies) => {
+                return watchFile({ paths: dependencies, onChange: execute });
+              });
           }
-        });
+        } else if (dir.isFile && dir.name === "_server.ts") {
+          const filename = dirname + path.SEP + dir.name;
+          const execute = () => {
+            bundle(
+              { filename, includeLevoTsconfig: false, minifyBundle: false },
+            )
+              .then(async (content) => {
+                const tempPath = filename + Date.now() + ".cache";
+                await Deno.writeFile(
+                  tempPath,
+                  new TextEncoder().encode(content),
+                );
+                const imported = await import("file://" + tempPath);
+                serverFunctionCache.set(filename, Promise.resolve(imported));
+                await Deno.remove(tempPath);
+              });
+          };
+          execute();
+          if (watchFileChanges) {
+            getLocalDependencies(filename)
+              .then((dependencies) => {
+                return watchFile({ paths: dependencies, onChange: execute });
+              });
+          }
+        }
+      });
 
-      scanDir(rootDir.pathname);
-    }
+    scanDir(rootDir.pathname);
 
     console.log(
       `Server listening on ${serverOptions.hostname ??
@@ -270,7 +327,7 @@ export const LevoApp = {
         await processRequest(req);
         const url = new URL("http://x/" + req.url);
         const resolvedUrl = resolveUrl(
-          cachePages
+          cacheDirectoryTree
             ? cachedDirectoryTree
             : getDirectoryTree(rootDir.pathname, { ignoreFiles: [] }),
           url.pathname,
@@ -347,27 +404,9 @@ export const LevoApp = {
           continue;
         }
 
-        const handleRequest: { default?: LevoServe<unknown, unknown> } =
-          await (cachePages
-            ? serverFunctionCache.get(handlerPath.pathname)
-            : (async () => {
-              // When cachePages is false
-              // Force re-compile _server.ts
-              const tempName = handlerPath.pathname + Date.now() + ".ts";
-              await Deno.copyFile(handlerPath.pathname, tempName);
-              return import("file://" + tempName)
-                .then((module) => {
-                  Deno.remove(tempName);
-                  return module;
-                })
-                .catch((error) => {
-                  console.error(error);
-                  console.error(
-                    `The error above is caught when importing "${handlerPath.pathname}"`,
-                  );
-                  Deno.remove(tempName);
-                });
-            })());
+        const handleRequest = await serverFunctionCache.get(
+          handlerPath.pathname,
+        );
         if (!handleRequest?.default) {
           throw new Error(
             `No default export found at "${handlerPath.pathname}"`,
@@ -413,8 +452,10 @@ export const LevoApp = {
           }
           case "page": {
             const filename = dirname + "_client.ts";
-            console.log(`Trying to bundle: ${filename}`);
-            const code = await bundle(filename);
+            const code = await bundleClientCode(
+              filename,
+              { overrideCache: false },
+            );
             await req.respond(
               await processResponse(req, {
                 status: 200,
