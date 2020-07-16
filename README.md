@@ -288,14 +288,14 @@ The environment variables will be injected to `_server.ts` of each routes. Envir
 
 
 ## How do I run in Levo in production mode?
-Simply use the `--production` flag:
 ```
-deno run --allow-all --unstable app.ts --production
+./tools/start-production.sh
 ```
 When Levo server is started in production mode, the server will generate every bundle for every Levo pages under the root directory.
 
+
 ## How to log action at browser?
-Run the server without the `--production` flag, or customise the `loggingOptions` object in `app.ts`.
+Run the server with the `./tools/start-development.sh` flag, or customise the `loggingOptions` object in `app.ts`.
 
 ---
 

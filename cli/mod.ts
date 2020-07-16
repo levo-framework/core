@@ -97,9 +97,7 @@ const main = async (): Promise<void> => {
       console.log(`Levo app successfully created at ${projectName}`);
       console.log(`Run the following command to get started:\n`);
       console.log(`  cd ${projectName}`);
-      console.log(
-        `  deno run --allow-all --unstable --importmap=import_map.json app.ts`,
-      );
+      console.log(`  ./tools/start-development.sh`);
     }
   } else if (args._?.[0] === "new-page") {
     const dirname = args._?.[1]?.toString();

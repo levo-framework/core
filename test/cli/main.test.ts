@@ -58,6 +58,10 @@ Deno.test({
             ["update.ts"],
             ["view.tsx"],
           ]],
+          ["tools", [
+            ["start-development.sh"],
+            ["start-production.sh"],
+          ]],
           ["tsconfig.json"],
         ]],
       ]],
@@ -87,6 +91,10 @@ Deno.test({
         ["update.ts"],
         ["view.tsx"],
       ]],
+      ["tools", [
+        ["start-development.sh"],
+        ["start-production.sh"],
+      ]],
       ["tsconfig.json"],
     ]);
 
@@ -105,11 +113,11 @@ Deno.test({
     });
 
     console.log("Test if the server created with the templates work");
+    Deno.chdir(projectName);
     const server = Deno.run({
-      cmd:
-        `deno run --allow-all --unstable --importmap=./${projectName}/import_map.json ./${projectName}/app.ts`
-          .split(" "),
+      cmd: [`./tools/start-development.sh`],
     });
+    Deno.chdir("..");
 
     await new Promise((resolve) => setTimeout(resolve, 25000));
 
