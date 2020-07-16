@@ -106,9 +106,7 @@ Deno.test({
 
     console.log("Test if the server created with the templates work");
     const server = Deno.run({
-      cmd:
-        `deno run --allow-all --unstable --importmap=./${projectName}/import_map.json ./${projectName}/app.ts`
-          .split(" "),
+      cmd: [`./${projectName}/tools/start-development.sh`],
     });
 
     await new Promise((resolve) => setTimeout(resolve, 25000));
