@@ -115,7 +115,7 @@ Deno.test({
     console.log("Test if the server created with the templates work");
     Deno.chdir(projectName);
     const server = Deno.run({
-      cmd: [`./${projectName}/tools/start-development.sh`],
+      cmd: [`./tools/start-development.sh`],
     });
     Deno.chdir("..");
 
