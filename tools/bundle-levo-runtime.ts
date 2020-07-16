@@ -1,12 +1,12 @@
 import { runCommand } from "../src/run-command.ts";
-import { minify } from "../src/minify.ts";
+import { minifyJavascript } from "../src/minify-js.ts";
 
 const main = async () => {
   const { output: bundled } = await runCommand(
     "deno bundle --config levo-runtime.tsconfig.json src/levo-runtime.ts",
   );
   if (bundled) {
-    const { code, error } = minify(bundled);
+    const { code, error } = minifyJavascript(bundled);
     if (error) {
       console.error(error);
       return Deno.exit(1);
