@@ -79,6 +79,7 @@ Levo is a frontend framework that supports Server-Side Rendering (SSR) and The E
 Because Deno has first-class support for Typescript and it don't require a package manager. You can find out more about it at [10 Things I Regret About Node.js](https://www.youtube.com/watch?v=M3BM9TB-8yA).
 
 ## Features that are supported out of the box (a.k.a no setup required)
+* Hot reload (~2 seconds)
 * Gzip/brotli compression
 * Security headers
 * Javascript minification

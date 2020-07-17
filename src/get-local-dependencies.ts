@@ -20,7 +20,6 @@ export const getLocalDependencies = async (
   },
 ): Promise<string[]> => {
   const currentDirectory = Deno.cwd();
-  console.log(Deno.cwd());
   const dependencies = (await _getLocalDependencies(
     { filename, currentDirectory, rootDirectory: currentDirectory, importMap },
   ))

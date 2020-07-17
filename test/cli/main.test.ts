@@ -152,6 +152,8 @@ Deno.test({
     const SIGTERM = 15;
     server.kill(SIGTERM);
 
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
     console.log("Delete created project folder");
     await Deno.remove(projectName, { recursive: true });
 

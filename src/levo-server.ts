@@ -15,7 +15,6 @@ import {
   ProcessRequestMiddleware,
   ProcessResponseMiddleware,
 } from "./middleware.ts";
-import { watchFile } from "./watch-file.ts";
 import { watchDependencies } from "./watch-dependencies.ts";
 
 export const LevoApp = {
@@ -228,6 +227,27 @@ export const LevoApp = {
       }
     };
 
+    const bundleServerCode = async (filename: string): Promise<
+      {
+        default?: LevoServe<unknown, unknown> | undefined;
+      } | undefined
+    > => {
+      return bundle(
+        { filename, includeLevoTsconfig: false, minifyBundle: false },
+      )
+        .then(async (content) => {
+          const tempPath = filename + Date.now() + ".cache";
+          await Deno.writeFile(
+            tempPath,
+            new TextEncoder().encode(content),
+          );
+          const imported = await import("file://" + tempPath);
+          serverFunctionCache.set(filename, Promise.resolve(imported));
+          await Deno.remove(tempPath);
+          return serverFunctionCache.get(filename);
+        });
+    };
+
     const scanDir = (dirname: string) =>
       Array.from(Deno.readDirSync(dirname)).forEach((dir) => {
         if (dir.isDirectory) {
@@ -242,21 +262,7 @@ export const LevoApp = {
           }
         } else if (dir.isFile && dir.name === "_server.ts") {
           const filename = dirname + path.SEP + dir.name;
-          const execute = () => {
-            bundle(
-              { filename, includeLevoTsconfig: false, minifyBundle: false },
-            )
-              .then(async (content) => {
-                const tempPath = filename + Date.now() + ".cache";
-                await Deno.writeFile(
-                  tempPath,
-                  new TextEncoder().encode(content),
-                );
-                const imported = await import("file://" + tempPath);
-                serverFunctionCache.set(filename, Promise.resolve(imported));
-                await Deno.remove(tempPath);
-              });
-          };
+          const execute = () => bundleServerCode(filename);
           execute();
           if (watchFileChanges) {
             watchDependencies({ filename, onChange: execute, importMap });
@@ -410,9 +416,9 @@ export const LevoApp = {
           continue;
         }
 
-        const handleRequest = await serverFunctionCache.get(
+        const handleRequest = (await serverFunctionCache.get(
           handlerPath.pathname,
-        );
+        )) ?? (await bundleServerCode(handlerPath.pathname));
         if (!handleRequest?.default) {
           throw new Error(
             `No default export found at "${handlerPath.pathname}"`,
