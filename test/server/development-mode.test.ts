@@ -39,7 +39,7 @@ const tests: {
     name: "handle URL with query params",
     fn: async () => {
       const result = await fetch("http://localhost:3000?title=spongebob");
-      assertEquals((await result.text()).includes("spongebob"), true);
+      assert((await result.text()).includes("spongebob"));
       assertEquals(result.headers.get("content-type"), "text/html");
       assertEquals(result.status, 200);
     },
@@ -48,10 +48,10 @@ const tests: {
     name: "handle path param wildcard",
     fn: async () => {
       const result1 = await fetch("http://localhost:3000/user/xxx");
-      assertEquals((await result1.text()).includes("I am xxx"), true);
+      assert((await result1.text()).includes("I am xxx"));
 
       const result2 = await fetch("http://localhost:3000/user/jojo");
-      assertEquals((await result2.text()).includes("I am jojo"), true);
+      assert((await result2.text()).includes("I am jojo"));
     },
   },
   {
@@ -204,7 +204,7 @@ button { background-color: bisque; font-size: 24px; }
 
       // reset the file
       await Deno.writeFile(path, encoder.encode(fileContent));
-      assertEquals((await result2.text()).includes(replacedWord), true);
+      assert((await result2.text()).includes(replacedWord));
     },
   },
 ];

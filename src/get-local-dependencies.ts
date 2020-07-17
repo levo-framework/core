@@ -23,6 +23,7 @@ export const getLocalDependencies = async (
   const dependencies = (await _getLocalDependencies(
     { filename, currentDirectory, rootDirectory: currentDirectory, importMap },
   ))
+    .map((line) => line.trim())
     .filter(Boolean)
     .filter((line) => !line.startsWith("http"))
     .filter((x, i, xs) => i === xs.indexOf(x));
