@@ -1,23 +1,42 @@
+import { exists } from "./deps.ts";
+
 export const watchFile = async (
-  { paths, onChange }: {
+  {
+    paths,
+    onChange,
+    log,
+  }: {
     paths: string[];
     onChange: (event: Deno.FsEvent) => void;
+    log?: boolean;
   },
-): Promise<void> => {
-  let handled = false;
-  const throttle = (event: Deno.FsEvent): void => {
-    if (!handled) {
-      handled = true;
-      onChange(event);
-      setTimeout(() => {
-        handled = false;
-      }, 300);
-    }
-  };
-  // Throttling is necessary because somehow more than
-  // one events will be fired for each file changes
-
-  for await (const event of Deno.watchFs(paths)) {
-    throttle(event);
+): Promise<{
+  stop: () => Promise<void>;
+}> => {
+  if (log) {
+    console.log("(watch-file.ts) Watching: " + paths.join(", "));
   }
+  const worker = new Worker(new URL("./watcher.ts", import.meta.url).href, {
+    type: "module",
+    deno: true,
+  });
+  worker.postMessage({
+    paths: (await Promise.all(paths.map(async (path) => {
+      if (await exists(path)) {
+        return path;
+      } else {
+        console.warn(`(watch-file.ts) Cannot find path: ${path}`);
+        return undefined;
+      }
+    })))
+      .filter((path): path is string => path !== undefined),
+  });
+  worker.onmessage = (event) => {
+    onChange(event.data as Deno.FsEvent);
+  };
+  return {
+    stop: async () => {
+      worker.terminate();
+    },
+  };
 };

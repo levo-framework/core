@@ -15,8 +15,8 @@ import {
   ProcessRequestMiddleware,
   ProcessResponseMiddleware,
 } from "./middleware.ts";
-import { getLocalDependencies } from "./get-local-dependencies.ts";
 import { watchFile } from "./watch-file.ts";
+import { watchDependencies } from "./watch-dependencies.ts";
 
 export const LevoApp = {
   start: async <Environment>({
@@ -226,10 +226,7 @@ export const LevoApp = {
             bundleClientCode(filename, { overrideCache: true });
           execute();
           if (watchFileChanges) {
-            getLocalDependencies(filename)
-              .then((dependencies) => {
-                return watchFile({ paths: dependencies, onChange: execute });
-              });
+            watchDependencies({ filename, onChange: execute });
           }
         } else if (dir.isFile && dir.name === "_server.ts") {
           const filename = dirname + path.SEP + dir.name;
@@ -250,10 +247,7 @@ export const LevoApp = {
           };
           execute();
           if (watchFileChanges) {
-            getLocalDependencies(filename)
-              .then((dependencies) => {
-                return watchFile({ paths: dependencies, onChange: execute });
-              });
+            watchDependencies({ filename, onChange: execute });
           }
         }
       });

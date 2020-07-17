@@ -7,11 +7,14 @@ Deno.test({
     const aPath = "./test/unit/test-files/a.ts";
     const bPath = "./test/unit/test-files/b.ts";
     const cPath = "./test/unit/test-files/c.ts";
+    const xPath = "./test/unit/test-files/x.ts";
 
     const events: Deno.FsEvent[] = [];
-    watchDependencies(
+
+    // Watch xPath
+    const handler = await watchDependencies(
       {
-        filename: "./test/unit/test-files/a.ts",
+        filename: xPath,
         onChange: (event) => {
           events.push(event);
         },
@@ -30,21 +33,22 @@ Deno.test({
     const aContent = await read(aPath);
     const bContent = await read(bPath);
     const cContent = await read(cPath);
+    const xContent = await read(xPath);
 
-    // Change file a.ts
-    await write(aPath, Date.now().toString());
+    // Change file x.ts to include a.ts
+    await write(xPath, `import * as a from "./a.ts"`);
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Change file b.ts
-    await write(bPath, Date.now().toString());
+    await write(bPath, `export * from './c.ts'`);
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Change file c.ts
-    await write(cPath, Date.now().toString());
+    await write(cPath, `export const c = 3`);
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     assertEquals(events.map((event) => event.paths), [
-      [Deno.cwd() + "/test/unit/test-files/a.ts"],
+      [Deno.cwd() + "/test/unit/test-files/x.ts"],
       [Deno.cwd() + "/test/unit/test-files/b.ts"],
       [Deno.cwd() + "/test/unit/test-files/c.ts"],
     ]);
@@ -53,9 +57,8 @@ Deno.test({
     await write(aPath, aContent);
     await write(bPath, bContent);
     await write(cPath, cContent);
+    await write(xPath, xContent);
 
-    Deno.exit();
+    await handler.stop?.();
   },
-  sanitizeOps: false,
-  sanitizeResources: false,
 });

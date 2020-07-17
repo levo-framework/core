@@ -9,9 +9,22 @@ export const watchDependencies = async (
     filename: string;
     onChange: (event: Deno.FsEvent) => void;
   },
-): Promise<void> => {
-  return watchFile({
-    paths: await getLocalDependencies(filename),
-    onChange,
-  });
+): Promise<{
+  stop?: () => Promise<void>;
+}> => {
+  const handler: { stop?: () => Promise<void> } = {};
+  const watch = async () => {
+    const dependencies = await getLocalDependencies(filename);
+    const newHandler = await watchFile({
+      paths: dependencies,
+      onChange: async (event) => {
+        await handler.stop?.();
+        onChange(event);
+        await watch();
+      },
+    });
+    handler.stop = newHandler.stop;
+  };
+  await watch();
+  return handler;
 };
