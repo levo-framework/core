@@ -22,7 +22,6 @@ export const LevoApp = {
   start: async <Environment>({
     serverOptions,
     environment,
-    minifyJs,
     minifyCss,
     cacheDirectoryTree,
     rootDir,
@@ -57,13 +56,6 @@ export const LevoApp = {
      * Path to import map that should be used when bundling client code.
      */
     importMapPath?: URL;
-
-    /**
-     * Minify Javascript code that will be served to client.  
-     * Should be set to true in production environment, while false in development.
-     * Default value is false.
-     */
-    minifyJs?: boolean;
 
     /**
      * Minify CSS files that will be served to client. 
@@ -227,7 +219,7 @@ export const LevoApp = {
           {
             filename,
             includeLevoTsconfig: true,
-            minifyBundle: Boolean(minifyJs),
+            minifyBundle: true,
           },
         );
         pageCache.set(cachePath, final);
@@ -480,12 +472,7 @@ export const LevoApp = {
       <!DOCTYPE html>
       ${response.html}
       <script>
-      ${
-                  minifyJs
-                    ? // This is necessary because we use Babel to transform the bundled code down to ES5
-                      `(()=>{${regeneratorRuntimeCode}})();`
-                    : ""
-                }
+          (()=>{${regeneratorRuntimeCode /** This is needed because use Babel to transpile the code down to ES5 */}})();
           (()=>{${code}})();
           (()=>{window.$levo.model=${JSON.stringify(response.model)}})();
           (()=>{window.$levo.log=${JSON.stringify(loggingOptions)}})();

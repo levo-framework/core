@@ -17,7 +17,6 @@ LevoApp.start<Environment>({
       VALUE_A: "aaa",
       VALUE_B: "bbb",
     },
-  minifyJs: PRODUCTION,
   minifyCss: PRODUCTION,
   cacheDirectoryTree: PRODUCTION,
   watchFileChanges: !PRODUCTION,

@@ -47,7 +47,7 @@ const tests: {
         encoder.encode(originalContent.replace("Change to green", "spongebob")),
       );
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 5000));
 
       const text2 = await (await fetch("http://localhost:5000")).text();
       assert(text2.includes("spongebob"));

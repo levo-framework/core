@@ -12,7 +12,6 @@ LevoApp.start<Environment>({
   environment: {
     VALUE_A: production ? "PROD_ENV" : "DEV_ENV",
   },
-  minifyJs: production,
   minifyCss: production,
   cacheDirectoryTree: production,
   watchFileChanges: !production,

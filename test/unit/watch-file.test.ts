@@ -6,7 +6,7 @@ Deno.test({
   fn: async () => {
     let counter = 0;
     const path = "./test/unit/test-files/x.ts";
-    watchFile({
+    const handler = await watchFile({
       paths: [path],
       onChange: () => {
         counter++;
@@ -18,7 +18,7 @@ Deno.test({
     // Change the file x.ts
     await Deno.writeFile(path, new TextEncoder().encode("hello"));
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Expect onChange handlers is olny triggered once
     assertEquals(counter, 1);
@@ -26,8 +26,6 @@ Deno.test({
     // Reset the file
     await Deno.writeFile(path, initialContent);
 
-    Deno.exit();
+    await handler.stop();
   },
-  sanitizeOps: false,
-  sanitizeResources: false,
 });
