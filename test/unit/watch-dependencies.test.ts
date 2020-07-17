@@ -60,5 +60,7 @@ Deno.test({
     await write(xPath, xContent);
 
     await handler.stop?.();
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
   },
 });
