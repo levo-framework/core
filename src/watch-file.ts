@@ -50,7 +50,7 @@ export const watchFile = async (
       // TODO: remove this try-catch block after the `return` on
       //       Deno.watchFs is fixed by nayeerm
     }
-  }, 1);
+  }, 100);
 
   return {
     stop: async () => {
