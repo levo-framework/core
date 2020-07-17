@@ -2,7 +2,7 @@ import { levoTsconfigRaw } from "./levo-tsconfig-raw.ts";
 import { mimeLookup } from "./mime-lookup.ts";
 import { server, path, exists, CleanCSS } from "./deps.ts";
 import { levoRuntimeCode } from "../levo-runtime-raw.ts";
-import { minifyJavascript as minifyJavascript } from "./minify-js.ts";
+import { minifyJavascript } from "./minify-js.ts";
 import { resolveUrl } from "./resolve-url.ts";
 import { getDirectoryTree } from "./get-directory-tree.ts";
 import { LevoServeResponse } from "../mod/levo-serve-response.ts";
