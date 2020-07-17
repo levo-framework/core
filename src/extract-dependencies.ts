@@ -9,5 +9,6 @@ export const extractDependencies = (code: string): string[] => {
     .map((line) => {
       const result = line.slice(4).trim();
       return result.slice(1, result.length - 1);
-    });
+    })
+    .filter(Boolean);
 };

@@ -144,6 +144,26 @@ export const LevoApp = {
 
     await Deno.writeFile("levo.tsconfig.json", encoder.encode(levoTsconfigRaw));
 
+    const importMap: Record<string, string> | undefined = importMapPath
+      ? await (async () => {
+        try {
+          const result = JSON.parse(
+            new TextDecoder().decode(
+              await Deno.readFile(importMapPath?.pathname),
+            ),
+          );
+          if (!("imports" in result)) {
+            throw new Error(`Missing "imports" property`);
+          } else if (typeof result.imports !== "object") {
+            throw new Error(`"imports" should have type of object.`);
+          }
+          return result.imports;
+        } catch (error) {
+          console.error(`Error parsing import map: `, error);
+        }
+      })()
+      : undefined;
+
     const bundle = async ({
       filename,
       includeLevoTsconfig,
@@ -226,7 +246,7 @@ export const LevoApp = {
             bundleClientCode(filename, { overrideCache: true });
           execute();
           if (watchFileChanges) {
-            watchDependencies({ filename, onChange: execute });
+            watchDependencies({ filename, onChange: execute, importMap });
           }
         } else if (dir.isFile && dir.name === "_server.ts") {
           const filename = dirname + path.SEP + dir.name;
@@ -247,7 +267,7 @@ export const LevoApp = {
           };
           execute();
           if (watchFileChanges) {
-            watchDependencies({ filename, onChange: execute });
+            watchDependencies({ filename, onChange: execute, importMap });
           }
         }
       });

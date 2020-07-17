@@ -1,14 +1,8 @@
-import { assertEquals } from "../../src/deps.ts";
+import { assert, assertEquals } from "../../src/deps.ts";
 
+Deno.chdir("./templates/new-project/");
 const process = Deno.run({
-  cmd: [
-    "deno",
-    "run",
-    "--allow-all",
-    "--unstable",
-    "--importmap=./templates/new-project/import_map.json",
-    "templates/new-project/app.ts",
-  ],
+  cmd: ["./tools/start-development.sh"],
 });
 
 await new Promise((resolve) => setTimeout(resolve, 25000));
@@ -34,6 +28,32 @@ const tests: {
         ["User-agent: *", "Allow: /"],
       );
       assertEquals(result.status, 200);
+    },
+  },
+  {
+    name: "hot reload should work",
+    fn: async () => {
+      const text1 = await (await fetch("http://localhost:5000")).text();
+      assert(!text1.includes("spongebob"));
+
+      // Update the content of view.tsx
+      const path = "./root/view.tsx";
+      const encoder = new TextEncoder();
+      const decoder = new TextDecoder();
+      const originalContent = decoder.decode(await Deno.readFile(path));
+
+      await Deno.writeFile(
+        path,
+        encoder.encode(originalContent.replace("Change to green", "spongebob")),
+      );
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      const text2 = await (await fetch("http://localhost:5000")).text();
+      assert(text2.includes("spongebob"));
+
+      // Reset the file
+      await Deno.writeFile(path, encoder.encode(originalContent));
     },
   },
 ];

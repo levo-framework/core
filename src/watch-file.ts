@@ -25,7 +25,7 @@ export const watchFile = async (
       if (await exists(path)) {
         return path;
       } else {
-        console.warn(`(watch-file.ts) Cannot find path: ${path}`);
+        console.warn(`(watch-file.ts) Cannot find dependency "${path}"`);
         return undefined;
       }
     })))
