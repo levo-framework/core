@@ -4,6 +4,8 @@ import { watchDependencies } from "../../src/watch-dependencies.ts";
 Deno.test({
   name: "watch dependencies",
   fn: async () => {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     const aPath = "./test/unit/test-files/a.ts";
     const bPath = "./test/unit/test-files/b.ts";
     const cPath = "./test/unit/test-files/c.ts";
