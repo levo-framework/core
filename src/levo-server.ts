@@ -121,7 +121,7 @@ export const LevoApp = {
     const decoder = new TextDecoder("utf-8");
     const encoder = new TextEncoder();
 
-    const pageCache = new MemoryCache<string>(
+    const clientPageCache = new MemoryCache<string>(
       { maxNumberOfKeys: maxNumberOfPages },
     );
 
@@ -206,23 +206,20 @@ export const LevoApp = {
     const bundleClientCode = async (filename: string): Promise<string> => {
       const execute = async () => {
         const cachePath = filename + ".cache";
-        if (
-          !hotReload &&
-          (pageCache.get(cachePath) || await exists(cachePath))
-        ) {
-          return pageCache.get(cachePath) ??
-            decoder.decode(await Deno.readFile(cachePath));
+        const cache = clientPageCache.get(cachePath);
+        if (!hotReload && (cache || await exists(cachePath))) {
+          return cache ?? decoder.decode(await Deno.readFile(cachePath));
         } else {
-          const final = await bundle(
+          const bundled = await bundle(
             {
               filename,
               includeLevoTsconfig: true,
               minifyBundle: true,
             },
           );
-          pageCache.set(cachePath, final);
-          await Deno.writeFile(cachePath, encoder.encode(final));
-          return final;
+          clientPageCache.set(cachePath, bundled);
+          await Deno.writeFile(cachePath, encoder.encode(bundled));
+          return bundled;
         }
       };
       if (hotReload) {
@@ -237,20 +234,23 @@ export const LevoApp = {
       } | undefined
     > => {
       const execute = async () => {
-        return bundle(
-          { filename, includeLevoTsconfig: false, minifyBundle: false },
-        )
-          .then(async (content) => {
-            const tempPath = filename + Date.now() + ".cache";
-            await Deno.writeFile(
-              tempPath,
-              new TextEncoder().encode(content),
-            );
-            const imported = await import("file://" + tempPath);
-            serverFunctionCache.set(filename, Promise.resolve(imported));
-            await Deno.remove(tempPath);
-            return serverFunctionCache.get(filename);
-          });
+        const cache = serverFunctionCache.get(filename);
+        if (!hotReload && cache) {
+          return cache;
+        } else {
+          const bundled = await bundle(
+            { filename, includeLevoTsconfig: false, minifyBundle: false },
+          );
+          const tempPath = filename + Date.now() + ".cache";
+          await Deno.writeFile(
+            tempPath,
+            new TextEncoder().encode(bundled),
+          );
+          const imported = await import("file://" + tempPath);
+          serverFunctionCache.set(filename, Promise.resolve(imported));
+          await Deno.remove(tempPath);
+          return serverFunctionCache.get(filename);
+        }
       };
 
       if (hotReload) {
@@ -418,9 +418,7 @@ export const LevoApp = {
           continue;
         }
 
-        const handleRequest = (await serverFunctionCache.get(
-          handlerPath.pathname,
-        )) ?? (await bundleServerCode(handlerPath.pathname));
+        const handleRequest = await bundleServerCode(handlerPath.pathname);
         if (!handleRequest?.default) {
           throw new Error(
             `No default export found at "${handlerPath.pathname}"`,

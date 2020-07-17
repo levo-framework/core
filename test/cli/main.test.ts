@@ -144,7 +144,9 @@ Deno.test({
     const replacedWord = Date.now().toString();
     await Deno.writeFile(
       aboutPagePath,
-      encoder.encode(aboutPageContent.replace(/rotate/gi, replacedWord)),
+      encoder.encode(
+        aboutPageContent.replace(/change to green/gi, replacedWord),
+      ),
     );
 
     const resultText = await (await fetch("http://localhost:5000/about"))
