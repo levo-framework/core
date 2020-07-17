@@ -35,7 +35,7 @@ export const watchFile = async (
       onChange(event);
       setTimeout(() => {
         handled = false;
-      }, 300);
+      }, 1);
     }
   };
 
