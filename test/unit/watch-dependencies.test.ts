@@ -39,15 +39,15 @@ Deno.test({
 
     // Change file x.ts to include a.ts
     await write(xPath, `import * as a from "./a.ts"`);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Change file b.ts
     await write(bPath, `export * from './c.ts'`);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Change file c.ts
     await write(cPath, `export const c = 3`);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     assertEquals(events.map((event) => event.paths), [
       [Deno.cwd() + "/test/unit/test-files/x.ts"],
