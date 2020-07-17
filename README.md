@@ -134,7 +134,7 @@ It's highly recommended that you use VSCode, and install the the official Deno e
 ## Installation
 Run the following command to install `levo` CLI to get started.
 ```
-deno install --allow-all --unstable --name levo https://raw.githubusercontent.com/levo-framework/core/master/cli/mod.ts
+deno install --allow-all --unstable --force --name levo https://raw.githubusercontent.com/levo-framework/core/master/cli/mod.ts
 ```
 
 ## Getting started
