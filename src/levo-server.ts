@@ -204,10 +204,10 @@ export const LevoApp = {
     };
 
     const bundleClientCode = async (filename: string): Promise<string> => {
-      const execute = async () => {
+      const execute = async ({ overrideCache }: { overrideCache: boolean }) => {
         const cachePath = filename + ".cache";
         const cache = clientPageCache.get(cachePath);
-        if (!hotReload && (cache || await exists(cachePath))) {
+        if (!overrideCache && (cache || await exists(cachePath))) {
           return cache ?? decoder.decode(await Deno.readFile(cachePath));
         } else {
           const bundled = await bundle(
@@ -223,9 +223,15 @@ export const LevoApp = {
         }
       };
       if (hotReload) {
-        watchDependencies({ filename, onChange: execute, importMap });
+        watchDependencies(
+          {
+            filename,
+            onChange: () => execute({ overrideCache: true }),
+            importMap,
+          },
+        );
       }
-      return execute();
+      return execute({ overrideCache: false });
     };
 
     const bundleServerCode = async (filename: string): Promise<
@@ -233,9 +239,9 @@ export const LevoApp = {
         default?: LevoServe<unknown, unknown> | undefined;
       } | undefined
     > => {
-      const execute = async () => {
+      const execute = async ({ overrideCache }: { overrideCache: boolean }) => {
         const cache = serverFunctionCache.get(filename);
-        if (!hotReload && cache) {
+        if (!overrideCache && cache) {
           return cache;
         } else {
           const bundled = await bundle(
@@ -254,9 +260,15 @@ export const LevoApp = {
       };
 
       if (hotReload) {
-        watchDependencies({ filename, onChange: execute, importMap });
+        watchDependencies(
+          {
+            filename,
+            onChange: () => execute({ overrideCache: true }),
+            importMap,
+          },
+        );
       }
-      return execute();
+      return execute({ overrideCache: false });
     };
 
     const scanDir = (dirname: string) =>
