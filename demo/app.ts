@@ -12,9 +12,9 @@ LevoApp.start<Environment>({
   environment: {
     VALUE_A: production ? "PROD_ENV" : "DEV_ENV",
   },
-  minifyJs: production,
   minifyCss: production,
-  cachePages: production,
+  cacheDirectoryTree: production,
+  hotReload: !production,
   rootDir: new URL("./home", import.meta.url),
   loggingOptions: production ? undefined : {
     action: true,

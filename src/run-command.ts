@@ -17,5 +17,6 @@ export const runCommand = async (
   if (error) {
     console.error("[error]", error);
   }
+  process.close();
   return { output, error };
 };

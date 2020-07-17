@@ -136,6 +136,23 @@ Deno.test({
     assertEquals(response2.status, 200);
     assertEquals(response2.headers.get("content-type"), "text/html");
 
+    console.log(`Test hot reload with new pages`);
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
+    const aboutPagePath = `${projectName}/root/about/view.tsx`;
+    const aboutPageContent = decoder.decode(await Deno.readFile(aboutPagePath));
+    const replacedWord = Date.now().toString();
+    await Deno.writeFile(
+      aboutPagePath,
+      encoder.encode(
+        aboutPageContent.replace(/change to green/gi, replacedWord),
+      ),
+    );
+
+    const resultText = await (await fetch("http://localhost:5000/about"))
+      .text();
+    assert(resultText.includes(replacedWord));
+
     console.log(`Test new-page command with nested wildcard path`);
     Deno.chdir(projectName);
     await runCommand(
@@ -149,8 +166,10 @@ Deno.test({
 
     console.log("Tear down");
     console.log("Terminate server");
-    const SIGTERM = 15;
-    server.kill(SIGTERM);
+
+    server.kill(Deno.Signal.SIGTERM);
+
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     console.log("Delete created project folder");
     await Deno.remove(projectName, { recursive: true });

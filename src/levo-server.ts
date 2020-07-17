@@ -2,7 +2,7 @@ import { levoTsconfigRaw } from "./levo-tsconfig-raw.ts";
 import { mimeLookup } from "./mime-lookup.ts";
 import { server, path, exists, CleanCSS } from "./deps.ts";
 import { levoRuntimeCode } from "../levo-runtime-raw.ts";
-import { minify as minify$ } from "./minify.ts";
+import { minifyJavascript } from "./minify-js.ts";
 import { resolveUrl } from "./resolve-url.ts";
 import { getDirectoryTree } from "./get-directory-tree.ts";
 import { LevoServeResponse } from "../mod/levo-serve-response.ts";
@@ -15,19 +15,20 @@ import {
   ProcessRequestMiddleware,
   ProcessResponseMiddleware,
 } from "./middleware.ts";
+import { watchDependencies } from "./watch-dependencies.ts";
 
 export const LevoApp = {
   start: async <Environment>({
     serverOptions,
     environment,
-    minifyJs,
     minifyCss,
-    cachePages,
+    cacheDirectoryTree,
     rootDir,
     loggingOptions,
     memoryCache: {
       maxNumberOfPages = 1024,
     } = {},
+    hotReload,
     processRequestMiddlewares,
     processResponseMiddlewares,
     importMapPath,
@@ -56,13 +57,6 @@ export const LevoApp = {
     importMapPath?: URL;
 
     /**
-     * Minify Javascript code that will be served to client.  
-     * Should be set to true in production environment, while false in development.
-     * Default value is false.
-     */
-    minifyJs?: boolean;
-
-    /**
      * Minify CSS files that will be served to client. 
      * Should be set to true in production environment, while false in development.
      * Default value is false.
@@ -70,11 +64,11 @@ export const LevoApp = {
     minifyCss?: boolean;
 
     /**
-     * Generate cached pages on startup and serve only cached pages.  
+     * Cache the directory tree to improve route searching performance.
      * Should be set to true in production environment, while false in development.
      * Default value is false.
      */
-    cachePages?: boolean;
+    cacheDirectoryTree?: boolean;
 
     /**
      * Settings for memory cache
@@ -108,6 +102,12 @@ export const LevoApp = {
     };
 
     /**
+     * Watch for file changes. Default value is false.
+     * Should be set to true during development, but false in production.
+     */
+    hotReload?: boolean;
+
+    /**
      * List of middlewares that will be used to process request. 
      */
     processRequestMiddlewares: ProcessRequestMiddleware[];
@@ -121,7 +121,7 @@ export const LevoApp = {
     const decoder = new TextDecoder("utf-8");
     const encoder = new TextEncoder();
 
-    const pageCache = new MemoryCache<string>(
+    const clientPageCache = new MemoryCache<string>(
       { maxNumberOfKeys: maxNumberOfPages },
     );
 
@@ -133,75 +133,146 @@ export const LevoApp = {
       maxNumberOfKeys: Number.POSITIVE_INFINITY,
     });
 
-    const minify = minifyJs
-      ? minify$
-      : (code: string) => ({ code, error: undefined });
-
     await Deno.writeFile("levo.tsconfig.json", encoder.encode(levoTsconfigRaw));
-    const bundle = async (filename: string, options?: {
-      overrideCache: boolean;
-    }) => {
-      const cachePath = filename + ".cache";
-      if (
-        cachePages && !options?.overrideCache &&
-        (pageCache.get(cachePath) || await exists(cachePath))
-      ) {
-        return pageCache.get(cachePath) ??
-          decoder.decode(await Deno.readFile(cachePath));
-      } else {
-        const now = Date.now();
-        const bundled = decoder.decode(
-          await Deno.run({
-            cmd: [
-              "deno",
-              "bundle",
-              "--config=levo.tsconfig.json",
-              ...(importMapPath
-                ? ["--unstable", `--importmap=${importMapPath.pathname}`]
-                : []),
-              filename,
-            ],
-            stdout: "piped",
-          })
-            .output(),
-        );
-        console.log(
-          `Finish bundle (${
-            ((Date.now() - now) / 1000).toFixed(2)
-          }s): ${cachePath}`,
-        );
 
-        const { code: minified, error } = minify(
+    const importMap: Record<string, string> | undefined = importMapPath
+      ? await (async () => {
+        try {
+          const result = JSON.parse(
+            new TextDecoder().decode(
+              await Deno.readFile(importMapPath?.pathname),
+            ),
+          );
+          if (!("imports" in result)) {
+            throw new Error(`Missing "imports" property`);
+          } else if (typeof result.imports !== "object") {
+            throw new Error(`"imports" should have type of object.`);
+          }
+          return result.imports;
+        } catch (error) {
+          console.error(`Error parsing import map: `, error);
+        }
+      })()
+      : undefined;
+
+    const bundle = async ({
+      filename,
+      includeLevoTsconfig,
+      minifyBundle,
+    }: {
+      filename: string;
+      includeLevoTsconfig: boolean;
+      minifyBundle: boolean;
+    }) => {
+      const now = Date.now();
+      const bundled = decoder.decode(
+        await Deno.run({
+          cmd: [
+            "deno",
+            "bundle",
+            ...(includeLevoTsconfig
+              ? [
+                "--config=levo.tsconfig.json",
+              ]
+              : []),
+            ...(importMapPath
+              ? ["--unstable", `--importmap=${importMapPath.pathname}`]
+              : []),
+            filename,
+          ],
+          stdout: "piped",
+        })
+          .output(),
+      );
+      console.log(
+        `Finish bundle (${
+          ((Date.now() - now) / 1000).toFixed(2)
+        }s): ${filename}`,
+      );
+
+      if (!minifyBundle) {
+        return bundled;
+      } else {
+        const { code: minified, error } = minifyJavascript(
           bundled.replace(/export const/gi, "const"),
         );
         if (error) {
           console.error(`Failed to minify, using unminified code`, error);
         }
-        const final = error ? bundled : minified;
-        if (cachePages) {
-          pageCache.set(cachePath, final);
-          await Deno.writeFile(cachePath, encoder.encode(final));
-        }
-        return final;
+        return error ? bundled : minified;
       }
     };
 
-    if (cachePages) {
-      const scanDir = (dirname: string) =>
-        Array.from(Deno.readDirSync(dirname)).forEach((dir) => {
-          if (dir.isDirectory) {
-            scanDir(dirname + path.SEP + dir.name);
-          } else if (dir.isFile && dir.name === "_client.ts") {
-            const filename = dirname + path.SEP + dir.name;
-            bundle(filename, { overrideCache: true });
-          } else if (dir.isFile && dir.name === "_server.ts") {
-            const key = dirname + path.SEP + dir.name;
-            serverFunctionCache.set(key, import("file://" + key));
-          }
-        });
+    const bundleClientCode = async (filename: string): Promise<string> => {
+      const execute = async () => {
+        const cachePath = filename + ".cache";
+        const cache = clientPageCache.get(cachePath);
+        if (!hotReload && (cache || await exists(cachePath))) {
+          return cache ?? decoder.decode(await Deno.readFile(cachePath));
+        } else {
+          const bundled = await bundle(
+            {
+              filename,
+              includeLevoTsconfig: true,
+              minifyBundle: true,
+            },
+          );
+          clientPageCache.set(cachePath, bundled);
+          await Deno.writeFile(cachePath, encoder.encode(bundled));
+          return bundled;
+        }
+      };
+      if (hotReload) {
+        watchDependencies({ filename, onChange: execute, importMap });
+      }
+      return execute();
+    };
 
-      scanDir(rootDir.pathname);
-    }
+    const bundleServerCode = async (filename: string): Promise<
+      {
+        default?: LevoServe<unknown, unknown> | undefined;
+      } | undefined
+    > => {
+      const execute = async () => {
+        const cache = serverFunctionCache.get(filename);
+        if (!hotReload && cache) {
+          return cache;
+        } else {
+          const bundled = await bundle(
+            { filename, includeLevoTsconfig: false, minifyBundle: false },
+          );
+          const tempPath = filename + Date.now() + ".cache";
+          await Deno.writeFile(
+            tempPath,
+            new TextEncoder().encode(bundled),
+          );
+          const imported = await import("file://" + tempPath);
+          serverFunctionCache.set(filename, Promise.resolve(imported));
+          await Deno.remove(tempPath);
+          return serverFunctionCache.get(filename);
+        }
+      };
+
+      if (hotReload) {
+        watchDependencies({ filename, onChange: execute, importMap });
+      }
+      return execute();
+    };
+
+    const scanDir = (dirname: string) =>
+      Array.from(Deno.readDirSync(dirname)).forEach((dir) => {
+        if (dir.isDirectory) {
+          scanDir(dirname + path.SEP + dir.name);
+        } else if (dir.isFile && dir.name === "_client.ts") {
+          const filename = dirname + path.SEP + dir.name;
+          bundleClientCode(filename);
+        } else if (dir.isFile && dir.name === "_server.ts") {
+          const filename = dirname + path.SEP + dir.name;
+          bundleServerCode(filename);
+        }
+      });
+
+    scanDir(rootDir.pathname);
 
     console.log(
       `Server listening on ${serverOptions.hostname ??
@@ -270,7 +341,7 @@ export const LevoApp = {
         await processRequest(req);
         const url = new URL("http://x/" + req.url);
         const resolvedUrl = resolveUrl(
-          cachePages
+          cacheDirectoryTree
             ? cachedDirectoryTree
             : getDirectoryTree(rootDir.pathname, { ignoreFiles: [] }),
           url.pathname,
@@ -347,27 +418,7 @@ export const LevoApp = {
           continue;
         }
 
-        const handleRequest: { default?: LevoServe<unknown, unknown> } =
-          await (cachePages
-            ? serverFunctionCache.get(handlerPath.pathname)
-            : (async () => {
-              // When cachePages is false
-              // Force re-compile _server.ts
-              const tempName = handlerPath.pathname + Date.now() + ".ts";
-              await Deno.copyFile(handlerPath.pathname, tempName);
-              return import("file://" + tempName)
-                .then((module) => {
-                  Deno.remove(tempName);
-                  return module;
-                })
-                .catch((error) => {
-                  console.error(error);
-                  console.error(
-                    `The error above is caught when importing "${handlerPath.pathname}"`,
-                  );
-                  Deno.remove(tempName);
-                });
-            })());
+        const handleRequest = await bundleServerCode(handlerPath.pathname);
         if (!handleRequest?.default) {
           throw new Error(
             `No default export found at "${handlerPath.pathname}"`,
@@ -413,8 +464,7 @@ export const LevoApp = {
           }
           case "page": {
             const filename = dirname + "_client.ts";
-            console.log(`Trying to bundle: ${filename}`);
-            const code = await bundle(filename);
+            const code = await bundleClientCode(filename);
             await req.respond(
               await processResponse(req, {
                 status: 200,
@@ -425,12 +475,7 @@ export const LevoApp = {
       <!DOCTYPE html>
       ${response.html}
       <script>
-      ${
-                  minifyJs
-                    ? // This is necessary because we use Babel to transform the bundled code down to ES5
-                      `(()=>{${regeneratorRuntimeCode}})();`
-                    : ""
-                }
+          (()=>{${regeneratorRuntimeCode /** This is needed because use Babel to transpile the code down to ES5 */}})();
           (()=>{${code}})();
           (()=>{window.$levo.model=${JSON.stringify(response.model)}})();
           (()=>{window.$levo.log=${JSON.stringify(loggingOptions)}})();

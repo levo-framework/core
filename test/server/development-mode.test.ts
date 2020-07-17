@@ -1,10 +1,7 @@
 import { assertEquals, assert } from "../../src/deps.ts";
 
-const demoAppPath = new URL("../../demo/app.ts", import.meta.url).href;
-
-const server = new Worker(demoAppPath, {
-  type: "module",
-  deno: true,
+const server = await Deno.run({
+  cmd: "deno run --allow-all --unstable demo/app.ts".split(" "),
 });
 
 await new Promise((resolve) => setTimeout(resolve, 25000));
@@ -42,7 +39,7 @@ const tests: {
     name: "handle URL with query params",
     fn: async () => {
       const result = await fetch("http://localhost:3000?title=spongebob");
-      assertEquals((await result.text()).includes("spongebob"), true);
+      assert((await result.text()).includes("spongebob"));
       assertEquals(result.headers.get("content-type"), "text/html");
       assertEquals(result.status, 200);
     },
@@ -51,10 +48,10 @@ const tests: {
     name: "handle path param wildcard",
     fn: async () => {
       const result1 = await fetch("http://localhost:3000/user/xxx");
-      assertEquals((await result1.text()).includes("I am xxx"), true);
+      assert((await result1.text()).includes("I am xxx"));
 
       const result2 = await fetch("http://localhost:3000/user/jojo");
-      assertEquals((await result2.text()).includes("I am jojo"), true);
+      assert((await result2.text()).includes("I am jojo"));
     },
   },
   {
@@ -158,25 +155,56 @@ button { background-color: bisque; font-size: 24px; }
   },
   {
     name:
-      "updating _server.ts should work when server is running in no-cache mode",
+      "updating _server.ts should work when server is running in hotReloadChanges mode",
     fn: async () => {
       const result = await fetch("http://localhost:3000/banana");
-      assertEquals((await result.text()).includes("i am banana"), true);
+      assert((await result.text()).includes("i am banana"));
       const decoder = new TextDecoder();
       const encoder = new TextEncoder();
       const path = new URL("../../demo/home/banana/_server.ts", import.meta.url)
         .pathname;
       const fileContent = decoder.decode(await Deno.readFile(path));
+      const replacedWord = "coconut";
+      assert(!fileContent.includes(replacedWord));
       await Deno.writeFile(
         path,
-        encoder.encode(fileContent.replace(/banana/, "coconut")),
+        encoder.encode(fileContent.replace(/banana/, replacedWord)),
       );
+
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
       const result2 = await fetch("http://localhost:3000/banana");
 
       // reset the file
       await Deno.writeFile(path, encoder.encode(fileContent));
-      assertEquals((await result2.text()).includes("i am coconut"), true);
+      assert((await result2.text()).includes(replacedWord));
+    },
+  },
+  {
+    name:
+      "updating _client.ts (or its dependencies) should work when server is running in hotReloadChanges mode",
+    fn: async () => {
+      const result = await fetch("http://localhost:3000/banana");
+      assert((await result.text()).includes("hello world"));
+      const decoder = new TextDecoder();
+      const encoder = new TextEncoder();
+      const path = new URL("../../demo/home/banana/view.tsx", import.meta.url)
+        .pathname;
+      const fileContent = decoder.decode(await Deno.readFile(path));
+      const replacedWord = "salam dunia";
+      assert(!fileContent.includes(replacedWord));
+      await Deno.writeFile(
+        path,
+        encoder.encode(fileContent.replace(/hello world/, replacedWord)),
+      );
+
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      const result2 = await fetch("http://localhost:3000/banana");
+
+      // reset the file
+      await Deno.writeFile(path, encoder.encode(fileContent));
+      assert((await result2.text()).includes(replacedWord));
     },
   },
 ];
@@ -185,7 +213,8 @@ let numberOfRanTest = 0;
 const done = () => {
   numberOfRanTest++;
   if (numberOfRanTest === tests.length) {
-    server.terminate();
+    const SIGTERM = 15;
+    server.kill(SIGTERM);
   }
 };
 

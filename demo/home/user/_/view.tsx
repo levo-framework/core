@@ -6,7 +6,7 @@ export const view = (props: {
   model: Model;
   dispatch: Levo.Dispatch<Action>;
 }): Levo.Element => {
-  const { model, dispatch } = props;
+  const { model } = props;
   return (
     <html>
       <body>

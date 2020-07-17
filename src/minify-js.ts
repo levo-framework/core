@@ -1,7 +1,7 @@
 import Terser from "./terser.js";
 import Babel from "./babelstandalone.js";
 
-export const minify = (code: string): {
+export const minifyJavascript = (code: string): {
   code: string;
   error?: string;
 } => {
