@@ -149,6 +149,8 @@ Deno.test({
       ),
     );
 
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
     const resultText = await (await fetch("http://localhost:5000/about"))
       .text();
     assert(resultText.includes(replacedWord));
