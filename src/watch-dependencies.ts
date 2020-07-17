@@ -1,6 +1,12 @@
 import { getLocalDependencies } from "./get-local-dependencies.ts";
 import { watchFile } from "./watch-file.ts";
 
+const handlers: Record</*filename*/ string, WatchDependenciesHandler> = {};
+
+type WatchDependenciesHandler = {
+  stop?: () => Promise<void>;
+};
+
 /**
  * Watch for changes of the Typescript file and its dependencies.
  */
@@ -10,10 +16,11 @@ export const watchDependencies = async (
     onChange: (event: Deno.FsEvent) => void;
     importMap?: Record<string, string>;
   },
-): Promise<{
-  stop?: () => Promise<void>;
-}> => {
-  const handler: { stop?: () => Promise<void> } = {};
+): Promise<WatchDependenciesHandler> => {
+  if (handlers[filename]?.stop) {
+    await handlers[filename]?.stop?.();
+  }
+  const handler: WatchDependenciesHandler = handlers[filename] = {};
   const watch = async () => {
     const dependencies = await getLocalDependencies({ filename, importMap });
     console.log("Watching dependencies of " + filename);

@@ -13,12 +13,14 @@ Deno.test({
       },
     });
 
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     const initialContent = await Deno.readFile(path);
 
     // Change the file x.ts
     await Deno.writeFile(path, new TextEncoder().encode("hello"));
 
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Expect onChange handlers is olny triggered once
     assertEquals(counter, 1);
