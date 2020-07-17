@@ -17,23 +17,22 @@ export const watchDependencies = async (
     importMap?: Record<string, string>;
   },
 ): Promise<WatchDependenciesHandler> => {
-  if (handlers[filename]?.stop) {
-    await handlers[filename]?.stop?.();
-  }
-  const handler: WatchDependenciesHandler = handlers[filename] = {};
   const watch = async () => {
+    await handlers[filename]?.stop?.();
     const dependencies = await getLocalDependencies({ filename, importMap });
     console.log("Watching dependencies of " + filename);
-    const newHandler = await watchFile({
+    handlers[filename] = await watchFile({
       paths: dependencies,
       onChange: async (event) => {
-        await handler.stop?.();
         onChange(event);
         await watch();
       },
     });
-    handler.stop = newHandler.stop;
   };
   await watch();
-  return handler;
+  return {
+    stop: async () => {
+      await handlers[filename]?.stop?.();
+    },
+  };
 };

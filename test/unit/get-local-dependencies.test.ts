@@ -62,6 +62,22 @@ Deno.test("get local dependencies (with import map)", async () => {
   );
 });
 
+Deno.test("get local dependencies (shouldnt include remote dependencies)", async () => {
+  const path = Deno.cwd() + "/test/unit/test-files/";
+  assertEquals(
+    await getLocalDependencies(
+      {
+        filename: path + "d.ts",
+        truncateCommonPrefix: false,
+        importMap: { "foo": "https://hello.world" },
+      },
+    ),
+    [
+      Deno.cwd() + "/test/unit/test-files/d.ts",
+    ],
+  );
+});
+
 Deno.test("get local dependencies (real example)", async () => {
   Deno.chdir("./templates/new-project");
   const result = await getLocalDependencies({

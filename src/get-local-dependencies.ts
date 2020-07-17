@@ -74,6 +74,9 @@ const _getLocalDependencies = async (
     );
     return [];
   }
+  if (absolutePath.trim().startsWith("http")) {
+    return [];
+  }
 
   if (!(await exists(absolutePath))) {
     console.error(

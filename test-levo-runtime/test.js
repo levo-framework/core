@@ -32,10 +32,10 @@ const waitForSeconds = (seconds) => {
 
 let browser;
 beforeAll(async (done) => {
-  await waitForSeconds(20);
+  await waitForSeconds(30);
   browser = await puppeteer.launch({ headless: true });
   done();
-}, 30000);
+}, 40000);
 
 describe("", () => {
   test("case 1", async () => {

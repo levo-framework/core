@@ -16,27 +16,49 @@ export const watchFile = async (
   if (log) {
     console.log("(watch-file.ts) Watching: " + paths.join(", "));
   }
-  const worker = new Worker(new URL("./watcher.ts", import.meta.url).href, {
-    type: "module",
-    deno: true,
-  });
-  worker.postMessage({
-    paths: (await Promise.all(paths.map(async (path) => {
-      if (await exists(path)) {
-        return path;
-      } else {
-        console.warn(`(watch-file.ts) Cannot find dependency "${path}"`);
-        return undefined;
-      }
-    })))
-      .filter((path): path is string => path !== undefined),
-  });
-  worker.onmessage = (event) => {
-    onChange(event.data as Deno.FsEvent);
+  const sanitisedPaths = (await Promise.all(paths.map(async (path) => {
+    if (await exists(path)) {
+      return path;
+    } else {
+      console.warn(`(watch-file.ts) Cannot find dependency "${path}"`);
+      return undefined;
+    }
+  })))
+    .filter((path): path is string => path !== undefined);
+
+  // Throttling is necessary because somehow more than
+  // one events will be fired for each file changes
+  let handled = false;
+  const throttle = (event: Deno.FsEvent): void => {
+    if (!handled) {
+      handled = true;
+      onChange(event);
+      setTimeout(() => {
+        handled = false;
+      }, 100);
+    }
   };
+
+  const iterator = Deno.watchFs(sanitisedPaths);
+  setTimeout(async () => {
+    try {
+      for await (const event of iterator) {
+        throttle(event);
+      }
+    } // eslint-disable-next-line no-empty
+    catch {
+      // TODO: remove this try-catch block after the `return` on
+      //       Deno.watchFs is fixed by nayeerm
+    }
+  }, 100);
+
   return {
     stop: async () => {
-      worker.terminate();
+      try {
+        await iterator.return?.();
+      } catch (error) {
+        console.error(error);
+      }
     },
   };
 };
