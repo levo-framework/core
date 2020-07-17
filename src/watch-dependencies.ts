@@ -21,7 +21,7 @@ export const watchDependencies = async (
     await handlers[filename]?.stop?.();
     const dependencies = await getLocalDependencies({ filename, importMap });
     console.log("Watching dependencies of " + filename);
-    return handlers[filename] = await watchFile({
+    handlers[filename] = await watchFile({
       paths: dependencies,
       onChange: async (event) => {
         onChange(event);
