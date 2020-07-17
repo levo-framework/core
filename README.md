@@ -31,7 +31,7 @@ Levo is a frontend framework that supports Server-Side Rendering (SSR) and The E
 
 ## Features that are supported out of the box (a.k.a no setup required)
 * Hot reload (~2 seconds)
-* JSX Template
+* Type-safe JSX Template
 * Gzip/brotli compression
 * Security headers (based on [Helmet](https://helmetjs.github.io/))
 * Javascript/CSS minification
