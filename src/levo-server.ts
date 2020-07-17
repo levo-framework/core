@@ -28,7 +28,7 @@ export const LevoApp = {
     memoryCache: {
       maxNumberOfPages = 1024,
     } = {},
-    watchFileChanges,
+    hotReload,
     processRequestMiddlewares,
     processResponseMiddlewares,
     importMapPath,
@@ -105,7 +105,7 @@ export const LevoApp = {
      * Watch for file changes. Default value is false.
      * Should be set to true during development, but false in production.
      */
-    watchFileChanges?: boolean;
+    hotReload?: boolean;
 
     /**
      * List of middlewares that will be used to process request. 
@@ -203,28 +203,32 @@ export const LevoApp = {
       }
     };
 
-    const bundleClientCode = async (filename: string, options: {
-      overrideCache: boolean;
-    }) => {
-      const cachePath = filename + ".cache";
-      if (
-        !options.overrideCache &&
-        (pageCache.get(cachePath) || await exists(cachePath))
-      ) {
-        return pageCache.get(cachePath) ??
-          decoder.decode(await Deno.readFile(cachePath));
-      } else {
-        const final = await bundle(
-          {
-            filename,
-            includeLevoTsconfig: true,
-            minifyBundle: true,
-          },
-        );
-        pageCache.set(cachePath, final);
-        await Deno.writeFile(cachePath, encoder.encode(final));
-        return final;
+    const bundleClientCode = async (filename: string): Promise<string> => {
+      const execute = async () => {
+        const cachePath = filename + ".cache";
+        if (
+          !hotReload &&
+          (pageCache.get(cachePath) || await exists(cachePath))
+        ) {
+          return pageCache.get(cachePath) ??
+            decoder.decode(await Deno.readFile(cachePath));
+        } else {
+          const final = await bundle(
+            {
+              filename,
+              includeLevoTsconfig: true,
+              minifyBundle: true,
+            },
+          );
+          pageCache.set(cachePath, final);
+          await Deno.writeFile(cachePath, encoder.encode(final));
+          return final;
+        }
+      };
+      if (hotReload) {
+        watchDependencies({ filename, onChange: execute, importMap });
       }
+      return execute();
     };
 
     const bundleServerCode = async (filename: string): Promise<
@@ -232,20 +236,27 @@ export const LevoApp = {
         default?: LevoServe<unknown, unknown> | undefined;
       } | undefined
     > => {
-      return bundle(
-        { filename, includeLevoTsconfig: false, minifyBundle: false },
-      )
-        .then(async (content) => {
-          const tempPath = filename + Date.now() + ".cache";
-          await Deno.writeFile(
-            tempPath,
-            new TextEncoder().encode(content),
-          );
-          const imported = await import("file://" + tempPath);
-          serverFunctionCache.set(filename, Promise.resolve(imported));
-          await Deno.remove(tempPath);
-          return serverFunctionCache.get(filename);
-        });
+      const execute = async () => {
+        return bundle(
+          { filename, includeLevoTsconfig: false, minifyBundle: false },
+        )
+          .then(async (content) => {
+            const tempPath = filename + Date.now() + ".cache";
+            await Deno.writeFile(
+              tempPath,
+              new TextEncoder().encode(content),
+            );
+            const imported = await import("file://" + tempPath);
+            serverFunctionCache.set(filename, Promise.resolve(imported));
+            await Deno.remove(tempPath);
+            return serverFunctionCache.get(filename);
+          });
+      };
+
+      if (hotReload) {
+        watchDependencies({ filename, onChange: execute, importMap });
+      }
+      return execute();
     };
 
     const scanDir = (dirname: string) =>
@@ -254,19 +265,10 @@ export const LevoApp = {
           scanDir(dirname + path.SEP + dir.name);
         } else if (dir.isFile && dir.name === "_client.ts") {
           const filename = dirname + path.SEP + dir.name;
-          const execute = () =>
-            bundleClientCode(filename, { overrideCache: true });
-          execute();
-          if (watchFileChanges) {
-            watchDependencies({ filename, onChange: execute, importMap });
-          }
+          bundleClientCode(filename);
         } else if (dir.isFile && dir.name === "_server.ts") {
           const filename = dirname + path.SEP + dir.name;
-          const execute = () => bundleServerCode(filename);
-          execute();
-          if (watchFileChanges) {
-            watchDependencies({ filename, onChange: execute, importMap });
-          }
+          bundleServerCode(filename);
         }
       });
 
@@ -464,10 +466,7 @@ export const LevoApp = {
           }
           case "page": {
             const filename = dirname + "_client.ts";
-            const code = await bundleClientCode(
-              filename,
-              { overrideCache: false },
-            );
+            const code = await bundleClientCode(filename);
             await req.respond(
               await processResponse(req, {
                 status: 200,

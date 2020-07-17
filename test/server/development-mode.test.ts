@@ -155,7 +155,7 @@ button { background-color: bisque; font-size: 24px; }
   },
   {
     name:
-      "updating _server.ts should work when server is running in watchFileChanges mode",
+      "updating _server.ts should work when server is running in hotReloadChanges mode",
     fn: async () => {
       const result = await fetch("http://localhost:3000/banana");
       assert((await result.text()).includes("i am banana"));
@@ -182,7 +182,7 @@ button { background-color: bisque; font-size: 24px; }
   },
   {
     name:
-      "updating _client.ts (or its dependencies) should work when server is running in watchFileChanges mode",
+      "updating _client.ts (or its dependencies) should work when server is running in hotReloadChanges mode",
     fn: async () => {
       const result = await fetch("http://localhost:3000/banana");
       assert((await result.text()).includes("hello world"));

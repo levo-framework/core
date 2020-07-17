@@ -19,7 +19,7 @@ LevoApp.start<Environment>({
     },
   minifyCss: PRODUCTION,
   cacheDirectoryTree: PRODUCTION,
-  watchFileChanges: !PRODUCTION,
+  hotReload: !PRODUCTION,
   rootDir: new URL("./root", import.meta.url),
   importMapPath: new URL("./import_map.json", import.meta.url),
   loggingOptions: PRODUCTION ? undefined : { model: true, action: true },
