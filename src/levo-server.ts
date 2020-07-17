@@ -206,7 +206,7 @@ export const LevoApp = {
     const bundleClientCode = async (filename: string): Promise<string> => {
       const cachePath = filename + ".cache";
       const cache = clientPageCache.get(cachePath);
-      if ((cache || await exists(cachePath))) {
+      if (cache || (!hotReload && await exists(cachePath))) {
         return cache ?? decoder.decode(await Deno.readFile(cachePath));
       }
       const execute = async () => {
