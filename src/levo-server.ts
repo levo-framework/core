@@ -204,34 +204,33 @@ export const LevoApp = {
     };
 
     const bundleClientCode = async (filename: string): Promise<string> => {
-      const execute = async ({ overrideCache }: { overrideCache: boolean }) => {
-        const cachePath = filename + ".cache";
-        const cache = clientPageCache.get(cachePath);
-        if (!overrideCache && (cache || await exists(cachePath))) {
-          return cache ?? decoder.decode(await Deno.readFile(cachePath));
-        } else {
-          const bundled = await bundle(
-            {
-              filename,
-              includeLevoTsconfig: true,
-              minifyBundle: true,
-            },
-          );
-          clientPageCache.set(cachePath, bundled);
-          await Deno.writeFile(cachePath, encoder.encode(bundled));
-          return bundled;
-        }
+      const cachePath = filename + ".cache";
+      const cache = clientPageCache.get(cachePath);
+      if ((cache || await exists(cachePath))) {
+        return cache ?? decoder.decode(await Deno.readFile(cachePath));
+      }
+      const execute = async () => {
+        const bundled = await bundle(
+          {
+            filename,
+            includeLevoTsconfig: true,
+            minifyBundle: true,
+          },
+        );
+        clientPageCache.set(cachePath, bundled);
+        await Deno.writeFile(cachePath, encoder.encode(bundled));
+        return bundled;
       };
       if (hotReload) {
         watchDependencies(
           {
             filename,
-            onChange: () => execute({ overrideCache: true }),
+            onChange: execute,
             importMap,
           },
         );
       }
-      return execute({ overrideCache: false });
+      return execute();
     };
 
     const bundleServerCode = async (filename: string): Promise<
@@ -239,36 +238,35 @@ export const LevoApp = {
         default?: LevoServe<unknown, unknown> | undefined;
       } | undefined
     > => {
-      const execute = async ({ overrideCache }: { overrideCache: boolean }) => {
-        const cache = serverFunctionCache.get(filename);
-        if (!overrideCache && cache) {
-          return cache;
-        } else {
-          const bundled = await bundle(
-            { filename, includeLevoTsconfig: false, minifyBundle: false },
-          );
-          const tempPath = filename + Date.now() + ".cache";
-          await Deno.writeFile(
-            tempPath,
-            new TextEncoder().encode(bundled),
-          );
-          const imported = await import("file://" + tempPath);
-          serverFunctionCache.set(filename, Promise.resolve(imported));
-          await Deno.remove(tempPath);
-          return serverFunctionCache.get(filename);
-        }
+      const cache = serverFunctionCache.get(filename);
+      if (cache) {
+        return cache;
+      }
+      const execute = async () => {
+        const bundled = await bundle(
+          { filename, includeLevoTsconfig: false, minifyBundle: false },
+        );
+        const tempPath = filename + Date.now() + ".cache";
+        await Deno.writeFile(
+          tempPath,
+          new TextEncoder().encode(bundled),
+        );
+        const imported = await import("file://" + tempPath);
+        serverFunctionCache.set(filename, Promise.resolve(imported));
+        await Deno.remove(tempPath);
+        return serverFunctionCache.get(filename);
       };
 
       if (hotReload) {
         watchDependencies(
           {
             filename,
-            onChange: () => execute({ overrideCache: true }),
+            onChange: execute,
             importMap,
           },
         );
       }
-      return execute({ overrideCache: false });
+      return execute();
     };
 
     const scanDir = (dirname: string) =>
@@ -284,7 +282,9 @@ export const LevoApp = {
         }
       });
 
-    scanDir(rootDir.pathname);
+    if (!hotReload) {
+      scanDir(rootDir.pathname);
+    }
 
     console.log(
       `Server listening on ${serverOptions.hostname ??
