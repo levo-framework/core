@@ -3,8 +3,6 @@ import { watchDependencies } from "../../src/watch-dependencies.ts";
 
 Deno.test({
   name: "watch dependencies",
-  sanitizeResources: false,
-  sanitizeOps: false,
   fn: async () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
