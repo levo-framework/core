@@ -4,6 +4,8 @@ import { assertEquals } from "../deps.ts";
 Deno.test({
   name: "watch file",
   fn: async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     let counter = 0;
     const path = "./test/unit/test-files/x.ts";
     const handler = await watchFile({
@@ -13,14 +15,14 @@ Deno.test({
       },
     });
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const initialContent = await Deno.readFile(path);
 
     // Change the file x.ts
     await Deno.writeFile(path, new TextEncoder().encode("hello"));
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Expect onChange handlers is olny triggered once
     assertEquals(counter, 1);
@@ -29,5 +31,7 @@ Deno.test({
     await Deno.writeFile(path, initialContent);
 
     await handler.stop();
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
   },
 });
