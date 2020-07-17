@@ -27,17 +27,19 @@ export const getLocalDependencies = async (
     .filter((line) => !line.startsWith("http"))
     .filter((x, i, xs) => i === xs.indexOf(x));
 
-  const commonPrefix = commonParentDirectory(dependencies);
-  return dependencies.map((line) =>
-    truncateCommonPrefix ? line.slice(commonPrefix.length) : line
-  ).sort();
+  if (!truncateCommonPrefix) {
+    return dependencies.sort();
+  } else {
+    const commonPrefix = commonParentDirectory(dependencies);
+    return dependencies.map((line) => line.slice(commonPrefix.length)).sort();
+  }
 };
 
 const commonParentDirectory = (directories: string[]): string => {
-  const [minRow, ...rows] = directories.map((dir) => dir.split(path.SEP)).sort((
-    a,
-    b,
-  ) => a.length - b.length);
+  const [minRow, ...rows] = directories
+    .map((dir) => dir.split(path.SEP))
+    .sort((a, b) => a.length - b.length);
+
   const result: string[] = [];
   for (let i = 0; i < (minRow.length ?? 0); i++) {
     if (rows.every((row) => row[i] === minRow[i])) {
