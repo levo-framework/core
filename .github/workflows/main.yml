@@ -69,7 +69,7 @@ jobs:
         with:
          deno-version: v1.2.0 
       - name: Unit Test
-        run: deno test --allow-all --unstable ./test/unit/
+        run: deno test --allow-all --unstable ./test/unit/ --filter="watch dependencies"
 
   dev-mode-server-test:
     runs-on: ubuntu-latest
