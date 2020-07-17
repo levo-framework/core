@@ -57,6 +57,7 @@ export const watchFile = async (
       try {
         await iterator.return?.();
       } catch (error) {
+        await iterator.return?.()
         console.error(error);
       }
     },
