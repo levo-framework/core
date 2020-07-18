@@ -75,7 +75,7 @@ const main = async (): Promise<void> => {
 
       await Deno.writeFile(
         importMapPath,
-        new TextEncoder().encode(JSON.stringify(newImportMap)),
+        new TextEncoder().encode(JSON.stringify(newImportMap, null, 2)),
       );
 
       await copy(
