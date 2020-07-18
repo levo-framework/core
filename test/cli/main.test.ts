@@ -99,11 +99,20 @@ Deno.test({
     ]);
 
     console.log("Verify import map");
-    const importMap = JSON.parse(
-      new TextDecoder().decode(
-        await Deno.readFile([projectName, "import_map.json"].join(path.SEP)),
-      ),
+    const importMapContent = new TextDecoder().decode(
+      await Deno.readFile([projectName, "import_map.json"].join(path.SEP)),
     );
+    assertEquals(
+      importMapContent,
+      `{
+  "imports": {
+    "levo/": "${sourceDir}/mod/",
+    "asserts": "https://deno.land/std@0.61.0/testing/asserts.ts",
+    "environment": "./environment.ts"
+  }
+}`,
+    );
+    const importMap = JSON.parse(importMapContent);
     assertEquals(importMap, {
       "imports": {
         "levo/": `${sourceDir}/mod/`,
