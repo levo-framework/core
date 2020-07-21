@@ -91,14 +91,19 @@ export const applyPatches = <Action>({
         ((patch.originalNode.ref as HTMLElement).style as any)[
           patch.attributeName
         ] = patch.value;
-        (patch.originalNode.style as any)[patch.attributeName] = patch.value;
+        if (!patch.originalNode.style) {
+          patch.originalNode.style = {};
+        }
+        patch.originalNode.style[patch.attributeName] = patch.value;
         return updatedMountedVirtualNode;
       }
       case "remove_style_attribute": {
         ((patch.originalNode.ref as HTMLElement).style as any)[
           patch.attributeName
         ] = undefined;
-        delete (patch.originalNode.style as any)[patch.attributeName];
+        if (patch.originalNode.style) {
+          delete patch.originalNode.style[patch.attributeName];
+        }
         return updatedMountedVirtualNode;
       }
       default:
