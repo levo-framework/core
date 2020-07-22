@@ -64,11 +64,16 @@ export const h = (
     return {
       $: tag,
       ...props,
-      children: children?.filter((x) => x !== undefined && x !== null).map((
-        x,
-      ) =>
-        ["string", "number"].includes(typeof x) ? { $: "_text", value: x } : x
-      ).flat(),
+      children: children?.filter((x) =>
+        ["string", "number", "object"].includes(typeof x)
+      )
+        .map((
+          x,
+        ) =>
+          ["string", "number"].includes(typeof x)
+            ? { $: "_text", value: x }
+            : x
+        ).flat(),
     } as any;
   }
 };

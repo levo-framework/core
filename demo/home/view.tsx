@@ -50,6 +50,7 @@ export const view = (
         />
         <input id="input" value={isEven ? "even" : "odd"} />
       </div>
+      {isEven && <div id="hello">Hello</div>}
       {items.map((item) => <div>{item.content}</div>)}
     </html>
   );
