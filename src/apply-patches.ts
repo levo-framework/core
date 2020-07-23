@@ -82,7 +82,7 @@ export const applyPatches = <Action>({
           // Refer: https://stackoverflow.com/a/30299762/6587634
           (patch.originalNode.ref as any).className = "";
         } else {
-          (patch.originalNode.ref as any)[patch.attributeName] = undefined;
+          (patch.originalNode.ref as any)[patch.attributeName] = "";
         }
         delete (patch.originalNode as any)[patch.attributeName];
         return updatedMountedVirtualNode;
@@ -100,7 +100,7 @@ export const applyPatches = <Action>({
       case "remove_style_attribute": {
         ((patch.originalNode.ref as HTMLElement).style as any)[
           patch.attributeName
-        ] = undefined;
+        ] = "";
         if (patch.originalNode.style) {
           delete patch.originalNode.style[patch.attributeName];
         }
