@@ -23,7 +23,11 @@ export const view = (
       >
         add
       </button>
-      <button id="minus-button" onclick={dispatch({ $: "minus" })}>
+      <button
+        id="minus-button"
+        onclick={dispatch({ $: "minus" })}
+        style={{ color: isEven ? "green" : undefined }}
+      >
         minus
       </button>
       <button id="stop-timer-button" onclick={dispatch({ $: "stop_interval" })}>
