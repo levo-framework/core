@@ -23,7 +23,11 @@ export const view = (
       >
         add
       </button>
-      <button id="minus-button" onclick={dispatch({ $: "minus" })}>
+      <button
+        id="minus-button"
+        onclick={dispatch({ $: "minus" })}
+        style={{ color: isEven ? "green" : undefined }}
+      >
         minus
       </button>
       <button id="stop-timer-button" onclick={dispatch({ $: "stop_interval" })}>
@@ -50,6 +54,7 @@ export const view = (
         />
         <input id="input" value={isEven ? "even" : "odd"} />
       </div>
+      {isEven && <div id="hello">Hello</div>}
       {items.map((item) => <div>{item.content}</div>)}
     </html>
   );
