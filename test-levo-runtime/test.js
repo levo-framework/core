@@ -112,6 +112,36 @@ describe("", () => {
     const currentValue10 = await getCurrentValue();
     const diff2 = currentValue10 - currentValue9;
     expect(diff1).not.toEqual(diff2);
+
+    // Test conditonal rendering
+    const getHelloDivExists = async () => {
+      const div = await page.$("#hello");
+      return Boolean(div);
+    };
+    const helloDivExists1 = await getHelloDivExists();
+    await page.click("#click-me-button");
+    const helloDivExists2 = await getHelloDivExists();
+    expect(helloDivExists1).not.toEqual(helloDivExists2);
+
+    // Test style removal
+    const getMinusButtonStyleColor = async () => {
+      return page.$eval("#minus-button", (el) => el.style.color);
+    };
+    const minusButtonStyleColor1 = await getMinusButtonStyleColor();
+    console.log(minusButtonStyleColor1);
+    await page.click("#click-me-button");
+    const minusButtonStyleColor2 = await getMinusButtonStyleColor();
+    console.log(minusButtonStyleColor2);
+    expect(
+      [minusButtonStyleColor1, minusButtonStyleColor2].some((color) =>
+        color === "green"
+      ),
+    ).toEqual(true);
+    expect(
+      [minusButtonStyleColor1, minusButtonStyleColor2].some((color) =>
+        color === ""
+      ),
+    ).toEqual(true);
   }, 60000);
 
   test("environment variables", async () => {
