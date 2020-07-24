@@ -32,6 +32,7 @@ export const LevoApp = {
     processRequestMiddlewares,
     processResponseMiddlewares,
     importMapPath,
+    whenPageNotFound,
   }: {
     /**
      * Options for configuring server, for example hostname and port number.
@@ -116,6 +117,14 @@ export const LevoApp = {
      * List of middlewares that will be used to process response.
      */
     processResponseMiddlewares: ProcessResponseMiddleware[];
+
+    /**
+     * What to do when page not found.
+     */
+    whenPageNotFound: {
+      type: "redirect";
+      url: string;
+    };
   }): Promise<void> => {
     const serverInstance = server.serve(serverOptions);
     const decoder = new TextDecoder("utf-8");
@@ -348,6 +357,24 @@ export const LevoApp = {
         });
     };
 
+    const redirect = async (
+      { req, url }: { req: server.ServerRequest; url: string },
+    ) => {
+      await req.respond({
+        body: encoder.encode(
+          `<script>window.location.href="${url}"</script>`
+            .trim(),
+        ),
+      });
+    };
+
+    const handlePageNotFound = ({ req }: { req: server.ServerRequest }) => {
+      switch (whenPageNotFound.type) {
+        case "redirect":
+          return redirect({ req, url: whenPageNotFound.url });
+      }
+    };
+
     for await (const req of serverInstance) {
       try {
         await processRequest(req);
@@ -362,9 +389,9 @@ export const LevoApp = {
         if (resolvedUrl === undefined) {
           console.error(
             new Date(),
-            `${req.url} does not point to a directory, responding with 404`,
+            `${req.url} does not point to a directory`,
           );
-          await req.respond({ status: 404 });
+          await handlePageNotFound({ req });
           continue;
         }
 
@@ -426,7 +453,7 @@ export const LevoApp = {
           console.error(
             `_server.ts not found under at ${handlerPath.pathname}`,
           );
-          await req.respond({ status: 404 });
+          await handlePageNotFound({ req });
           continue;
         }
 
@@ -452,12 +479,7 @@ export const LevoApp = {
 
         switch (response.$) {
           case "redirect": {
-            await req.respond({
-              body: encoder.encode(
-                `<script>window.location.href="${response.url}"</script>`
-                  .trim(),
-              ),
-            });
+            await redirect({ req, url: response.url });
             break;
           }
           case "custom": {

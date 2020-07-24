@@ -16,6 +16,10 @@ LevoApp.start<Environment>({
   cacheDirectoryTree: production,
   hotReload: !production,
   rootDir: new URL("./home", import.meta.url),
+  whenPageNotFound: {
+    type: "redirect",
+    url: "/404",
+  },
   loggingOptions: production ? undefined : {
     action: true,
     patches: true,

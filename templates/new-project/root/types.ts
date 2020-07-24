@@ -11,10 +11,6 @@ export const initialModel = (): Model => {
 };
 
 export type Action =
-  | {
-    $: "rotate";
-  }
-  | {
-    $: "change_color";
-    color: string;
-  };
+  | {$: "no action"}
+  | { $: "rotate"; }
+  | { $: "change_color"; color: string; };

@@ -5,6 +5,11 @@ export const update: Levo.Update<Model, Action> = (
   { model, action },
 ) => {
   switch (action.$) {
+    case "no action": {
+      return {
+        newModel: model
+      }
+    }
     case "rotate": {
       return {
         newModel: {
