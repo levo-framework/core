@@ -125,14 +125,13 @@ view.tsx
     - this file is the entry file that will be executed by the browser
     - it is used to run initial setup at browser
     - for example, setting up socket event listener, initializing auth library etc.
-- `types.ts`
-    - this file is used to specify the `Model` type that will be used to render dynamic content on the page
-    - this file is also used to specify the actions that can be executed by client on the page
-    - note that the action type must be a [discriminated union](https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions) where the discriminated/tag must be named as `$`.
-- `update.ts`
     - this file is used to specify how the model should be updated give an action 
 - `view.tsx`
-    - this file is used to specify how the page should be rendered based on the model provided in `model.ts`
+    - this file is used to:
+        - specify how the page should be rendered based on the model provided in `model.ts`
+        - specify the `Model` type that will be used to render dynamic content on the page
+        - specify the actions that can be executed by client on the page
+        - note that the action type must be a [discriminated union](https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions) where the discriminated/tag must be named as `$`.
 
 
 ## Which file/folders should not be renamed?
