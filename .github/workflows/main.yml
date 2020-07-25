@@ -15,7 +15,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2.3.1
       - name: Shellcheck
         run: shellcheck ./**/*.sh
       - name: Install node modules
@@ -26,7 +26,7 @@ jobs:
   format-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2.3.1
       - uses: denolib/setup-deno@master
         with:
           deno-version: v1.2.0 
@@ -36,7 +36,7 @@ jobs:
   verify-deno-types:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2.3.1
       - uses: denolib/setup-deno@master
         with:
           deno-version: v1.2.0 
@@ -52,7 +52,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2.3.1
       - uses: denolib/setup-deno@master
         with:
          deno-version: v1.2.0 
@@ -64,7 +64,7 @@ jobs:
   unit-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2.3.1
       - uses: denolib/setup-deno@master
         with:
          deno-version: v1.2.0 
@@ -74,7 +74,7 @@ jobs:
   dev-mode-server-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2.3.1
       - uses: denolib/setup-deno@master
         with:
          deno-version: v1.2.0 
@@ -84,7 +84,7 @@ jobs:
   prod-mode-server-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2.3.1
       - uses: denolib/setup-deno@master
         with:
          deno-version: v1.2.0 
@@ -94,7 +94,7 @@ jobs:
   template-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2.3.1
       - uses: denolib/setup-deno@master
         with:
          deno-version: v1.2.0 
@@ -104,7 +104,7 @@ jobs:
   cli-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2.3.1
       - uses: denolib/setup-deno@master
         with:
          deno-version: v1.2.0 
@@ -114,7 +114,7 @@ jobs:
   levo-runtime-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2.3.1
       - uses: denolib/setup-deno@master
         with:
          deno-version: v1.2.0 

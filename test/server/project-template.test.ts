@@ -44,7 +44,7 @@ const tests: {
 
       await Deno.writeFile(
         path,
-        encoder.encode(originalContent.replace("Change to green", "spongebob")),
+        encoder.encode(originalContent.replace("click me", "spongebob")),
       );
 
       await new Promise((resolve) => setTimeout(resolve, 5000));

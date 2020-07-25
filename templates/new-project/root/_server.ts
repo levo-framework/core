@@ -1,5 +1,4 @@
-import { view } from "./view.tsx";
-import { Model, Action, initialModel } from "./types.ts";
+import { view, Model, Action, initialModel } from "./view.tsx";
 import { serve } from "levo/levo-serve.ts";
 import { Environment } from "environment";
 
