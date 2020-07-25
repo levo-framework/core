@@ -102,7 +102,6 @@ Deno.test("get local dependencies (real example)", async () => {
     "/src/virtual-node.ts",
     "/templates/new-project/environment.ts",
     "/templates/new-project/root/_server.ts",
-    "/templates/new-project/root/types.ts",
     "/templates/new-project/root/view.tsx",
   ]);
 });

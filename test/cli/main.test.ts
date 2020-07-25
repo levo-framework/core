@@ -53,9 +53,6 @@ Deno.test({
             ]],
             ["_client.ts"],
             ["_server.ts"],
-            ["types.ts"],
-            ["update.test.ts"],
-            ["update.ts"],
             ["view.tsx"],
           ]],
           ["tools", [
@@ -86,9 +83,6 @@ Deno.test({
         ["robots.txt", [
           ["_server.ts"],
         ]],
-        ["types.ts"],
-        ["update.test.ts"],
-        ["update.ts"],
         ["view.tsx"],
       ]],
       ["tools", [
@@ -154,7 +148,7 @@ Deno.test({
     await Deno.writeFile(
       aboutPagePath,
       encoder.encode(
-        aboutPageContent.replace(/change to green/gi, replacedWord),
+        aboutPageContent.replace(/click me/gi, replacedWord),
       ),
     );
 
