@@ -1,5 +1,7 @@
 # Levo
 
+Added some notes about login
+
 ![](https://github.com/levo-framework/core/workflows/CI/badge.svg)
 
 ## Background
